@@ -205,6 +205,101 @@ def delete_projects(
 
     typer.echo(f"✅ Successfully deleted {len(id_list)} project(s) for company {company_id}")
 
+# ------------------ Create Command ------------------ #
+
+@app.command("create")
+def create_project(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company (scope) ID"),
+    label: str = typer.Option(..., "--name", "-n", help="Project name or label"),
+    goal: str = typer.Option(..., "--goal", "-g", help="Project goal or purpose"),
+    scope: str = typer.Option(..., "--scope", "-s", help="Scope or context of the project"),
+    type_id: int = typer.Option(..., "--type-id", "-t", help="Project type ID"),
+    start_date: str = typer.Option(None, "--start-date", help="Start date (YYYY-MM-DD)"),
+    end_date: str = typer.Option(None, "--end-date", help="End date (YYYY-MM-DD)"),
+    estimated_hours: str = typer.Option(None, "--hours", help="Estimated hours (string, not number)"),
+):
+    """
+    Create a new project in the specified company.
+    """
+
+    mutation = """
+    mutation CreateProject($input: CreateProjectInput!) {
+      createProject(input: $input) {
+        project {
+          id
+          pid
+          label
+          goal
+          scope
+          createdAt
+          startDate
+          endDate
+          estimatedHours
+          projectType {
+            id
+            label
+          }
+        }
+      }
+    }
+    """
+
+    variables = {
+        "input": {
+            "companyId": company_id,
+            "label": label,
+            "goal": goal,
+            "scope": scope,
+            "typeId": type_id,
+            "startDate": start_date,
+            "endDate": end_date,
+            "estimatedHours": estimated_hours,
+        }
+    }
+
+    log(f"Creating project '{label}' in company {company_id}...")
+    data = graphql_request(mutation, variables)
+
+    project = data["createProject"]["project"]
+    typer.echo("✅ Project created successfully:")
+    export_data(
+        [project],
+        ["id", "pid", "label", "goal", "scope", "startDate", "endDate", "estimatedHours"],
+        "table",
+        None,
+    )
+
+# ------------------ Project Type Command ------------------ #
+
+@app.command("types")
+def list_project_types(
+    company_id: int = typer.Option(None, "--company-id", "-c", help="Optional company ID"),
+):
+    """
+    List all available project types and their IDs.
+    """
+    query = """
+    query {
+      projectTypes {
+        collection {
+          id
+          label
+        }
+      }
+    }
+    """
+    log("Fetching project types...")
+    data = graphql_request(query)
+    types = data.get("projectTypes", {}).get("collection", [])
+
+    if not types:
+        typer.echo("⚠️  No project types found.")
+        raise typer.Exit()
+
+    typer.echo(
+        f"Available project types{' for company ' + str(company_id) if company_id else ''}:"
+    )
+    export_data(types, ["id", "label"], "table", None)
 
 # ------------------ Documentation ------------------ #
 
