@@ -34,7 +34,7 @@ def autocomplete_sort(ctx: typer.Context, incomplete: str):
     return [f for f in schema.all_sortable_fields() if f.startswith(incomplete)]
 
 
-# ------------------ Main Command ------------------ #
+# ------------------ List Command ------------------ #
 
 @app.command("list")
 def list_projects(
@@ -164,6 +164,46 @@ def list_projects(
         export_rows.append({schema.display_name(k): r.get(k, "") for k in cols})
 
     export_data(export_rows, headers, fmt, output)
+
+# ------------------ Delete Command ------------------ #
+@app.command("delete")
+def delete_projects(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company (scope) ID"),
+    ids: str = typer.Option(..., "--ids", "-i", help="Comma-separated list of project IDs to delete"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation prompt"),
+):
+    """
+    Delete one or more projects by ID (requires company ID for scope validation).
+    """
+
+    id_list = [int(x.strip()) for x in ids.split(",") if x.strip()]
+    if not id_list:
+        typer.echo("❌ No project IDs provided.")
+        raise typer.Exit()
+
+    log(f"Preparing to delete {len(id_list)} project(s) for company {company_id}...")
+
+    if not force:
+        confirm = typer.confirm(f"Are you sure you want to delete {len(id_list)} project(s)?")
+        if not confirm:
+            typer.echo("🛑 Operation cancelled.")
+            raise typer.Exit()
+
+    mutation = """
+    mutation BulkDeleteProject($input: BulkDeleteProjectInput!) {
+      bulkDeleteProjects(input: $input) {
+        clientMutationId
+      }
+    }
+    """
+
+    # ✅ Include companyId in the input
+    variables = {"input": {"companyId": company_id, "ids": id_list}}
+
+    log("Sending GraphQL mutation to delete projects...")
+    data = graphql_request(mutation, variables)
+
+    typer.echo(f"✅ Successfully deleted {len(id_list)} project(s) for company {company_id}")
 
 
 # ------------------ Documentation ------------------ #
