@@ -1,0 +1,3 @@
+label,description,global,activities
+Requirement A,Do X,false,"Login|Check login|1|REF||Category||123|1;Logout|Check logout|1"
+Requirement B,Do Y,false,""

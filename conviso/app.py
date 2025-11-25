@@ -1,15 +1,29 @@
 # conviso/app.py
 import typer
-from conviso.commands.projects import register as register_projects
-from conviso.core.logger import log
+from conviso.commands import projects
+from conviso.commands import assets
+from conviso.commands import requirements
+from conviso.commands import vulnerabilities
+from conviso.commands import bulk
+from conviso.core.logger import log, set_verbosity
+import conviso.schemas.projects_schema
 
-# ✅ Import all schemas explicitly to ensure registration happens at startup
-import conviso.schemas.projects_schema  # Add future schemas here as well
+app = typer.Typer(help="Conviso Platform CLI")
 
-app = typer.Typer(help="Conviso Platform CLI - interact with GraphQL API")
+# Registra os subcomandos
+app.add_typer(projects.app, name="projects", help="Manage projects in the Conviso Platform.")
+app.add_typer(assets.app, name="assets", help="Manage assets in the Conviso Platform.")
+app.add_typer(requirements.app, name="requirements", help="List requirements/playbooks.")
+app.add_typer(vulnerabilities.app, name="vulns", help="List vulnerabilities/issues.")
+app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
 
-# Register CLI modules
-register_projects(app)
+# Global verbosity options
+@app.callback()
+def main(
+    quiet: bool = typer.Option(False, "--quiet", help="Silence non-error output."),
+    verbose: bool = typer.Option(False, "--verbose", help="Show verbose logs (GraphQL requests, etc.)."),
+):
+    set_verbosity(quiet=quiet, verbose=verbose)
 
 if __name__ == "__main__":
     log("Starting Conviso CLI...")

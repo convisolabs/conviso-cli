@@ -2,40 +2,20 @@
 """
 Projects Command Module
 -----------------------
-Implements CLI commands to interact with Conviso Platform projects.
-
-Columns shown:
-  ID | Name | Project Type | Status | Requirements | Associated Assets | Created at | Start Date | End Date | Tags
+Manages project operations (list, create, update, delete) via Conviso GraphQL API.
+Now standardized to use the new core/output_manager for unified output handling.
 """
 
 import typer
 from typing import Optional, List
-
+from conviso.core.notifier import info, success, error, summary, warning
 from conviso.clients.client_graphql import graphql_request
-from conviso.core.schema_alias import registry
-from conviso.core.output_manager import export_data
-from conviso.core.doc_generator import generate_schema_doc
-from conviso.core.logger import log
 from conviso.schemas.projects_schema import schema
+from conviso.core.output_manager import export_data
 
-app = typer.Typer(help="Manage and search projects in Conviso Platform.")
+app = typer.Typer(help="Manage projects via Conviso GraphQL API.")
 
-
-# ------------------ Autocomplete Helpers ------------------ #
-
-def autocomplete_filters(ctx: typer.Context, incomplete: str):
-    """Autocomplete for --filter key=val pairs (supports aliases)."""
-    all_fields = set(schema.all_search_fields()) | set(schema.all_aliases().keys())
-    return [f for f in sorted(all_fields) if f.startswith(incomplete)]
-
-
-def autocomplete_sort(ctx: typer.Context, incomplete: str):
-    """Autocomplete for --sort-by with displayable (raw) fields."""
-    return [f for f in schema.all_sortable_fields() if f.startswith(incomplete)]
-
-
-# ------------------ List Command ------------------ #
-
+# ---------------------- LIST COMMAND ---------------------- #
 @app.command("list")
 def list_projects(
     company_id: int = typer.Option(..., "--company-id", "-c", help="Company ID (required)"),
@@ -44,31 +24,29 @@ def list_projects(
         "--filter",
         "-f",
         help="Apply filters in 'field=value' format. Supports aliases (e.g., id=123, name=foo, status=DONE).",
-        autocompletion=autocomplete_filters,
     ),
     sort_by: Optional[str] = typer.Option(
         None,
         "--sort-by",
         "-s",
         help="Sort results by a field (e.g. createdAt, label, startDate, endDate).",
-        autocompletion=autocomplete_sort,
     ),
     descending: bool = typer.Option(False, "--desc", help="Sort in descending order."),
     page: int = typer.Option(1, "--page", "-p", help="Page number."),
     limit: int = typer.Option(50, "--limit", "-l", help="Items per page."),
-    fmt: str = typer.Option("table", "--format", help="Output format: table, csv, json."),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path (for CSV/JSON export)."),
+    fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file (for JSON or CSV export)."),
+    all_pages: bool = typer.Option(False, "--all", help="Fetch all pages."),
 ):
-    """
-    List projects for a given company using GraphQL + ProjectSearch filters.
-    """
-    # Build ProjectSearch params
-    params = {"scopeIdEq": company_id}
+    """List projects for a given company using the unified output manager."""
+    info(f"Listing projects for company {company_id} (page {page}, limit {limit})...")
 
+    # Build search parameters
+    params = {"scopeIdEq": company_id}
     if filters:
         for f in filters:
             if "=" not in f:
-                log(f"[WARN] Invalid filter syntax: {f} (expected key=value)")
+                warning(f"[WARN] Invalid filter syntax: {f} (expected key=value)")
                 continue
             key, value = f.split("=", 1)
             gql_key = schema.resolve_filter_key(key.strip())
@@ -83,7 +61,6 @@ def list_projects(
         "descending": descending,
     }
 
-    # GraphQL: fetch only what we need for the 10 definitive columns
     query = """
     query projects(
       $page: Int
@@ -118,95 +95,76 @@ def list_projects(
     }
     """
 
-    data = graphql_request(query, variables)
-    projects = data["projects"]["collection"]
+    try:
+        current_page = page
+        rows = []
+        total_pages = None
+        total_count = 0
+        while True:
+            variables["page"] = current_page
+            data = graphql_request(query, variables, log_request=True, verbose_only=all_pages)
+            projects_data = data["projects"]
+            collection = projects_data["collection"]
+            metadata = projects_data["metadata"]
+            total_pages = metadata.get("totalPages")
+            total_count = metadata.get("totalCount", total_count)
 
-    if not projects:
-        typer.echo("No projects found.")
-        raise typer.Exit()
+            if not collection:
+                if current_page == page:
+                    typer.echo("⚠️  No projects found.")
+                    raise typer.Exit()
+                break
 
-    log(f"Received {len(projects)} projects")
+            for p in collection:
+                done = (p.get("requirementsProgress") or {}).get("done", 0)
+                total = (p.get("requirementsProgress") or {}).get("total", 0)
+                requirements = f"{done}/{total}"
 
-    # Flatten to the exact 10 columns
-    rows = []
-    for p in projects:
-        done = (p.get("requirementsProgress") or {}).get("done", 0)
-        total = (p.get("requirementsProgress") or {}).get("total", 0)
-        requirements = f"{done}/{total}"
+                tags_list = p.get("tags") or []
+                tags_str = ", ".join(t.get("name", "") for t in tags_list if t and t.get("name"))
 
-        assets = p.get("assets") or []
-        assets_count = len(assets)
+                assets_list = []
+                for a in p.get("assets") or []:
+                    name = a.get("name")
+                    aid = a.get("id")
+                    if name:
+                        assets_list.append(name)
+                    elif aid:
+                        assets_list.append(str(aid))
 
-        tags_list = p.get("tags") or []
-        tags_str = ", ".join(t.get("name", "") for t in tags_list if t and t.get("name"))
+                rows.append({
+                    "id": p.get("id") or "",
+                    "label": p.get("label") or "",
+                    "projectType.label": (p.get("projectType") or {}).get("label", ""),
+                    "status": p.get("status") or "",
+                    "requirements": requirements,
+                    "assets": ", ".join(assets_list),
+                    "createdAt": p.get("createdAt") or "",
+                    "startDate": p.get("startDate") or "",
+                    "endDate": p.get("endDate") or "",
+                    "tags": tags_str,
+                })
 
-        row = {
-            "id": p.get("id") or "",
-            "label": p.get("label") or "",
-            "projectType.label": (p.get("projectType") or {}).get("label", "") or "",
-            "status": p.get("status") or "",
-            "requirements": requirements,
-            "assetsCount": assets_count,
-            "createdAt": p.get("createdAt") or "",
-            "startDate": p.get("startDate") or "",
-            "endDate": p.get("endDate") or "",
-            "tags": tags_str,
-        }
-        rows.append(row)
+            if not all_pages or (total_pages is not None and current_page >= total_pages):
+                break
+            current_page += 1
 
-    # Fixed column order + headers from schema
-    cols = schema.all_display_fields()
-    headers = [schema.display_name(c) for c in cols]
+        export_data(
+            rows,
+            schema=schema,
+            fmt=fmt,
+            output=output,
+            title=f"Projects (Company {company_id}) - Page {page}/{total_pages or '?'}",
+        )
 
-    # Repackage with user-friendly headers for export/output
-    export_rows = []
-    for r in rows:
-        export_rows.append({schema.display_name(k): r.get(k, "") for k in cols})
+        summary(f"{len(rows)} project(s) listed out of {total_count or len(rows)} total.\n")
 
-    export_data(export_rows, headers, fmt, output)
+    except Exception as e:
+        error(f"Error listing projects: {e}")
+        raise typer.Exit(code=1)
 
-# ------------------ Delete Command ------------------ #
-@app.command("delete")
-def delete_projects(
-    company_id: int = typer.Option(..., "--company-id", "-c", help="Company (scope) ID"),
-    ids: str = typer.Option(..., "--ids", "-i", help="Comma-separated list of project IDs to delete"),
-    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation prompt"),
-):
-    """
-    Delete one or more projects by ID (requires company ID for scope validation).
-    """
 
-    id_list = [int(x.strip()) for x in ids.split(",") if x.strip()]
-    if not id_list:
-        typer.echo("❌ No project IDs provided.")
-        raise typer.Exit()
-
-    log(f"Preparing to delete {len(id_list)} project(s) for company {company_id}...")
-
-    if not force:
-        confirm = typer.confirm(f"Are you sure you want to delete {len(id_list)} project(s)?")
-        if not confirm:
-            typer.echo("🛑 Operation cancelled.")
-            raise typer.Exit()
-
-    mutation = """
-    mutation BulkDeleteProject($input: BulkDeleteProjectInput!) {
-      bulkDeleteProjects(input: $input) {
-        clientMutationId
-      }
-    }
-    """
-
-    # ✅ Include companyId in the input
-    variables = {"input": {"companyId": company_id, "ids": id_list}}
-
-    log("Sending GraphQL mutation to delete projects...")
-    data = graphql_request(mutation, variables)
-
-    typer.echo(f"✅ Successfully deleted {len(id_list)} project(s) for company {company_id}")
-
-# ------------------ Create Command ------------------ #
-
+# ---------------------- CREATE COMMAND ---------------------- #
 @app.command("create")
 def create_project(
     company_id: int = typer.Option(..., "--company-id", "-c", help="Company (scope) ID"),
@@ -216,11 +174,43 @@ def create_project(
     type_id: int = typer.Option(..., "--type-id", "-t", help="Project type ID"),
     start_date: str = typer.Option(None, "--start-date", help="Start date (YYYY-MM-DD)"),
     end_date: str = typer.Option(None, "--end-date", help="End date (YYYY-MM-DD)"),
-    estimated_hours: str = typer.Option(None, "--hours", help="Estimated hours (string, not number)"),
+    estimated_hours: str = typer.Option(None, "--hours", help="Estimated hours"),
+    tags: Optional[str] = typer.Option(None, "--tags", help="Comma-separated tags."),
+    assets: Optional[str] = typer.Option(None, "--assets", help="Comma-separated asset IDs."),
+    requirements: Optional[str] = typer.Option(None, "--requirements", help="Comma-separated requirement IDs."),
 ):
-    """
-    Create a new project in the specified company.
-    """
+    """Create a new project in the specified company."""
+    info(f"Creating project '{label}' in company {company_id}...")
+
+    def _split_assets(value: Optional[str]) -> Optional[List[int]]:
+        """Parse comma-separated asset IDs into a list of ints."""
+        if value is None:
+            return None
+        parsed = []
+        for raw in value.split(","):
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                parsed.append(int(raw))
+            except ValueError:
+                warning(f"Ignoring invalid asset ID: {raw}")
+        return parsed
+
+    def _split_requirements(value: Optional[str]) -> Optional[List[int]]:
+        """Parse comma-separated requirement IDs into a list of ints."""
+        if value is None:
+            return None
+        parsed = []
+        for raw in value.split(","):
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                parsed.append(int(raw))
+            except ValueError:
+                warning(f"Ignoring invalid requirement ID: {raw}")
+        return parsed
 
     mutation = """
     mutation CreateProject($input: CreateProjectInput!) {
@@ -235,84 +225,308 @@ def create_project(
           startDate
           endDate
           estimatedHours
-          projectType {
-            id
-            label
-          }
+          projectType { id label }
         }
       }
     }
     """
 
-    variables = {
-        "input": {
-            "companyId": company_id,
-            "label": label,
-            "goal": goal,
-            "scope": scope,
-            "typeId": type_id,
-            "startDate": start_date,
-            "endDate": end_date,
-            "estimatedHours": estimated_hours,
-        }
+    assets_ids = _split_assets(assets)
+    playbooks_ids = _split_requirements(requirements)
+
+    input_data = {
+        "companyId": company_id,
+        "label": label,
+        "goal": goal,
+        "scope": scope,
+        "typeId": type_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "estimatedHours": estimated_hours,
+        "tags": tags.split(",") if tags else None,
+        "assetsIds": assets_ids if assets_ids else None,
+        "playbooksIds": playbooks_ids if playbooks_ids else None,
     }
+    input_data = {k: v for k, v in input_data.items() if v is not None}
 
-    log(f"Creating project '{label}' in company {company_id}...")
-    data = graphql_request(mutation, variables)
+    try:
+        data = graphql_request(mutation, {"input": input_data})
+        project = data["createProject"]["project"]
+        success(f"Project created successfully: ID {project['id']} - {project['label']}")
+    except Exception as e:
+        error(f"Error creating project: {e}")
+        raise typer.Exit(code=1)
 
-    project = data["createProject"]["project"]
-    typer.echo("✅ Project created successfully:")
-    export_data(
-        [project],
-        ["id", "pid", "label", "goal", "scope", "startDate", "endDate", "estimatedHours"],
-        "table",
-        None,
-    )
 
-# ------------------ Project Type Command ------------------ #
-
-@app.command("types")
-def list_project_types(
-    company_id: int = typer.Option(None, "--company-id", "-c", help="Optional company ID"),
+# ---------------------- UPDATE COMMAND ---------------------- #
+@app.command("update")
+def update_project(
+    project_id: int = typer.Option(..., "--id", "-i", help="Project ID to update."),
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company ID."),
+    label: str = typer.Option(None, "--name", "-n", help="New name or label."),
+    goal: str = typer.Option(None, "--goal", "-g", help="Project goal."),
+    scope: str = typer.Option(None, "--scope", "-s", help="Scope or context."),
+    type_id: int = typer.Option(None, "--type-id", "-t", help="Project type ID."),
+    start_date: str = typer.Option(None, "--start-date", help="Start date (YYYY-MM-DD)."),
+    end_date: str = typer.Option(None, "--end-date", help="End date (YYYY-MM-DD)."),
+    estimated_hours: str = typer.Option(None, "--hours", help="Estimated hours."),
+    tags: Optional[str] = typer.Option(None, "--tags", help="Comma-separated list of tags (replaces existing)."),
+    assets: Optional[str] = typer.Option(None, "--assets", help="Comma-separated list of asset IDs (replaces existing)."),
+    requirements: Optional[str] = typer.Option(None, "--requirements", help="Comma-separated requirement IDs (replaces existing)."),
+    add_tags: Optional[str] = typer.Option(None, "--add-tags", help="Comma-separated tags to add."),
+    remove_tags: Optional[str] = typer.Option(None, "--remove-tags", help="Comma-separated tags to remove."),
+    clear_tags: bool = typer.Option(False, "--clear-tags", help="Remove all tags."),
+    add_assets: Optional[str] = typer.Option(None, "--add-assets", help="Comma-separated asset IDs to add."),
+    remove_assets: Optional[str] = typer.Option(None, "--remove-assets", help="Comma-separated asset IDs to remove."),
+    clear_assets: bool = typer.Option(False, "--clear-assets", help="Remove all assets."),
 ):
-    """
-    List all available project types and their IDs.
-    """
-    query = """
-    query {
-      projectTypes {
-        collection {
+    """Update an existing project."""
+    info(f"✏️ Updating project ID {project_id} in company {company_id}...")
+
+    mutation = """
+    mutation UpdateProject($input: UpdateProjectInput!) {
+      updateProject(input: $input) {
+        project {
           id
           label
+          goal
+          scope
+          startDate
+          endDate
+          estimatedHours
+          projectType { id label }
+          tags { name }
+          assets { id name }
         }
       }
     }
     """
-    log("Fetching project types...")
-    data = graphql_request(query)
-    types = data.get("projectTypes", {}).get("collection", [])
 
-    if not types:
-        typer.echo("⚠️  No project types found.")
-        raise typer.Exit()
+    def _split_csv_str(value: Optional[str]) -> Optional[List[str]]:
+        """Split comma-separated strings into list, trimming blanks."""
+        if value is None:
+            return None
+        return [v.strip() for v in value.split(",") if v.strip()]
 
-    typer.echo(
-        f"Available project types{' for company ' + str(company_id) if company_id else ''}:"
+    def _split_csv_ids(value: Optional[str]) -> Optional[List[int]]:
+        """Split comma-separated asset IDs into list of ints."""
+        if value is None:
+            return None
+        items: List[int] = []
+        for raw in value.split(","):
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                items.append(int(raw))
+            except ValueError:
+                warning(f"Ignoring invalid asset ID: {raw}")
+        return items
+
+    # Pre-parse direct replacements
+    direct_tags = _split_csv_str(tags)
+    direct_assets = _split_csv_ids(assets)
+    direct_playbooks = _split_csv_ids(requirements)
+
+    # Determine if we need to fetch current associations for merge-style operations
+    needs_merge_tags = any([add_tags, remove_tags, clear_tags]) and direct_tags is None
+    needs_merge_assets = any([add_assets, remove_assets, clear_assets]) and direct_assets is None
+
+    current_tags: List[str] = []
+    current_assets: List[int] = []
+    current_playbooks: List[int] = []
+
+    if needs_merge_tags or needs_merge_assets:
+        info("Fetching current tags/assets for merge...")
+        fetch_query = """
+        query Project($id: ID!, $companyId: ID!) {
+          project(id: $id, companyId: $companyId) {
+            id
+            tags { name }
+            assets { id }
+            playbooks { id }
+          }
+        }
+        """
+        try:
+            fetched = graphql_request(fetch_query, {"id": project_id, "companyId": company_id})
+            project = fetched.get("project") or {}
+            current_tags = [t.get("name") for t in project.get("tags") or [] if t.get("name")]
+            # Some APIs return IDs as strings; cast defensively
+            for a in project.get("assets") or []:
+                aid = a.get("id")
+                if aid is None:
+                    continue
+                try:
+                    current_assets.append(int(aid))
+                except ValueError:
+                    warning(f"Asset ID '{aid}' is not numeric; skipping.")
+            for pb in project.get("playbooks") or []:
+                pid = pb.get("id")
+                if pid is None:
+                    continue
+                try:
+                    current_playbooks.append(int(pid))
+                except ValueError:
+                    warning(f"Requirement ID '{pid}' is not numeric; skipping.")
+        except Exception as fetch_err:
+            error(f"Could not fetch current tags/assets: {fetch_err}")
+            return
+
+    def _unique_preserve(seq):
+        """Remove duplicates while preserving order."""
+        seen = set()
+        result = []
+        for item in seq:
+            key = item
+            if key in seen:
+                continue
+            seen.add(key)
+            result.append(item)
+        return result
+
+    # Start with explicit replacements when provided; otherwise use fetched values
+    merged_tags = direct_tags if direct_tags is not None else list(current_tags)
+    merged_assets = direct_assets if direct_assets is not None else list(current_assets)
+    merged_playbooks = direct_playbooks if direct_playbooks is not None else list(current_playbooks)
+
+    # Apply merge operations for tags
+    add_tags_list = _split_csv_str(add_tags) or []
+    remove_tags_list = _split_csv_str(remove_tags) or []
+    if clear_tags:
+        merged_tags = []
+    if add_tags_list:
+        merged_tags = _unique_preserve([*merged_tags, *add_tags_list])
+    if remove_tags_list:
+        merged_tags = [t for t in merged_tags if t not in remove_tags_list]
+
+    # Apply merge operations for assets
+    add_assets_list = _split_csv_ids(add_assets) or []
+    remove_assets_list = _split_csv_ids(remove_assets) or []
+    if clear_assets:
+        merged_assets = []
+    if add_assets_list:
+        merged_assets = _unique_preserve([*merged_assets, *add_assets_list])
+    if remove_assets_list:
+        merged_assets = [a for a in merged_assets if a not in remove_assets_list]
+
+    include_playbooks = direct_playbooks is not None
+
+    include_tags = (
+        direct_tags is not None
+        or clear_tags
+        or bool(add_tags_list)
+        or bool(remove_tags_list)
+        or needs_merge_tags
     )
-    export_data(types, ["id", "label"], "table", None)
+    include_assets = (
+        direct_assets is not None
+        or clear_assets
+        or bool(add_assets_list)
+        or bool(remove_assets_list)
+        or needs_merge_assets
+    )
 
-# ------------------ Documentation ------------------ #
+    input_data = {
+        "id": project_id,
+        "companyId": company_id,
+        "label": label,
+        "goal": goal,
+        "scope": scope,
+        "typeId": type_id,
+        "startDate": start_date,
+        "endDate": end_date,
+        "estimatedHours": estimated_hours,
+        "tags": merged_tags if include_tags else None,
+        "assetsIds": merged_assets if include_assets else None,
+        "playbooksIds": merged_playbooks if include_playbooks else None,
+    }
+    input_data = {k: v for k, v in input_data.items() if v is not None}
 
-@app.command("doc")
-def generate_doc():
-    """Generate CLI documentation for the project schema (fields & filters)."""
-    doc = generate_schema_doc(schema)
-    typer.echo(doc)
+    try:
+        data = graphql_request(mutation, {"input": input_data})
+        project = data["updateProject"]["project"]
+        success(f"Project updated successfully: ID {project['id']} - {project['label']}")
+    except Exception as e:
+        error(f"Error updating project: {e}")
+        raise typer.Exit(code=1)
 
 
-# ------------------ Registration ------------------ #
+# ---------------------- DELETE COMMAND ---------------------- #
+@app.command("delete")
+def delete_projects(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company ID."),
+    ids: str = typer.Option(..., "--ids", "-i", "-ids", help="Comma-separated list of project IDs (accepts single ID)."),
+    force: bool = typer.Option(False, "--force", help="Skip confirmation prompt."),
+):
+    """Delete one or more projects by ID, then verify by querying which IDs still exist."""
+    project_ids = [int(x.strip()) for x in ids.split(",") if x.strip()]
+    info(f"Deleting {len(project_ids)} project(s) from company {company_id}...")
 
-def register(app_ref: typer.Typer):
-    """Register this command under the main Typer app."""
-    log("Registering command: projects")
-    app_ref.add_typer(app, name="projects")
+    if not force:
+        confirm = typer.confirm(f"Are you sure you want to delete {len(project_ids)} project(s)?")
+        if not confirm:
+            info("Aborted.")
+            raise typer.Exit()
+
+    mutation = """
+    mutation BulkDeleteProject($input: BulkDeleteProjectInput!) {
+      bulkDeleteProjects(input: $input) {
+        clientMutationId
+      }
+    }
+    """
+    variables = {"input": {"companyId": company_id, "ids": project_ids}}
+
+    try:
+        data = graphql_request(mutation, variables)
+        # If API returned errors, graphql_request will raise.
+        info(f"Delete request sent for {len(project_ids)} project(s). Verifying...")
+
+    except Exception as e:
+        msg = str(e)
+        if "Record not found" in msg:
+            for pid in project_ids:
+                info(f"Project {pid} was not found (likely already deleted).")
+            summary(f"Summary: 0 deleted, {len(project_ids)} skipped (already removed).")
+            return
+        else:
+            error(f"Error deleting project(s): {e}")
+            summary(f"Summary: 0 deleted, {len(project_ids)} failed.")
+            return
+
+    # Optional verification
+    verify_query = """
+    query projects(
+      $page: Int
+      $limit: Int
+      $params: ProjectSearch!
+    ) {
+      projects(page: $page, limit: $limit, params: $params) {
+        collection { id label }
+      }
+    }
+    """
+    verify_vars = {
+        "page": 1,
+        "limit": len(project_ids),
+        "params": {"scopeIdEq": str(company_id), "idIn": [str(pid) for pid in project_ids]},
+    }
+
+    try:
+        data = graphql_request(verify_query, verify_vars)
+        remaining = (data.get("projects") or {}).get("collection") or []
+        remaining_ids = {int(p["id"]) for p in remaining if p.get("id")}
+        deleted_ids = [pid for pid in project_ids if pid not in remaining_ids]
+        failed_ids = [pid for pid in project_ids if pid in remaining_ids]
+
+        for pid in deleted_ids:
+            success(f"Deleted project ID {pid}")
+        for pid in failed_ids:
+            error(f"Failed to delete project ID {pid} (still present)")
+        summary(f"Summary: {len(deleted_ids)} deleted, {len(failed_ids)} failed.")
+
+    except Exception as e:
+        error(f"Deletion verification failed: {e}")
+        summary("Deletion attempted, but verification failed. Try listing the IDs again.")
+        raise typer.Exit(code=1)

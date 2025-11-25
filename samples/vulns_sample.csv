@@ -1,0 +1,2 @@
+type,assetId,title,description,solution,impactLevel,probabilityLevel,severity,summary,impactDescription,stepsToReproduce,method,scheme,url,port,request,response
+WEB,27516,XSS atualizado,"desc","fix",HIGH,MEDIUM,HIGH,"summary","impact","steps",GET,HTTPS,https://app/login,443,"GET /login","HTTP/1.1 200"

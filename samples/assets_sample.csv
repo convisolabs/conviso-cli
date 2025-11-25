@@ -1,0 +1,4 @@
+name,businessImpact,dataClassification,tags,attackSurface
+Asset A,HIGH,NON_SENSITIVE,"tag1,tag2",INTERNET_FACING
+Asset B,MEDIUM,PERSONALLY_IDENTIFIABLE_INFORMATION,"customer,pii",INTERNAL
+Asset C,LOW,PAYMENT_CARD_INDUSTRY,"pci,checkout",INTERNET_FACING
