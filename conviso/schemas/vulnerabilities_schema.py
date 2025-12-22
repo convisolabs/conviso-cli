@@ -19,8 +19,8 @@ class VulnerabilitySchema:
             "asset",
             "tags",
             "author",
+            "assignee",
             "company",
-            "attackSurface",
         ]
 
         self.display_headers: Dict[str, str] = {
@@ -32,8 +32,8 @@ class VulnerabilitySchema:
             "asset": "Asset",
             "tags": "Asset Tags",
             "author": "Author",
+            "assignee": "Assignee",
             "company": "Company",
-            "attackSurface": "Attack Surface",
         }
 
     def display_name(self, field: str) -> str:

@@ -13,6 +13,12 @@ Supports:
 import csv
 from typing import Callable, Dict, List, Any, Tuple
 from conviso.core.notifier import info, success, error, warning, summary
+from conviso.core.output_manager import console
+
+
+class SkipRow(Exception):
+    """Signal to skip processing a specific row without treating as an error."""
+    pass
 
 
 class BulkResult:
@@ -65,12 +71,15 @@ def bulk_process(
             if header in row:
                 payload[target] = row[header]
         if dry_run:
-            info(f"[dry-run] Row {idx}: {payload}")
+            # Avoid Rich markup parsing issues by disabling markup for payload display
+            console.print(f"ℹ️  [dry-run] Row {idx}: {payload}", markup=False)
             result.add_success(idx, "dry-run")
             continue
         try:
             op_handler(payload, idx)
             result.add_success(idx, "ok")
+        except SkipRow as exc:
+            result.add_skip(idx, str(exc))
         except Exception as exc:
             result.add_error(idx, str(exc))
     return result

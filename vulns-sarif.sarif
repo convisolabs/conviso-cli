@@ -1,0 +1,1666 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Conviso CLI",
+          "informationUri": "https://github.com/convisolabs/conviso-cli"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "SCA_FINDING",
+          "level": "warning",
+          "message": {
+            "text": "3rd party CORS request may execute"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "RISK_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "3rd party CORS request may execute",
+            "solution": "Update to the latest stable version or apply patches.",
+            "reference": "https://github.com/jquery/jquery/issues/2432\nhttp://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/\nhttps://nvd.nist.gov/vuln/detail/CVE-2015-9251\nhttp://research.insecurelabs.org/jquery/test/",
+            "impactLevel": null,
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "AWAITING_VALIDATION",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Daniel",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SCA_FINDING",
+          "level": "note",
+          "message": {
+            "text": "Bootstrap before 4.0.0 is end-of-life and no longer maintained."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "LOW",
+            "status": "FIX_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Bootstrap before 4.0.0 is end-of-life and no longer maintained.",
+            "solution": "Update to the latest stable version or apply patches.",
+            "reference": "https://github.com/twbs/bootstrap/issues/20631",
+            "impactLevel": null,
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "code_injection"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "CRITICAL",
+            "status": "FIX_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "code_injection",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/app/plugin/lastrss.php",
+            "vulnerableLine": 71,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/JKyhbyvB39mEK9yEDfb3fJ1N?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=c6934948f476185a8ae3f534e96fdb7e8565661d395d43e0378e27f430e6de3d"
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jose",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "darenas@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Daniel",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "Credenciais Expostas no C\u00f3digo"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "DRAFT",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>A aplica\u00e7\u00e3o possui em seu c\u00f3digo-fonte informa\u00e7\u00f5es de credenciais de acesso. Tais informa\u00e7\u00f5es podem ser expostas e \u00fateis a um atacante para obten\u00e7\u00e3o de acesso n\u00e3o autorizado em algum componente da aplica\u00e7\u00e3o ou algum outro servi\u00e7o que perten\u00e7a a ela.</p>",
+            "solution": "<p>Atualmente, a alternativa mais recomendada para armazenar e administrar credenciais de forma segura \u00e9 utilizando um Cofre de Senhas ou Key Vault. Al\u00e9m de armazenar e gerenciar as senhas, o Cofre de Senhas pode exercer a fun\u00e7\u00e3o de gerenciamento de credenciais. Isso garante o controle de acesso baseado em permiss\u00f5es e facilita a integra\u00e7\u00e3o de servi\u00e7os como, por exemplo, o Active Directory.</p><p>Como as senhas para se comunicar com os servi\u00e7os s\u00e3o fornecidas apenas quando necess\u00e1rias, a utiliza\u00e7\u00e3o de um Cofre de Senhas ajuda a aumentar o n\u00edvel de seguran\u00e7a da institui\u00e7\u00e3o.</p><p><br></p><p>Algumas linguagens disponibilizam&nbsp;interfaces/bibliotecas e guias de melhores pr\u00e1ticas, para n\u00e3o trabalhar diretamente com credenciais nos arquivos de configura\u00e7\u00e3o:</p><p><strong>Asp.NET</strong>: https://msdn.microsoft.com/en-us/library/ms998283.aspx https://msdn.microsoft.com/en-us/library/ms998280.aspx</p><p><strong>Ruby</strong>: https://rubygems.org/gems/dbi-dbrc</p><p><br></p><p>Caso nenhuma das alternativas acima seja poss\u00edvel, deve-se utilizar as credenciais no arquivo de configura\u00e7\u00e3o da aplica\u00e7\u00e3o e permitir que apenas ela tenha acesso \u00e0s credenciais.&nbsp;Observa\u00e7\u00e3o: O desenvolvedor deve se atentar para n\u00e3o deixar o arquivo dispon\u00edvel no diret\u00f3rio listado pelo sistema de controle de vers\u00e3o. Isso evita um <em>commit</em> feito por engano e um poss\u00edvel vazamento de credenciais. O arquivo de configura\u00e7\u00e3o sempre deve estar listado no arquivo de<strong> ignore</strong> do sistema de controle de vers\u00e3o.&nbsp;O arquivo de configura\u00e7\u00e3o deve ser preenchido no ambiente onde ser\u00e1 utilizado pela aplica\u00e7\u00e3o e onde haja o devido controle dos acessos ao ambiente.</p>",
+            "reference": "<ul><li><a href=\"https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password\" target=\"_blank\">https://owasp.org/www-community/vulnerabilities/Password_Management_Hardcoded_Password</a></li><li><a href=\"http://cwe.mitre.org/data/definitions/798.html\" target=\"_blank\">http://cwe.mitre.org/data/definitions/798.html</a></li><li><a href=\"http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/\" target=\"_blank\">http://software-security.sans.org/blog/2010/03/10/top-25-series-rank-11-hardcoded-credentials/</a></li><li><a href=\"https://cwe.mitre.org/data/definitions/13.html\" target=\"_blank\">https://cwe.mitre.org/data/definitions/13.html</a></li></ul>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Cross Site Scripting (XSS)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "CRITICAL",
+            "status": "CREATED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "asantos@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>Os ataques de Cross-Site Scripting (XSS) s\u00e3o um tipo de ataque no qual scripts maliciosos s\u00e3o injetados em sites aparentemente benignos e confi\u00e1veis. Os ataques XSS ocorrem quando um atacante usa uma aplica\u00e7\u00e3o Web para enviar c\u00f3digo malicioso, geralmente na forma de um script do lado do navegador, para um usu\u00e1rio alvo. As falhas que permitem que esses ataques sejam bem-sucedidos s\u00e3o bastante difundidas e ocorrem em qualquer lugar em que uma aplica\u00e7\u00e3o usa o input de um usu\u00e1rio no output gerado, sem valida\u00e7\u00f5es suficientes.</p><p><br></p><p>Um atacante pode usar o XSS para enviar um script malicioso a uma v\u00edtima desavisada. O navegador do usu\u00e1rio alvo n\u00e3o tem como determinar que o script n\u00e3o \u00e9 confi\u00e1vel, e o executar\u00e1. Sem a implementa\u00e7\u00e3o de alguns controles de seguran\u00e7a, a vulnerabilidade pode ser considerada cr\u00edtica, j\u00e1 que atrav\u00e9s de sua explora\u00e7\u00e3o o atacante consegue acessar quaisquer cookies, tokens de sess\u00e3o ou outras informa\u00e7\u00f5es confidenciais retidas pelo navegador da v\u00edtima para o uso com a aplica\u00e7\u00e3o alvo. A vulnerabilidade tamb\u00e9m pode ser usada para reescrever o conte\u00fado da p\u00e1gina HTML retornada pela aplica\u00e7\u00e3o.</p><p><br></p><p>As vulnerabilidades de XSS normalmente permitem que um atacante se passe pelo usu\u00e1rio alvo, podendo executar quaisquer a\u00e7\u00f5es e acessar quaisquer dados dispon\u00edveis \u00e0 v\u00edtima. Ou seja, em um contexto no qual a v\u00edtima possui acesso completo \u00e0 aplica\u00e7\u00e3o (como administrador por exemplo), o atacante potencialmente obter\u00e1 controle total sobre as funcionalidades e dados da aplica\u00e7\u00e3o.</p>",
+            "solution": "<p>Ataques de XSS podem ser evitados ao fazer valida\u00e7\u00e3o e sanitiza\u00e7\u00e3o de dados inseridos por usu\u00e1rios na aplica\u00e7\u00e3o e ao realizar o encode de caracteres que podem ser utilizados de maneira maliciosa e que n\u00e3o s\u00e3o esperados pela aplica\u00e7\u00e3o. Pol\u00edticas de<a href=\"https://developers.google.com/web/fundamentals/security/csp\" target=\"_blank\">&nbsp;CSP</a>&nbsp;tamb\u00e9m surgem como boa solu\u00e7\u00e3o para o problema, pois caso implementadas de maneira correta previnem que o browser execute scripts de fontes diferentes das quais expressamente permitidas pela pol\u00edtica.</p><p>A sanitiza\u00e7\u00e3o varia por contexto de cada aplica\u00e7\u00e3o, por\u00e9m \u00e9 recomendada a filtragem de caracteres comumente utilizados em ataques de injection, como<strong>&nbsp;\u2018</strong>,&nbsp;<strong>\u201c</strong>,&nbsp;<strong>&lt;</strong>,&nbsp;<strong>&gt;</strong>,<strong>&nbsp;&amp;&nbsp;</strong>e<strong>&nbsp;/</strong>. Uma proposta \u00e9 que esses caracteres sejam encodados como HTML entities, dado que frequentemente s\u00e3o utilizados na constru\u00e7\u00e3o de scripts maliciosos. Uma boa pr\u00e1tica tamb\u00e9m \u00e9 utilizar fun\u00e7\u00f5es seguras para popular o front-end da aplica\u00e7\u00e3o, como o&nbsp;<strong>textContent</strong>&nbsp;do JavaScript.</p><p>Essas a\u00e7\u00f5es ir\u00e3o garantir que o browser do usu\u00e1rio n\u00e3o entender\u00e1 o input malicioso como um script que deve ser executado, evitando assim que o XSS seja bem sucedido.</p>",
+            "reference": "<p><a href=\"https://owasp.org/www-community/attacks/xss/\" target=\"_blank\">OWASP</a></p><p><a href=\"https://portswigger.net/web-security/cross-site-scripting\" target=\"_blank\">PortSwigger</a></p>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Cross Site Scripting (XSS)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "CRITICAL",
+            "status": "CREATED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "asantos@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>Os ataques de Cross-Site Scripting (XSS) s\u00e3o um tipo de ataque no qual scripts maliciosos s\u00e3o injetados em sites aparentemente benignos e confi\u00e1veis. Os ataques XSS ocorrem quando um atacante usa uma aplica\u00e7\u00e3o Web para enviar c\u00f3digo malicioso, geralmente na forma de um script do lado do navegador, para um usu\u00e1rio alvo. As falhas que permitem que esses ataques sejam bem-sucedidos s\u00e3o bastante difundidas e ocorrem em qualquer lugar em que uma aplica\u00e7\u00e3o usa o input de um usu\u00e1rio no output gerado, sem valida\u00e7\u00f5es suficientes.</p><p><br></p><p>Um atacante pode usar o XSS para enviar um script malicioso a uma v\u00edtima desavisada. O navegador do usu\u00e1rio alvo n\u00e3o tem como determinar que o script n\u00e3o \u00e9 confi\u00e1vel, e o executar\u00e1. Sem a implementa\u00e7\u00e3o de alguns controles de seguran\u00e7a, a vulnerabilidade pode ser considerada cr\u00edtica, j\u00e1 que atrav\u00e9s de sua explora\u00e7\u00e3o o atacante consegue acessar quaisquer cookies, tokens de sess\u00e3o ou outras informa\u00e7\u00f5es confidenciais retidas pelo navegador da v\u00edtima para o uso com a aplica\u00e7\u00e3o alvo. A vulnerabilidade tamb\u00e9m pode ser usada para reescrever o conte\u00fado da p\u00e1gina HTML retornada pela aplica\u00e7\u00e3o.</p><p><br></p><p>As vulnerabilidades de XSS normalmente permitem que um atacante se passe pelo usu\u00e1rio alvo, podendo executar quaisquer a\u00e7\u00f5es e acessar quaisquer dados dispon\u00edveis \u00e0 v\u00edtima. Ou seja, em um contexto no qual a v\u00edtima possui acesso completo \u00e0 aplica\u00e7\u00e3o (como administrador por exemplo), o atacante potencialmente obter\u00e1 controle total sobre as funcionalidades e dados da aplica\u00e7\u00e3o.</p>",
+            "solution": "<p>Ataques de XSS podem ser evitados ao fazer valida\u00e7\u00e3o e sanitiza\u00e7\u00e3o de dados inseridos por usu\u00e1rios na aplica\u00e7\u00e3o e ao realizar o encode de caracteres que podem ser utilizados de maneira maliciosa e que n\u00e3o s\u00e3o esperados pela aplica\u00e7\u00e3o. Pol\u00edticas de<a href=\"https://developers.google.com/web/fundamentals/security/csp\" target=\"_blank\">&nbsp;CSP</a>&nbsp;tamb\u00e9m surgem como boa solu\u00e7\u00e3o para o problema, pois caso implementadas de maneira correta previnem que o browser execute scripts de fontes diferentes das quais expressamente permitidas pela pol\u00edtica.</p><p>A sanitiza\u00e7\u00e3o varia por contexto de cada aplica\u00e7\u00e3o, por\u00e9m \u00e9 recomendada a filtragem de caracteres comumente utilizados em ataques de injection, como<strong>&nbsp;\u2018</strong>,&nbsp;<strong>\u201c</strong>,&nbsp;<strong>&lt;</strong>,&nbsp;<strong>&gt;</strong>,<strong>&nbsp;&amp;&nbsp;</strong>e<strong>&nbsp;/</strong>. Uma proposta \u00e9 que esses caracteres sejam encodados como HTML entities, dado que frequentemente s\u00e3o utilizados na constru\u00e7\u00e3o de scripts maliciosos. Uma boa pr\u00e1tica tamb\u00e9m \u00e9 utilizar fun\u00e7\u00f5es seguras para popular o front-end da aplica\u00e7\u00e3o, como o&nbsp;<strong>textContent</strong>&nbsp;do JavaScript.</p><p>Essas a\u00e7\u00f5es ir\u00e3o garantir que o browser do usu\u00e1rio n\u00e3o entender\u00e1 o input malicioso como um script que deve ser executado, evitando assim que o XSS seja bem sucedido.</p>",
+            "reference": "<p><a href=\"https://owasp.org/www-community/attacks/xss/\" target=\"_blank\">OWASP</a></p><p><a href=\"https://portswigger.net/web-security/cross-site-scripting\" target=\"_blank\">PortSwigger</a></p>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Cross Site Scripting (XSS)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "CRITICAL",
+            "status": "CREATED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>Os ataques de Cross-Site Scripting (XSS) s\u00e3o um tipo de ataque no qual scripts maliciosos s\u00e3o injetados em sites aparentemente benignos e confi\u00e1veis. Os ataques XSS ocorrem quando um atacante usa uma aplica\u00e7\u00e3o Web para enviar c\u00f3digo malicioso, geralmente na forma de um script do lado do navegador, para um usu\u00e1rio alvo. As falhas que permitem que esses ataques sejam bem-sucedidos s\u00e3o bastante difundidas e ocorrem em qualquer lugar em que uma aplica\u00e7\u00e3o usa o input de um usu\u00e1rio no output gerado, sem valida\u00e7\u00f5es suficientes.</p><p><br></p><p>Um atacante pode usar o XSS para enviar um script malicioso a uma v\u00edtima desavisada. O navegador do usu\u00e1rio alvo n\u00e3o tem como determinar que o script n\u00e3o \u00e9 confi\u00e1vel, e o executar\u00e1. Sem a implementa\u00e7\u00e3o de alguns controles de seguran\u00e7a, a vulnerabilidade pode ser considerada cr\u00edtica, j\u00e1 que atrav\u00e9s de sua explora\u00e7\u00e3o o atacante consegue acessar quaisquer cookies, tokens de sess\u00e3o ou outras informa\u00e7\u00f5es confidenciais retidas pelo navegador da v\u00edtima para o uso com a aplica\u00e7\u00e3o alvo. A vulnerabilidade tamb\u00e9m pode ser usada para reescrever o conte\u00fado da p\u00e1gina HTML retornada pela aplica\u00e7\u00e3o.</p><p><br></p><p>As vulnerabilidades de XSS normalmente permitem que um atacante se passe pelo usu\u00e1rio alvo, podendo executar quaisquer a\u00e7\u00f5es e acessar quaisquer dados dispon\u00edveis \u00e0 v\u00edtima. Ou seja, em um contexto no qual a v\u00edtima possui acesso completo \u00e0 aplica\u00e7\u00e3o (como administrador por exemplo), o atacante potencialmente obter\u00e1 controle total sobre as funcionalidades e dados da aplica\u00e7\u00e3o.</p>",
+            "solution": "<p>Ataques de XSS podem ser evitados ao fazer valida\u00e7\u00e3o e sanitiza\u00e7\u00e3o de dados inseridos por usu\u00e1rios na aplica\u00e7\u00e3o e ao realizar o encode de caracteres que podem ser utilizados de maneira maliciosa e que n\u00e3o s\u00e3o esperados pela aplica\u00e7\u00e3o. Pol\u00edticas de<a href=\"https://developers.google.com/web/fundamentals/security/csp\" target=\"_blank\">&nbsp;CSP</a>&nbsp;tamb\u00e9m surgem como boa solu\u00e7\u00e3o para o problema, pois caso implementadas de maneira correta previnem que o browser execute scripts de fontes diferentes das quais expressamente permitidas pela pol\u00edtica.</p><p>A sanitiza\u00e7\u00e3o varia por contexto de cada aplica\u00e7\u00e3o, por\u00e9m \u00e9 recomendada a filtragem de caracteres comumente utilizados em ataques de injection, como<strong>&nbsp;\u2018</strong>,&nbsp;<strong>\u201c</strong>,&nbsp;<strong>&lt;</strong>,&nbsp;<strong>&gt;</strong>,<strong>&nbsp;&amp;&nbsp;</strong>e<strong>&nbsp;/</strong>. Uma proposta \u00e9 que esses caracteres sejam encodados como HTML entities, dado que frequentemente s\u00e3o utilizados na constru\u00e7\u00e3o de scripts maliciosos. Uma boa pr\u00e1tica tamb\u00e9m \u00e9 utilizar fun\u00e7\u00f5es seguras para popular o front-end da aplica\u00e7\u00e3o, como o&nbsp;<strong>textContent</strong>&nbsp;do JavaScript.</p><p>Essas a\u00e7\u00f5es ir\u00e3o garantir que o browser do usu\u00e1rio n\u00e3o entender\u00e1 o input malicioso como um script que deve ser executado, evitando assim que o XSS seja bem sucedido.</p>",
+            "reference": "<p><a href=\"https://owasp.org/www-community/attacks/xss/\" target=\"_blank\">OWASP</a></p><p><a href=\"https://portswigger.net/web-security/cross-site-scripting\" target=\"_blank\">PortSwigger</a></p>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Cross Site Scripting (XSS)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "CRITICAL",
+            "status": "CREATED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "<p>Os ataques de Cross-Site Scripting (XSS) s\u00e3o um tipo de ataque no qual scripts maliciosos s\u00e3o injetados em sites aparentemente benignos e confi\u00e1veis. Os ataques XSS ocorrem quando um atacante usa uma aplica\u00e7\u00e3o Web para enviar c\u00f3digo malicioso, geralmente na forma de um script do lado do navegador, para um usu\u00e1rio alvo. As falhas que permitem que esses ataques sejam bem-sucedidos s\u00e3o bastante difundidas e ocorrem em qualquer lugar em que uma aplica\u00e7\u00e3o usa o input de um usu\u00e1rio no output gerado, sem valida\u00e7\u00f5es suficientes.</p><p><br></p><p>Um atacante pode usar o XSS para enviar um script malicioso a uma v\u00edtima desavisada. O navegador do usu\u00e1rio alvo n\u00e3o tem como determinar que o script n\u00e3o \u00e9 confi\u00e1vel, e o executar\u00e1. Sem a implementa\u00e7\u00e3o de alguns controles de seguran\u00e7a, a vulnerabilidade pode ser considerada cr\u00edtica, j\u00e1 que atrav\u00e9s de sua explora\u00e7\u00e3o o atacante consegue acessar quaisquer cookies, tokens de sess\u00e3o ou outras informa\u00e7\u00f5es confidenciais retidas pelo navegador da v\u00edtima para o uso com a aplica\u00e7\u00e3o alvo. A vulnerabilidade tamb\u00e9m pode ser usada para reescrever o conte\u00fado da p\u00e1gina HTML retornada pela aplica\u00e7\u00e3o.</p><p><br></p><p>As vulnerabilidades de XSS normalmente permitem que um atacante se passe pelo usu\u00e1rio alvo, podendo executar quaisquer a\u00e7\u00f5es e acessar quaisquer dados dispon\u00edveis \u00e0 v\u00edtima. Ou seja, em um contexto no qual a v\u00edtima possui acesso completo \u00e0 aplica\u00e7\u00e3o (como administrador por exemplo), o atacante potencialmente obter\u00e1 controle total sobre as funcionalidades e dados da aplica\u00e7\u00e3o.</p>",
+            "solution": "<p>Ataques de XSS podem ser evitados ao fazer valida\u00e7\u00e3o e sanitiza\u00e7\u00e3o de dados inseridos por usu\u00e1rios na aplica\u00e7\u00e3o e ao realizar o encode de caracteres que podem ser utilizados de maneira maliciosa e que n\u00e3o s\u00e3o esperados pela aplica\u00e7\u00e3o. Pol\u00edticas de<a href=\"https://developers.google.com/web/fundamentals/security/csp\" target=\"_blank\">&nbsp;CSP</a>&nbsp;tamb\u00e9m surgem como boa solu\u00e7\u00e3o para o problema, pois caso implementadas de maneira correta previnem que o browser execute scripts de fontes diferentes das quais expressamente permitidas pela pol\u00edtica.</p><p>A sanitiza\u00e7\u00e3o varia por contexto de cada aplica\u00e7\u00e3o, por\u00e9m \u00e9 recomendada a filtragem de caracteres comumente utilizados em ataques de injection, como<strong>&nbsp;\u2018</strong>,&nbsp;<strong>\u201c</strong>,&nbsp;<strong>&lt;</strong>,&nbsp;<strong>&gt;</strong>,<strong>&nbsp;&amp;&nbsp;</strong>e<strong>&nbsp;/</strong>. Uma proposta \u00e9 que esses caracteres sejam encodados como HTML entities, dado que frequentemente s\u00e3o utilizados na constru\u00e7\u00e3o de scripts maliciosos. Uma boa pr\u00e1tica tamb\u00e9m \u00e9 utilizar fun\u00e7\u00f5es seguras para popular o front-end da aplica\u00e7\u00e3o, como o&nbsp;<strong>textContent</strong>&nbsp;do JavaScript.</p><p>Essas a\u00e7\u00f5es ir\u00e3o garantir que o browser do usu\u00e1rio n\u00e3o entender\u00e1 o input malicioso como um script que deve ser executado, evitando assim que o XSS seja bem sucedido.</p>",
+            "reference": "<p><a href=\"https://owasp.org/www-community/attacks/xss/\" target=\"_blank\">OWASP</a></p><p><a href=\"https://portswigger.net/web-security/cross-site-scripting\" target=\"_blank\">PortSwigger</a></p>",
+            "impactLevel": "HIGH",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "RISK_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/app/config/setup.php",
+            "vulnerableLine": 130,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/MTLQUnZTm61HftLTuJZ324UK?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=5230cc3d5e6a0971ebd0356e775a11220536f12f450848509383a950eb3ae8ea"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/app/control/user/create.php",
+            "vulnerableLine": 21,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/5LDaLtq8UzsJbYKYsCEXQXT1?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=ca82c54edf5761de42e06792165b02c077b881a762d8241b05e5b11a8847aca4"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/_japp/view/_internal/test/result/web.php",
+            "vulnerableLine": 257,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/2LhgQVKuJ8JLFEPr6YJizb3u?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=422dce4827a2619114afb0fd6f51ad8519b8bb6f02e891d2ab4f2ce0055aa7a3"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/_japp/view/default/users/unassign.php",
+            "vulnerableLine": 75,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/5Uj8xXmgvMRJYfZw98otpXba?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=58517c429f399bd3569804693132e0251b7d3b5407685e1562cead58999da930"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/_japp/view/default/users/unassign.php",
+            "vulnerableLine": 77,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/CCcbWPALDFrbJxFQNDLYwQgd?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=e3f0aa4facd180a0fda830b83ad01f1ecc285c49ccdda968580ce6e958f2bcdd"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/_japp/view/default/users/unassign.php",
+            "vulnerableLine": 80,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/4ot55fyCeCqLLoNY9dXCYSxq?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=fb20ef346e649fad4415bf45a7915b7fe26c423d510e9f6a18f435cde5a65d89"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/_japp/view/default/rbac/unassign.php",
+            "vulnerableLine": 76,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/MAEsN3cTkBkriQHVj8CqyRc9?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=146ee9f10c418a3647320f1a796a8449cf8e797ac2b8be9809fc4ce678528aa9"
+          }
+        },
+        {
+          "ruleId": "SAST_FINDING",
+          "level": "error",
+          "message": {
+            "text": "Cross-Site Scripting"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "FALSE_POSITIVE",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "Cross-Site Scripting",
+            "solution": null,
+            "reference": "",
+            "impactLevel": null,
+            "fileName": "/_japp/view/default/rbac/unassign.php",
+            "vulnerableLine": 78,
+            "codeSnippet": "https://armature-files-production.s3.sa-east-1.amazonaws.com/abqK3KNa1LopDorYJHAUjBLy?response-content-disposition=attachment%3B%20filename%3D%22code_snippet%22%3B%20filename%2A%3DUTF-8%27%27code_snippet&response-content-type=application%2Foctet-stream&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJX67XBZ73PZ2NLQA%2F20251222%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251222T192021Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&X-Amz-Signature=f61a3a082973147e70e9000cc6015db7161063d6477bd872c3256b3697ff0c18"
+          }
+        }
+      ]
+    }
+  ]
+}

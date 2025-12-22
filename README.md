@@ -94,9 +94,10 @@ Notes:
     123,Requirement A Updated,Do Y
     ```
 
-## Bulk CSV (vulnerabilities)
-- Command: `python -m conviso.app bulk vulns --company-id 443 --file vulns.csv --op create [--force] [--preview-only]`
-- Supports types: WEB, NETWORK, SOURCE (create only)
+## Bulk CSV/SARIF (vulnerabilities)
+- Command: `python -m conviso.app bulk vulns --company-id 443 --file vulns.csv --op create|update|delete [--force] [--preview-only] [--sarif]`
+- Types: WEB, NETWORK, SOURCE. CSV por padrão; use `--sarif` para importar de SARIF (campos compatíveis com a tabela). `--sarif-asset-field <campo>` define de onde ler o asset (nome ou id); se o asset não existir, o CLI cria automaticamente no company informado.
+- Template helper: `python -m conviso.app bulk vulns --show-template`
 - Headers (CSV columns)
 
   | Column                 | Required          | Values / Format                                                      |
@@ -141,3 +142,5 @@ Notes:
   type,assetId,title,description,solution,impactLevel,probabilityLevel,severity,summary,impactDescription,stepsToReproduce,method,scheme,url,port,request,response
   WEB,12345,XSS,"desc","fix",HIGH,MEDIUM,HIGH,"summary","impact","steps",GET,HTTPS,https://app/login,443,"GET /login","HTTP/1.1 200"
   ```
+- Example (update/delete):
+  - CSV export from `vulns list --format csv` pode ser usado em update/delete. Use coluna `id` ou `issueId`. Tipos são inferidos; `--sarif-asset-field` define onde achar o asset no SARIF; se o asset não existir, o CLI o cria automaticamente.
