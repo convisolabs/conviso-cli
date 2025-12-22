@@ -25,19 +25,12 @@ app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
 app.add_typer(sbom.app, name="sbom", help="List/import SBOM components.")
 
 # Global verbosity options
-@app.callback()
+@app.callback(invoke_without_command=True)
 def main(
     quiet: bool = typer.Option(False, "--quiet", help="Silence non-error output."),
     verbose: bool = typer.Option(False, "--verbose", help="Show verbose logs (GraphQL requests, etc.)."),
 ):
     set_verbosity(quiet=quiet, verbose=verbose)
-    try:
-        local, remote, outdated = check_for_updates()
-        if outdated and remote:
-            info(f"A new CLI version is available: {remote} (current: {local}).")
-            info(f"Update: download latest from {DEFAULT_REMOTE_URL.rsplit('/', 1)[0]}")
-    except Exception as exc:
-        warning(f"Version check skipped due to error: {exc}")
 
 @app.command("upgrade")
 def upgrade_cli():
@@ -65,4 +58,14 @@ def upgrade_cli():
 
 if __name__ == "__main__":
     log(f"Starting Conviso CLI v{read_local_version()}...")
+    try:
+        local, remote, outdated, remote_missing = check_for_updates()
+        if outdated and remote:
+            info(f"A new CLI version is available: {remote} (current: {local}).")
+            info(f"Update: download latest from {DEFAULT_REMOTE_URL.rsplit('/', 1)[0]}")
+        elif remote_missing:
+            # Avoid noisy output when offline; surface only in verbose mode.
+            log("Could not check remote version (network blocked or unavailable). Set CONVISO_CLI_REMOTE_VERSION to override.", style="yellow", verbose_only=True)
+    except Exception as exc:
+        warning(f"Version check skipped due to error: {exc}")
     app()

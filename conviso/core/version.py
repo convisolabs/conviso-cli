@@ -44,6 +44,10 @@ def is_newer(remote: str, local: str) -> bool:
 
 
 def fetch_remote_version(url: str = DEFAULT_REMOTE_URL, timeout: float = 3.0) -> Optional[str]:
+    # Allow overriding via env to support offline environments/tests
+    env_ver = os.getenv("CONVISO_CLI_REMOTE_VERSION")
+    if env_ver:
+        return env_ver.strip()
     if not requests:
         return None
     try:
@@ -58,14 +62,14 @@ def fetch_remote_version(url: str = DEFAULT_REMOTE_URL, timeout: float = 3.0) ->
 def check_for_updates(
     remote_url: str = DEFAULT_REMOTE_URL,
     skip_env: str = "CONVISO_CLI_SKIP_UPDATE_CHECK",
-) -> Tuple[str, Optional[str], bool]:
+) -> Tuple[str, Optional[str], bool, bool]:
     """
-    Returns (local_version, remote_version, is_outdated)
+    Returns (local_version, remote_version, is_outdated, remote_missing)
     """
     if os.getenv(skip_env, "").lower() in {"1", "true", "yes", "y"}:
-        return read_local_version(), None, False
+        return read_local_version(), None, False, False
     local = read_local_version()
     remote = fetch_remote_version(remote_url)
     if not remote:
-        return local, None, False
-    return local, remote, is_newer(remote, local)
+        return local, None, False, True
+    return local, remote, is_newer(remote, local), False

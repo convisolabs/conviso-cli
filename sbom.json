@@ -1,0 +1,1167 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "serialNumber": "urn:uuid:e1eadca5-a071-433f-9ade-c87a06b94e44",
+  "components": [
+    {
+      "type": "application",
+      "name": "@babel/helpers",
+      "version": "7.17.8",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "vulnerable-facade"
+        },
+        {
+          "name": "assetId",
+          "value": "40639"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "@babel/helpers",
+      "version": "7.16.5",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "@babel/traverse",
+      "version": "7.17.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "vulnerable-facade"
+        },
+        {
+          "name": "assetId",
+          "value": "40639"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "CRITICAL:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "adm-zip",
+      "version": "0.4.4",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "adm-zip",
+      "version": "0.4.4",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "adm-zip",
+      "version": "0.4.4",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ajv",
+      "version": "6.10.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ajv",
+      "version": "6.10.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ajv",
+      "version": "6.10.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "angular",
+      "version": "1.5.11",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:2, LOW:7"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "angular",
+      "version": "1.6.10",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:2, LOW:7"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "angular",
+      "version": "1.7.9",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1, LOW:8"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "angular",
+      "version": "1.8.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1, LOW:6"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ansi-html",
+      "version": "0.0.7",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "vulnerable-facade"
+        },
+        {
+          "name": "assetId",
+          "value": "40639"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ansi-regex",
+      "version": "3.0.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ansi-regex",
+      "version": "3.0.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "ansi-regex",
+      "version": "3.0.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.1",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.1",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.1",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "Sigma-Bank"
+        },
+        {
+          "name": "assetId",
+          "value": "38020"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "vulnerable-facade"
+        },
+        {
+          "name": "assetId",
+          "value": "40639"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "Damn-Vulnerable-Bank-Demo"
+        },
+        {
+          "name": "assetId",
+          "value": "33418"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "async",
+      "version": "2.6.3",
+      "properties": [
+        {
+          "name": "asset",
+          "value": "customer-experience-bank"
+        },
+        {
+          "name": "assetId",
+          "value": "45611"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "bl",
+      "version": "1.0.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "bl",
+      "version": "1.1.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "bl",
+      "version": "1.0.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "bl",
+      "version": "1.1.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "bl",
+      "version": "1.0.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "bl",
+      "version": "1.1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.18.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.18.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.18.3",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.19.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "Sigma-Bank"
+        },
+        {
+          "name": "assetId",
+          "value": "38020"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.19.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "vulnerable-facade"
+        },
+        {
+          "name": "assetId",
+          "value": "40639"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.19.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "terragoat"
+        },
+        {
+          "name": "assetId",
+          "value": "40641"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.19.0",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "Damn-Vulnerable-Bank-Demo"
+        },
+        {
+          "name": "assetId",
+          "value": "33418"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "body-parser",
+      "version": "1.19.0",
+      "properties": [
+        {
+          "name": "asset",
+          "value": "customer-experience-bank"
+        },
+        {
+          "name": "assetId",
+          "value": "45611"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "brace-expansion",
+      "version": "1.1.6",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "brace-expansion",
+      "version": "1.1.6",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "brace-expansion",
+      "version": "1.1.6",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "brace-expansion",
+      "version": "1.1.11",
+      "properties": [
+        {
+          "name": "asset",
+          "value": "customer-experience-bank"
+        },
+        {
+          "name": "assetId",
+          "value": "45611"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "LOW:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "1.8.5",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1, LOW:2"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "2.3.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node"
+        },
+        {
+          "name": "assetId",
+          "value": "35831"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "1.8.5",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1, LOW:2"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "2.3.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "NodeGoat"
+        },
+        {
+          "name": "assetId",
+          "value": "36819"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "1.8.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1, LOW:2"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "2.3.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "payment-service-node-api"
+        },
+        {
+          "name": "assetId",
+          "value": "37389"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "name": "braces",
+      "version": "2.3.2",
+      "properties": [
+        {
+          "name": "packageManager",
+          "value": "npm"
+        },
+        {
+          "name": "asset",
+          "value": "Sigma-Bank"
+        },
+        {
+          "name": "assetId",
+          "value": "38020"
+        },
+        {
+          "name": "vulnsBySeverity",
+          "value": "HIGH:1"
+        }
+      ]
+    }
+  ]
+}

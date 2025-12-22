@@ -1,0 +1,1666 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Conviso CLI",
+          "informationUri": "https://github.com/convisolabs/conviso-cli"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "SCA_FINDING",
+          "level": "warning",
+          "message": {
+            "text": "3rd party CORS request may execute"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "RISK_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "Jean Carlos Sales Pantoja",
+            "company": "App Demo",
+            "description": "3rd party CORS request may execute",
+            "solution": "Update to the latest stable version or apply patches.",
+            "reference": "https://github.com/jquery/jquery/issues/2432\nhttp://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/\nhttps://nvd.nist.gov/vuln/detail/CVE-2015-9251\nhttp://research.insecurelabs.org/jquery/test/",
+            "impactLevel": null,
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "3rd party CORS request may execute"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "RISK_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "3rd party CORS request may execute",
+            "solution": "Update to the latest stable version or apply patches.",
+            "reference": "https://github.com/jquery/jquery/issues/2432\nhttp://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/\nhttps://nvd.nist.gov/vuln/detail/CVE-2015-9251\nhttp://research.insecurelabs.org/jquery/test/",
+            "impactLevel": "LOW",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "SOURCE_CODE_VULNERABILITY",
+          "level": "warning",
+          "message": {
+            "text": "3rd party CORS request may execute"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "MEDIUM",
+            "status": "RISK_ACCEPTED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "3rd party CORS request may execute",
+            "solution": "Update to the latest stable version or apply patches.",
+            "reference": "https://github.com/jquery/jquery/issues/2432\nhttp://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/\nhttps://nvd.nist.gov/vuln/detail/CVE-2015-9251\nhttp://research.insecurelabs.org/jquery/test/",
+            "impactLevel": "LOW",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        },
+        {
+          "ruleId": "WEB_VULNERABILITY",
+          "level": "error",
+          "message": {
+            "text": "Armazenamento Criptogr\u00e1fico Inseguro"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "OWASPWebGoatPHP (github.com/OWASP)"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "severity": "HIGH",
+            "status": "IDENTIFIED",
+            "asset": "OWASPWebGoatPHP (github.com/OWASP)",
+            "author": "welias@conviso.com.br",
+            "company": "App Demo",
+            "description": "As aplica\u00e7\u00e3o armazena dados sens\u00edveis sem a devida codifica\u00e7\u00e3o de seguran\u00e7a necess\u00e1ria para garantir a confidencialidade de tais informa\u00e7\u00f5es. Essas informa\u00e7\u00f5es podem varias desde dados de cart\u00f5es de cr\u00e9dito at\u00e9 senhas de acesso. No caso de comprometimento do meio de armazenamento de tais dados (atrav\u00e9s de uma outra vulnerabilidade, por exemplo) tais informa\u00e7\u00f5es confidenciais ficariam em\u00a0total exposi\u00e7\u00e3o ao atacante.",
+            "solution": "Utilizar mecanismos apropriados para cifrar os dados antes do armazenamento, como algoritmos de criptografia atualizados, chaves fortes, como tamb\u00e9m fun\u00e7\u00f5es de hashing e salt.",
+            "reference": "<p><a href=\"https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage\">https://www.owasp.org/index.php/Top_10_2010-A7-Insecure_Cryptographic_Storage</a></p>\r\n<p><a href=\"http://bretthard.in/2009/09/insecure-cryptographic-storage/\">http://bretthard.in/2009/09/insecure-cryptographic-storage/</a></p>\r\n<p><a href=\"http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html\">http://www.infosecisland.com/blogview/21796-Insecure-Cryptographic-Storage-Explained.html</a></p>\r\n<p><a href=\"http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html\">http://www.troyhunt.com/2011/06/owasp-top-10-for-net-developers-part-7.html</a></p>",
+            "impactLevel": "MEDIUM",
+            "fileName": null,
+            "vulnerableLine": null,
+            "codeSnippet": null
+          }
+        }
+      ]
+    }
+  ]
+}
