@@ -1,0 +1,47 @@
+name: Enforce VERSION bump
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure VERSION bumped when CLI changes
+        run: |
+          BASE_REF="${{ github.base_ref }}"
+          if [ -z "$BASE_REF" ]; then
+            echo "No base_ref found (not a PR or unusual event); skipping check."
+            exit 0
+          fi
+
+          git fetch origin "$BASE_REF":"refs/remotes/origin/$BASE_REF"
+          CHANGED=$(git diff --name-only "origin/$BASE_REF"...HEAD)
+
+          # Files that require a VERSION bump when modified
+          if echo "$CHANGED" | grep -Eq '^(conviso/|README\.md|samples/|conviso\.app|conviso\.py)'; then
+            CLI_CHANGED=1
+          else
+            CLI_CHANGED=0
+          fi
+
+          if echo "$CHANGED" | grep -Eq '^VERSION$'; then
+            VERSION_CHANGED=1
+          else
+            VERSION_CHANGED=0
+          fi
+
+          if [ "$CLI_CHANGED" -eq 1 ] && [ "$VERSION_CHANGED" -eq 0 ]; then
+            echo "Detected CLI-related changes but VERSION was not updated."
+            echo "Changed files:"
+            echo "$CHANGED"
+            exit 1
+          fi
+
+          echo "Version check passed (CLI changes: $CLI_CHANGED, VERSION changed: $VERSION_CHANGED)."
