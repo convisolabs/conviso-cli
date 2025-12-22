@@ -41,6 +41,7 @@ Notes:
 - Use `--all` on list commands to fetch every page.
 - `--quiet` silences info logs; `--verbose` shows per-page requests when paginating.
 - On startup the CLI checks for a newer version (via https://raw.githubusercontent.com/convisolabs/conviso-cli/main/VERSION). Set `CONVISO_CLI_SKIP_UPDATE_CHECK=1` to skip.
+- Upgrade: `python -m conviso.app upgrade` (equiv. `conviso upgrade`) tenta `git pull --ff-only` no diretório do repo; se instalado via pip, rode `pip install .` após o pull.
 
 ## Bulk CSV (assets)
 - Command: `python -m conviso.app bulk assets --company-id 443 --file assets.csv --op create|update|delete [--force] [--preview-only]`
