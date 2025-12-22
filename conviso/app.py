@@ -5,6 +5,7 @@ from conviso.commands import assets
 from conviso.commands import requirements
 from conviso.commands import vulnerabilities
 from conviso.commands import bulk
+from conviso.commands import sbom
 from conviso.core.logger import log, set_verbosity
 from conviso.core.notifier import info, warning
 from conviso.core.version import check_for_updates, DEFAULT_REMOTE_URL, read_local_version
@@ -21,6 +22,7 @@ app.add_typer(assets.app, name="assets", help="Manage assets in the Conviso Plat
 app.add_typer(requirements.app, name="requirements", help="List requirements/playbooks.")
 app.add_typer(vulnerabilities.app, name="vulns", help="List vulnerabilities/issues.")
 app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
+app.add_typer(sbom.app, name="sbom", help="List/import SBOM components.")
 
 # Global verbosity options
 @app.callback()

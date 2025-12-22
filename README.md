@@ -43,6 +43,16 @@ Notes:
 - On startup the CLI checks for a newer version (via https://raw.githubusercontent.com/convisolabs/conviso-cli/main/VERSION). Set `CONVISO_CLI_SKIP_UPDATE_CHECK=1` to skip.
 - Upgrade: `python -m conviso.app upgrade` (equiv. `conviso upgrade`) tenta `git pull --ff-only` no diretório do repo; se instalado via pip, rode `pip install .` após o pull.
 
+## SBOM
+- List: `python -m conviso.app sbom list --company-id 443 --name log4j --all --format csv --output sbom.csv`
+- Filters: `--name`, `--vulnerable-only`, `--asset-ids`, `--tags`, `--sort-by`, `--order`, pagination (`--page/--per-page/--all`).
+- Import: `python -m conviso.app sbom import --company-id 443 --file bom.cdx --asset-id 123` (asset-id obrigatório; Upload, formato inferido pelo backend)
+- Formats: table/CSV/JSON/CycloneDX para list (`--format cyclonedx`).
+- Check vulns (OSV):
+  - Usando API: `python -m conviso.app sbom check-vulns --company-id 443 --asset-ids 123 --tags foo --format json --output osv.json`
+  - Usando arquivo CycloneDX: `python -m conviso.app sbom check-vulns --file bom.cdx --format json --output osv.json`
+  - Por padrão lista em tabela; use `--format json` para JSON (com ou sem `--output`).
+
 ## Bulk CSV (assets)
 - Command: `python -m conviso.app bulk assets --company-id 443 --file assets.csv --op create|update|delete [--force] [--preview-only]`
 - Headers (CSV columns)
