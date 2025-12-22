@@ -6,6 +6,8 @@ from conviso.commands import requirements
 from conviso.commands import vulnerabilities
 from conviso.commands import bulk
 from conviso.core.logger import log, set_verbosity
+from conviso.core.notifier import info, warning
+from conviso.core.version import check_for_updates, DEFAULT_REMOTE_URL, read_local_version
 import conviso.schemas.projects_schema
 
 app = typer.Typer(help="Conviso Platform CLI")
@@ -24,7 +26,14 @@ def main(
     verbose: bool = typer.Option(False, "--verbose", help="Show verbose logs (GraphQL requests, etc.)."),
 ):
     set_verbosity(quiet=quiet, verbose=verbose)
+    try:
+        local, remote, outdated = check_for_updates()
+        if outdated and remote:
+            info(f"A new CLI version is available: {remote} (current: {local}).")
+            info(f"Update: download latest from {DEFAULT_REMOTE_URL.rsplit('/', 1)[0]}")
+    except Exception as exc:
+        warning(f"Version check skipped due to error: {exc}")
 
 if __name__ == "__main__":
-    log("Starting Conviso CLI...")
+    log(f"Starting Conviso CLI v{read_local_version()}...")
     app()

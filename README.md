@@ -40,6 +40,7 @@ Notes:
 - GraphQL errors return exit code 1.
 - Use `--all` on list commands to fetch every page.
 - `--quiet` silences info logs; `--verbose` shows per-page requests when paginating.
+- On startup the CLI checks for a newer version (via https://raw.githubusercontent.com/convisolabs/conviso-cli/main/VERSION). Set `CONVISO_CLI_SKIP_UPDATE_CHECK=1` to skip.
 
 ## Bulk CSV (assets)
 - Command: `python -m conviso.app bulk assets --company-id 443 --file assets.csv --op create|update|delete [--force] [--preview-only]`
