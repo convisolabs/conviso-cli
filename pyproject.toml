@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "conviso-cli"
+dynamic = ["version"]
+description = "CLI to interact with Conviso Platform via GraphQL."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Conviso Labs", email = "suporte@convisoappsec.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+]
+
+
+dependencies = [
+    "typer>=0.21.1",
+    "rich>=14.3.1",
+    "requests>=2.32.5",
+    "python-dotenv>=1.2.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/convisolabs/conviso-cli"
+"Source" = "https://github.com/convisolabs/conviso-cli"
+
+[project.scripts]
+# Cria o binário 'conviso'.
+# Aponta para o objeto 'app' dentro do arquivo 'src/conviso/app.py'
+conviso = "conviso.app:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = { file = "src/conviso/VERSION" }

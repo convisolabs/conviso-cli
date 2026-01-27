@@ -7,6 +7,7 @@ Version utilities for Conviso CLI.
 
 import os
 from typing import Optional, Tuple
+from pathlib import Path
 
 try:
     import requests
@@ -14,8 +15,8 @@ except Exception:  # pragma: no cover - defensive; requests is a dependency
     requests = None
 
 
-VERSION_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "VERSION"))
-DEFAULT_REMOTE_URL = "https://raw.githubusercontent.com/convisolabs/conviso-cli/main/VERSION"
+VERSION_FILE = Path(__file__).parent.parent / "VERSION"
+DEFAULT_REMOTE_URL = "https://raw.githubusercontent.com/convisolabs/conviso-cli/main/src/conviso/VERSION"
 
 
 def read_local_version() -> str:
