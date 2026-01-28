@@ -28,7 +28,7 @@ pip install -r requirements.txt  # if present
 python -m conviso.app --help
 ```
 
-## Instal (Homebrew)
+## Install (Homebrew)
 ```
 The easiest way to install the CLI on macOS (or Linux via Linuxbrew) is via our official tap:
 
