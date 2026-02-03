@@ -118,10 +118,6 @@ def list_project_requirements(
             label
             description
             reference
-            item
-            category
-            actionPlan
-            sort
           }
         }
       }
@@ -168,10 +164,6 @@ def list_project_requirements(
                         "activityLabel": "",
                         "description": "",
                         "reference": "",
-                        "item": "",
-                        "category": "",
-                        "actionPlan": "",
-                        "sort": "",
                     })
                     continue
                 for a in checks:
@@ -185,10 +177,6 @@ def list_project_requirements(
                         "activityLabel": a.get("label"),
                         "description": a.get("description"),
                         "reference": a.get("reference"),
-                        "item": a.get("item"),
-                        "category": a.get("category"),
-                        "actionPlan": a.get("actionPlan"),
-                        "sort": a.get("sort"),
                     })
         else:
             for r in collection:
@@ -248,10 +236,6 @@ def list_requirement_activities(
           label
           description
           reference
-          item
-          category
-          actionPlan
-          sort
         }
       }
     }
@@ -270,10 +254,6 @@ def list_requirement_activities(
             label
             description
             reference
-            item
-            category
-            actionPlan
-            sort
           }
         }
       }
@@ -299,10 +279,6 @@ def list_requirement_activities(
                     "label": a.get("label"),
                     "description": a.get("description"),
                     "reference": a.get("reference"),
-                    "item": a.get("item"),
-                    "category": a.get("category"),
-                    "actionPlan": a.get("actionPlan"),
-                    "sort": a.get("sort"),
                 })
 
             export_data(
@@ -327,10 +303,6 @@ def list_requirement_activities(
                         "label": a.get("label"),
                         "description": a.get("description"),
                         "reference": a.get("reference"),
-                        "item": a.get("item"),
-                        "category": a.get("category"),
-                        "actionPlan": a.get("actionPlan"),
-                        "sort": a.get("sort"),
                     })
 
             if not rows:
