@@ -15,9 +15,9 @@ CLI to interact with Conviso Platform via GraphQL.
 - `src/conviso/schemas/`: table schemas/headers for consistent output.
 
 ## Adding a new command
-1) Create `conviso/commands/<name>.py` with a `typer.Typer()` and subcommands.
-2) Register it in `conviso/app.py` via `app.add_typer(...)`.
-3) If you need tabular output, add a schema in `conviso/schemas/<name>_schema.py` and pass it to `export_data`.
+1) Create `src/conviso/commands/<name>.py` with a `typer.Typer()` and subcommands.
+2) Register it in `src/conviso/app.py` via `app.add_typer(...)`.
+3) If you need tabular output, add a schema in `src/conviso/schemas/<name>_schema.py` and pass it to `export_data`.
 4) Use `graphql_request` from `conviso.clients.client_graphql` (it enforces API key and timeout).
 5) Ensure errors raise `typer.Exit(code=1)` so CI/automation see failures.
 
@@ -87,6 +87,9 @@ conviso --help
 - Requirements (project): `python -m conviso.app requirements project --company-id 443 --project-id 26102`
 - Requirements (activities): `python -m conviso.app requirements activities --company-id 443 --requirement-id 1503`
 - Requirements (project activities): `python -m conviso.app requirements activities --company-id 443 --project-id 26102`
+- Tasks (execute YAML from requirements): `python -m conviso.app tasks run --company-id 443 --project-id 26102`
+- Tasks (list project): `python -m conviso.app tasks list --company-id 443 --project-id 26102`
+- Tasks (only valid YAML): `python -m conviso.app tasks list --company-id 443 --project-id 26102 --only-valid`
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
 
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
@@ -96,18 +99,53 @@ Notes:
 - Use `--all` on list commands to fetch every page.
 - `--quiet` silences info logs; `--verbose` shows per-page requests when paginating.
 - On startup the CLI checks for a newer version (via https://raw.githubusercontent.com/convisolabs/conviso-cli/main/VERSION). Set `CONVISO_CLI_SKIP_UPDATE_CHECK=1` to skip.
-- Sem rede, o check avisa e você pode forçar a comparação definindo `CONVISO_CLI_REMOTE_VERSION` (override manual).
-- Upgrade: `python -m conviso.app upgrade` (equiv. `conviso upgrade`) tenta `git pull --ff-only` no diretório do repo; se instalado via pip, rode `pip install .` após o pull.
+- When offline, the check warns and you can force the comparison by setting `CONVISO_CLI_REMOTE_VERSION` (manual override).
+- Upgrade: `python -m conviso.app upgrade` (equiv. `conviso upgrade`) runs `git pull --ff-only` in the repo directory; if installed via pip, run `pip install .` after the pull.
+
+## Tasks (YAML in activities)
+- The YAML must be stored in the activity `description` field.
+- Only requirements with labels starting with `TASK` (e.g., `TASK - ...` or `TASK:`) are processed (configurable with `--prefix`). Listing and execution are always project-scoped.
+- Each activity must have **exactly one step** in the YAML.
+- In `vulns.create`, `assetId` is required. If defined in YAML, it takes precedence. Otherwise it is resolved via `inputs.assets`. If it cannot be resolved, the command fails.
+- To auto-create assets in `vulns.create`, use `asset.create_if_missing: true` and set `asset.map.name` to a field from the tool output. `description` is accepted in YAML but ignored by the API.
+- YAML examples: `samples/task-nmap-nuclei.yaml`, `samples/task-nuclei.yaml`
+- `scan-json-lines` example: `samples/task-naabu.yaml`
+- Subdomains -> resolve -> ports pipeline: `samples/task-subfinder-dnsx-naabu.yaml`
+- Execution:
+  - Dry-run with confirmation: `python -m conviso.app tasks run --company-id 443 --project-id 26102`
+  - Apply directly: `python -m conviso.app tasks run --company-id 443 --project-id 26102 --apply`
+- Pentest guide: `docs/pentest-tasks-guide.md`
+
+### scan-json-lines (agnostic format)
+- In `run.parse.format`, use `scan-json-lines` to consume JSONL from any tool.
+- Each line must be a JSON object with `finding`, or the whole object is treated as `finding`.
+
+Exemplo mínimo:
+```json
+{"finding":{"type":"WEB","title":"X-Frame-Options Missing","description":"...","severity":"info","asset":"example.com","url":"https://example.com","method":"GET","scheme":"HTTPS","port":443,"request":"...","response":"..."}}
+```
+
+Automatic normalizations:
+- `title` -> `name` (if `name` is missing)
+- `asset` -> `host` (if `host` is missing)
+- `matchedAt` -> `url` (if `url` is missing)
+
+### Project targets helpers
+- `inputs.targets` supports `export.mode: hosts` to normalize Target URLs into hostnames.
+- Example:
+  - `source: "project.target_urls"`
+  - `export.file: ".task/targets.txt"`
+  - `export.mode: "hosts"`
 
 ## SBOM
 - List: `python -m conviso.app sbom list --company-id 443 --name log4j --all --format csv --output sbom.csv`
 - Filters: `--name`, `--vulnerable-only`, `--asset-ids`, `--tags`, `--sort-by`, `--order`, pagination (`--page/--per-page/--all`).
 - Import: `python -m conviso.app sbom import --company-id 443 --file bom.cdx --asset-id 123` (asset-id obrigatório; Upload, formato inferido pelo backend)
-- Formats: table/CSV/JSON/CycloneDX para list (`--format cyclonedx`).
+- Formats: table/CSV/JSON/CycloneDX for list (`--format cyclonedx`).
 - Check vulns (OSV):
-  - Usando API: `python -m conviso.app sbom check-vulns --company-id 443 --asset-ids 123 --tags foo --format json --output osv.json`
-  - Usando arquivo CycloneDX: `python -m conviso.app sbom check-vulns --file bom.cdx --format json --output osv.json`
-  - Por padrão lista em tabela; use `--format json` para JSON (com ou sem `--output`).
+  - Using API: `python -m conviso.app sbom check-vulns --company-id 443 --asset-ids 123 --tags foo --format json --output osv.json`
+  - Using CycloneDX file: `python -m conviso.app sbom check-vulns --file bom.cdx --format json --output osv.json`
+  - Default output is table; use `--format json` for JSON (with or without `--output`).
 
 ## Bulk CSV (assets)
 - Command: `python -m conviso.app bulk assets --company-id 443 --file assets.csv --op create|update|delete [--force] [--preview-only]`

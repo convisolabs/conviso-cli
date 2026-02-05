@@ -1,0 +1,31 @@
+version: 1
+name: "Naabu scan (scan-json-lines)"
+steps:
+  - id: naabu_scan
+    name: "Naabu scan"
+    inputs:
+      assets:
+        query:
+          tags: "cloud"
+        export:
+          file: ".task/assets.txt"
+          field: "name"
+    run:
+      cmd: "naabu -list ${assets.file} -json | python tools/naabu_to_scan_jsonl.py"
+      parse:
+        format: "scan-json-lines"
+    actions:
+      - type: "vulns.create"
+        asset:
+          create_if_missing: true
+          map:
+            name: "${finding.asset}"
+        map:
+          assetId: "${assets.by_name:finding.asset}"
+          title: "${finding.title}"
+          description: "${finding.description}"
+          severity: "${finding.severity}"
+          address: "${finding.address}"
+          protocol: "${finding.protocol}"
+          port: "${finding.port}"
+          attackVector: "${finding.attackVector}"

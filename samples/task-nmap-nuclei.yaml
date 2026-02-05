@@ -1,0 +1,17 @@
+version: 1
+name: "Nmap discovery"
+steps:
+  - id: nmap_discover
+    name: "Nmap discovery"
+    run:
+      cmd: "nmap -sV -oX - 10.10.0.0/24"
+      parse:
+        format: "nmap-xml"
+    actions:
+      - type: "assets.create"
+        map:
+          name: "${host.address}"
+        defaults:
+          businessImpact: "HIGH"
+          dataClassification:
+            - "NON_SENSITIVE"

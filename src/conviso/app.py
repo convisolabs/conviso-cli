@@ -5,6 +5,7 @@ from conviso.commands import requirements
 from conviso.commands import vulnerabilities
 from conviso.commands import bulk
 from conviso.commands import sbom
+from conviso.commands import tasks
 from conviso.core.logger import log, set_verbosity
 from conviso.core.notifier import info, warning
 from conviso.core.version import check_for_updates, DEFAULT_REMOTE_URL, read_local_version
@@ -19,6 +20,7 @@ app.add_typer(requirements.app, name="requirements", help="List requirements/pla
 app.add_typer(vulnerabilities.app, name="vulns", help="List vulnerabilities/issues.")
 app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
 app.add_typer(sbom.app, name="sbom", help="List/import SBOM components.")
+app.add_typer(tasks.app, name="tasks", help="Execute YAML tasks from requirements.")
 
 @app.callback(invoke_without_command=True)
 def main(

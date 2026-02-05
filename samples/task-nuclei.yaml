@@ -1,0 +1,36 @@
+version: 1
+name: "Nuclei scan"
+steps:
+  - id: nuclei_scan
+    name: "Nuclei scan"
+    inputs:
+      assets:
+        query:
+          tags: "cloud"
+        export:
+          file: ".task/assets.txt"
+          field: "name"
+    run:
+      cmd: "nuclei -l ${assets.file} -jsonl -include-rr"
+      parse:
+        format: "nuclei-json-lines"
+    actions:
+      - type: "vulns.create"
+        asset:
+          create_if_missing: true
+          map:
+            name: "${finding.host}"
+        map:
+          type: "WEB"
+          assetId: "${assets.by_name:finding.host}"
+          title: "${finding.name}"
+          description: "${finding.description}"
+          severity: "${finding.severity}"
+          solution: "${finding.solution}"
+          method: "${finding.method}"
+          scheme: "${finding.scheme}"
+          url: "${finding.url}"
+          port: "${finding.port}"
+          request: "${finding.request}"
+          response: "${finding.response}"
+          reference: "${finding.reference}"

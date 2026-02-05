@@ -1,0 +1,24 @@
+version: 1
+name: "Subfinder + DNSX + Naabu (scan-json-lines)"
+steps:
+  - id: recon_ports
+    name: "Subdomains -> resolve -> port scan"
+    run:
+      cmd: "subfinder -d convisoappsec.com -silent | dnsx -silent | naabu -list /dev/stdin -json | python tools/naabu_to_scan_jsonl.py"
+      parse:
+        format: "scan-json-lines"
+    actions:
+      - type: "vulns.create"
+        asset:
+          create_if_missing: true
+          map:
+            name: "${finding.asset}"
+        map:
+          assetId: "${assets.by_name:finding.asset}"
+          title: "${finding.title}"
+          description: "${finding.description}"
+          severity: "${finding.severity}"
+          address: "${finding.address}"
+          protocol: "${finding.protocol}"
+          port: "${finding.port}"
+          attackVector: "${finding.attackVector}"
