@@ -28,3 +28,6 @@ dist/
 .env
 *.env
 .env.*>
+
+# Task workspace
+.task/

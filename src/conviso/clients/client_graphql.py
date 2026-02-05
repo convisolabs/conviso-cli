@@ -1,6 +1,7 @@
 # conviso/clients/client_graphql.py
 import os
 import requests
+import time
 import json
 from dotenv import load_dotenv
 import conviso.core.logger as logger
@@ -15,6 +16,7 @@ else:
 API_URL = "https://api.convisoappsec.com/graphql"
 API_KEY = os.getenv("CONVISO_API_KEY")
 DEFAULT_TIMEOUT = float(os.getenv("CONVISO_API_TIMEOUT", "30"))
+DEFAULT_RETRIES = int(os.getenv("CONVISO_API_RETRIES", "2"))
 
 
 def graphql_request(query: str, variables: dict = None, log_request: bool = True, verbose_only: bool = False) -> dict:
@@ -34,16 +36,29 @@ def graphql_request(query: str, variables: dict = None, log_request: bool = True
         if logger.VERBOSE:
             logger.log(f"GraphQL variables: {payload['variables']}", verbose_only=True)
 
-    response = requests.post(API_URL, json=payload, headers=headers, timeout=DEFAULT_TIMEOUT)
-    response.raise_for_status()
+    last_exc = None
+    for attempt in range(DEFAULT_RETRIES + 1):
+        try:
+            response = requests.post(API_URL, json=payload, headers=headers, timeout=DEFAULT_TIMEOUT)
+            response.raise_for_status()
+            data = response.json()
+            if "errors" in data:
+                if logger.VERBOSE:
+                    logger.log(f"GraphQL error payload: {data}", style="red", verbose_only=True)
+                raise Exception(f"GraphQL errors: {data['errors']}")
+            return data["data"]
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as exc:
+            last_exc = exc
+            if attempt >= DEFAULT_RETRIES:
+                raise
+            backoff = 0.5 * (2 ** attempt)
+            time.sleep(backoff)
+        except Exception:
+            raise
 
-    data = response.json()
-    if "errors" in data:
-        if logger.VERBOSE:
-            logger.log(f"GraphQL error payload: {data}", style="red", verbose_only=True)
-        raise Exception(f"GraphQL errors: {data['errors']}")
-
-    return data["data"]
+    if last_exc:
+        raise last_exc
+    raise Exception("GraphQL request failed")
 
 
 def graphql_request_upload(
