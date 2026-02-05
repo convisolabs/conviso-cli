@@ -120,7 +120,7 @@ Notes:
 - In `run.parse.format`, use `scan-json-lines` to consume JSONL from any tool.
 - Each line must be a JSON object with `finding`, or the whole object is treated as `finding`.
 
-Exemplo mínimo:
+Minimal example:
 ```json
 {"finding":{"type":"WEB","title":"X-Frame-Options Missing","description":"...","severity":"info","asset":"example.com","url":"https://example.com","method":"GET","scheme":"HTTPS","port":443,"request":"...","response":"..."}}
 ```
