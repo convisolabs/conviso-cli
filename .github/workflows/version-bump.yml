@@ -25,13 +25,13 @@ jobs:
           CHANGED=$(git diff --name-only "origin/$BASE_REF"...HEAD)
 
           # Files that require a VERSION bump when modified
-          if echo "$CHANGED" | grep -Eq '^(conviso/|README\.md|samples/|conviso\.app|conviso\.py)'; then
+          if echo "$CHANGED" | grep -Eq '^(src/conviso/|README\.md|samples/|docs/|tools/|conviso\.app|conviso\.py)'; then
             CLI_CHANGED=1
           else
             CLI_CHANGED=0
           fi
 
-          if echo "$CHANGED" | grep -Eq '^VERSION$'; then
+          if echo "$CHANGED" | grep -Eq '^src/conviso/VERSION$'; then
             VERSION_CHANGED=1
           else
             VERSION_CHANGED=0
