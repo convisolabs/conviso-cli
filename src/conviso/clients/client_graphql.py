@@ -5,8 +5,12 @@ import json
 from dotenv import load_dotenv
 import conviso.core.logger as logger
 
-# Load environment variables from .env file
-load_dotenv()
+cwd_env = os.path.join(os.getcwd(), ".env")
+
+if os.path.exists(cwd_env):
+    load_dotenv(cwd_env, override=True)
+else:
+    load_dotenv()
 
 API_URL = "https://api.convisoappsec.com/graphql"
 API_KEY = os.getenv("CONVISO_API_KEY")

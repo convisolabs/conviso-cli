@@ -3,16 +3,16 @@
 CLI to interact with Conviso Platform via GraphQL.
 
 ## Requirements
-- Python 3.9+ (`typer`, `rich`, `requests`, `python-dotenv`)
+- Python 3.10+ (`typer`, `rich`, `requests`, `python-dotenv`)
 - Environment variable `CONVISO_API_KEY` (in shell or `.env`)
 - Optional: `CONVISO_API_TIMEOUT` (seconds, default 30)
 
 ## Project structure
-- `conviso/app.py`: Typer entrypoint; registers subcommands.
-- `conviso/commands/`: CLI commands (`projects`, `assets`, `requirements`, `vulnerabilities`).
-- `conviso/clients/`: API clients (GraphQL).
-- `conviso/core/`: shared utilities (logging, notifications, output manager).
-- `conviso/schemas/`: table schemas/headers for consistent output.
+- `src/conviso/app.py`: Typer entrypoint; registers subcommands.
+- `src/conviso/commands/`: CLI commands (`projects`, `assets`, `requirements`, `vulnerabilities`).
+- `src/conviso/clients/`: API clients (GraphQL).
+- `src/conviso/core/`: shared utilities (logging, notifications, output manager).
+- `src/conviso/schemas/`: table schemas/headers for consistent output.
 
 ## Adding a new command
 1) Create `conviso/commands/<name>.py` with a `typer.Typer()` and subcommands.
@@ -21,11 +21,63 @@ CLI to interact with Conviso Platform via GraphQL.
 4) Use `graphql_request` from `conviso.clients.client_graphql` (it enforces API key and timeout).
 5) Ensure errors raise `typer.Exit(code=1)` so CI/automation see failures.
 
-## Install (local)
+## Installation & Setup
+
+Choose the installation method that best fits your needs:
+
+### 1. Development Setup (For Contributors)
+
+Use this method if you plan to modify the source code. It installs the package in **editable mode**, so changes in the code are reflected immediately without re-installing.
+
+**Prerequisites (Optional but Recommended):**
+
+We recommend using [pyenv](https://github.com/pyenv/pyenv) to manage Python versions.
+
+```bash
+# 1. Install the required Python version
+pyenv install 3.14.2
+
+# 2. Set this version for the current project directory
+pyenv local 3.14.2
 ```
-pip install -r requirements.txt  # if present
-# or run directly
-python -m conviso.app --help
+
+**Setup & Installation:**
+
+```bash
+# 1. Create a virtual environment (it will use the version set by pyenv)
+python3 -m venv .venv
+
+# 2. Activate the environment
+source .venv/bin/activate
+
+# 3. Install the package in editable mode
+pip install -e .
+```
+
+### 2. User Installation (Build from Source)
+
+Use this method to install the package as a standard CLI tool. This involves building the distribution artifact (`.whl`) first.
+
+**Steps:**
+
+```bash
+# 1. Install the build tool
+pip install build
+
+# 2. Build the package artifacts (sdist and wheel)
+python -m build
+
+# 3. Install the generated wheel from the dist/ directory
+# Note: The wildcard (*) automatically selects the version generated in step 2
+pip install dist/conviso_cli-*-py3-none-any.whl --force-reinstall
+```
+
+**Verification:**
+
+After installation, verify that the CLI is correctly installed and accessible:
+
+```bash
+conviso --help
 ```
 
 ## Usage (examples)
