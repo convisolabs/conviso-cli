@@ -87,6 +87,241 @@ def list_requirements(
         error(f"Error listing requirements: {e}")
 
 
+@app.command("project")
+def list_project_requirements(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company/Scope ID."),
+    project_id: int = typer.Option(..., "--project-id", "-i", help="Project ID."),
+    with_activities: bool = typer.Option(
+        True,
+        "--with-activities/--no-activities",
+        help="Include activities (checks) for each requirement.",
+    ),
+    fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file for json/csv."),
+):
+    """List requirements (playbooks) associated with a project."""
+    info(f"Listing requirements for project {project_id} in company {company_id}...")
+
+    query_with_activities = """
+    query ProjectRequirements($id: ID!) {
+      project(id: $id) {
+        id
+        label
+        playbooks {
+          id
+          label
+          global
+          updatedAt
+          createdAt
+          check {
+            id
+            label
+            description
+            reference
+          }
+        }
+      }
+    }
+    """
+
+    query_requirements_only = """
+    query ProjectRequirements($id: ID!) {
+      project(id: $id) {
+        id
+        label
+        playbooks {
+          id
+          label
+          global
+          updatedAt
+          createdAt
+        }
+      }
+    }
+    """
+
+    try:
+        data = graphql_request(query_with_activities if with_activities else query_requirements_only, {"id": project_id})
+        project = data.get("project") or {}
+        collection = project.get("playbooks") or []
+
+        if not collection:
+            typer.echo("No requirements found for this project.")
+            raise typer.Exit()
+
+        rows = []
+        if with_activities:
+            for r in collection:
+                checks = r.get("check") or []
+                if not checks:
+                    rows.append({
+                        "requirementId": r.get("id"),
+                        "requirementLabel": r.get("label"),
+                        "global": r.get("global"),
+                        "updatedAt": r.get("updatedAt"),
+                        "createdAt": r.get("createdAt"),
+                        "activityId": "",
+                        "activityLabel": "",
+                        "description": "",
+                        "reference": "",
+                    })
+                    continue
+                for a in checks:
+                    rows.append({
+                        "requirementId": r.get("id"),
+                        "requirementLabel": r.get("label"),
+                        "global": r.get("global"),
+                        "updatedAt": r.get("updatedAt"),
+                        "createdAt": r.get("createdAt"),
+                        "activityId": a.get("id"),
+                        "activityLabel": a.get("label"),
+                        "description": a.get("description"),
+                        "reference": a.get("reference"),
+                    })
+        else:
+            for r in collection:
+                rows.append({
+                    "id": r.get("id"),
+                    "label": r.get("label"),
+                    "global": r.get("global"),
+                    "updatedAt": r.get("updatedAt"),
+                    "createdAt": r.get("createdAt"),
+                })
+
+        export_data(
+            rows,
+            schema=None,
+            fmt=fmt,
+            output=output,
+            title=f"Requirements (Project {project_id}) - {project.get('label') or ''}".strip(),
+        )
+        if with_activities:
+            summary(f"{len(rows)} activit(ies) listed for project {project_id}.")
+        else:
+            summary(f"{len(collection)} requirement(s) listed for project {project_id}.")
+
+    except Exception as e:
+        error(f"Error listing project requirements: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command("activities")
+def list_requirement_activities(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company/Scope ID."),
+    requirement_id: Optional[int] = typer.Option(None, "--requirement-id", "-r", help="Requirement ID."),
+    project_id: Optional[int] = typer.Option(None, "--project-id", "-i", help="Project ID."),
+    fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file for json/csv."),
+):
+    """List activities (checks) inside a requirement."""
+    if not requirement_id and not project_id:
+        error("You must provide either --requirement-id or --project-id.")
+        raise typer.Exit(code=1)
+    if requirement_id and project_id:
+        error("Provide only one of --requirement-id or --project-id.")
+        raise typer.Exit(code=1)
+
+    if requirement_id:
+        info(f"Listing activities for requirement {requirement_id} in company {company_id}...")
+    else:
+        info(f"Listing activities for requirements in project {project_id} (company {company_id})...")
+
+    requirement_query = """
+    query Requirement($companyId: ID!, $id: ID!) {
+      requirement(companyId: $companyId, id: $id) {
+        id
+        label
+        check {
+          id
+          label
+          description
+          reference
+        }
+      }
+    }
+    """
+
+    project_query = """
+    query ProjectRequirements($id: ID!) {
+      project(id: $id) {
+        id
+        label
+        playbooks {
+          id
+          label
+          check {
+            id
+            label
+            description
+            reference
+          }
+        }
+      }
+    }
+    """
+
+    try:
+        rows = []
+        if requirement_id:
+            data = graphql_request(requirement_query, {"companyId": company_id, "id": requirement_id})
+            req = data.get("requirement") or {}
+            collection = req.get("check") or []
+
+            if not collection:
+                typer.echo("No activities found for this requirement.")
+                raise typer.Exit()
+
+            for a in collection:
+                rows.append({
+                    "requirementId": req.get("id"),
+                    "requirementLabel": req.get("label"),
+                    "id": a.get("id"),
+                    "label": a.get("label"),
+                    "description": a.get("description"),
+                    "reference": a.get("reference"),
+                })
+
+            export_data(
+                rows,
+                fmt=fmt,
+                output=output,
+                title=f"Activities (Requirement {requirement_id}) - {req.get('label') or ''}".strip(),
+            )
+            summary(f"{len(collection)} activit(ies) listed for requirement {requirement_id}.")
+        else:
+            data = graphql_request(project_query, {"id": project_id})
+            project = data.get("project") or {}
+            playbooks = project.get("playbooks") or []
+
+            for req in playbooks:
+                checks = req.get("check") or []
+                for a in checks:
+                    rows.append({
+                        "requirementId": req.get("id"),
+                        "requirementLabel": req.get("label"),
+                        "id": a.get("id"),
+                        "label": a.get("label"),
+                        "description": a.get("description"),
+                        "reference": a.get("reference"),
+                    })
+
+            if not rows:
+                typer.echo("No activities found for this project's requirements.")
+                raise typer.Exit()
+
+            export_data(
+                rows,
+                fmt=fmt,
+                output=output,
+                title=f"Activities (Project {project_id}) - {project.get('label') or ''}".strip(),
+            )
+            summary(f"{len(rows)} activit(ies) listed for project {project_id}.")
+
+    except Exception as e:
+        error(f"Error listing requirement activities: {e}")
+        raise typer.Exit(code=1)
+
+
 # ---------------------- CREATE COMMAND ---------------------- #
 @app.command("create")
 def create_requirement(
@@ -256,12 +491,10 @@ def update_requirement(
               id
               label
               description
-              typeId
               reference
               item
               category
               actionPlan
-              vulnerabilityTemplateId
               sort
             }
           }

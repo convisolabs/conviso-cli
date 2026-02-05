@@ -83,7 +83,10 @@ conviso --help
 ## Usage (examples)
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
 - Assets: `python -m conviso.app assets list --company-id 443 --tags cloud --attack-surface INTERNET_FACING --all`
-- Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login"` 
+- Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login"`
+- Requirements (project): `python -m conviso.app requirements project --company-id 443 --project-id 26102`
+- Requirements (activities): `python -m conviso.app requirements activities --company-id 443 --requirement-id 1503`
+- Requirements (project activities): `python -m conviso.app requirements activities --company-id 443 --project-id 26102`
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
 
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
