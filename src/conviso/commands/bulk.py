@@ -306,26 +306,36 @@ def bulk_requirements(
                 warning(f"Ignoring activity (expected at least label|description): {raw}")
                 continue
             act = {"label": parts[0], "description": parts[1]}
-            if len(parts) > 2 and parts[2]:
-                try:
-                    act["typeId"] = int(parts[2])
-                except Exception:
-                    warning(f"Ignoring invalid typeId in activity: {parts[2]}")
-            if len(parts) > 3 and parts[3]:
-                act["reference"] = parts[3]
-            if len(parts) > 4 and parts[4]:
-                act["item"] = parts[4]
-            if len(parts) > 5 and parts[5]:
-                act["category"] = parts[5]
-            if len(parts) > 6 and parts[6]:
-                act["actionPlan"] = parts[6]
-            if len(parts) > 7 and parts[7]:
-                try:
-                    act["vulnerabilityTemplateId"] = int(parts[7])
-                except Exception:
-                    warning(f"Ignoring invalid vulnerabilityTemplateId in activity: {parts[7]}")
-            if len(parts) > 8 and parts[8]:
-                act["sort"] = parts[8]
+
+            rest = parts[2:]
+            if rest:
+                first = rest[0]
+                if first:
+                    try:
+                        act["typeId"] = int(first)
+                        rest = rest[1:]
+                    except Exception:
+                        act["reference"] = first
+                        rest = rest[1:]
+                else:
+                    rest = rest[1:]
+
+            field_order = ["reference", "item", "category", "actionPlan", "vulnerabilityTemplateId", "sort"]
+            start_index = 1 if "reference" in act else 0
+            for idx, value in enumerate(rest):
+                field_idx = idx + start_index
+                if field_idx >= len(field_order):
+                    break
+                if not value:
+                    continue
+                field = field_order[field_idx]
+                if field == "vulnerabilityTemplateId":
+                    try:
+                        act[field] = int(value)
+                    except Exception:
+                        warning(f"Ignoring invalid vulnerabilityTemplateId in activity: {value}")
+                else:
+                    act[field] = value
             activities.append(act)
         return activities
 
@@ -1322,14 +1332,14 @@ def _show_requirement_template():
     table.add_row(
         "activities",
         "optional",
-        "Semicolon-separated activities; each activity uses pipe-separated fields: label|description|typeId|reference|item|category|actionPlan|templateId|sort",
-        "Login|Check login|1|REF||Category||123|1;Logout|Check logout|1",
+        "Semicolon-separated activities; each activity uses pipe-separated fields: label|description|[typeId]|reference|item|category|actionPlan|templateId|sort",
+        "Login|Check login|REF||Category||123|1;Logout|Check logout|1",
     )
 
     console.print(table)
     console.print("\nExample create CSV:\n")
     console.print("label,description,global,activities")
-    console.print("Req A,Do X,true,\"Login|Check login|1|REF||Category||123|1\"\n")
+    console.print("Req A,Do X,true,\"Login|Check login|REF||Category||123|1\"\n")
 
     console.print("Example update CSV:\n")
     console.print("id,label,description")

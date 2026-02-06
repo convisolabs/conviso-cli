@@ -83,13 +83,16 @@ conviso --help
 ## Usage (examples)
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
 - Assets: `python -m conviso.app assets list --company-id 443 --tags cloud --attack-surface INTERNET_FACING --all`
-- Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login"`
+- Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login|REF-123"`
 - Requirements (project): `python -m conviso.app requirements project --company-id 443 --project-id 26102`
 - Requirements (activities): `python -m conviso.app requirements activities --company-id 443 --requirement-id 1503`
 - Requirements (project activities): `python -m conviso.app requirements activities --company-id 443 --project-id 26102`
+- Tasks (create from YAML): `python -m conviso.app tasks create --company-id 443 --project-id 26102 --label "Nuclei Scan" --yaml-file samples/task-nuclei.yaml`
+- Tasks (append to requirement): `python -m conviso.app tasks create --company-id 443 --requirement-id 2174 --label "Nuclei Scan" --yaml-file samples/task-nuclei.yaml`
 - Tasks (execute YAML from requirements): `python -m conviso.app tasks run --company-id 443 --project-id 26102`
 - Tasks (list project): `python -m conviso.app tasks list --company-id 443 --project-id 26102`
 - Tasks (only valid YAML): `python -m conviso.app tasks list --company-id 443 --project-id 26102 --only-valid`
+- Tasks (create with inline YAML): `python -m conviso.app tasks create --company-id 443 --label "Quick Task" --yaml "name: quick\nsteps:\n  - action: echo\n    message: ok"`
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
 
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
@@ -186,13 +189,13 @@ Automatic normalizations:
   | label                   | create/update      | Text                                                 |
   | description             | create/update      | Text                                                 |
   | global                  | optional           | true/false                                           |
-  | activities              | optional           | Semicolon-separated; each activity uses `label|description|typeId|reference|item|category|actionPlan|templateId|sort` |
+  | activities              | optional           | Semicolon-separated; each activity uses `label|description|[typeId]|reference|item|category|actionPlan|templateId|sort` |
 
 - Examples:
   - Create:
     ```
     label,description,global,activities
-    Requirement A,Do X,true,"Login|Check login|1|REF||Category||123|1;Logout|Check logout|1"
+    Requirement A,Do X,true,"Login|Check login|REF||Category||123|1;Logout|Check logout|1"
     ```
   - Update/Delete:
     ```

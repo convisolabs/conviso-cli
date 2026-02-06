@@ -94,6 +94,57 @@ def _matches_prefix(label: str, prefix: str) -> bool:
     return re.match(pattern, label.strip(), flags=re.IGNORECASE) is not None
 
 
+def _build_requirement_label(prefix: str, label: str) -> str:
+    base_label = (label or "").strip()
+    if not base_label:
+        return base_label
+    if not prefix or _matches_prefix(base_label, prefix):
+        return base_label
+    return f"{prefix.strip()} - {base_label}"
+
+
+def _attach_requirement_to_project(company_id: int, project_id: int, requirement_id: int):
+    fetch_query = """
+    query Project($id: ID!, $companyId: ID!) {
+      project(id: $id, companyId: $companyId) {
+        id
+        playbooks { id }
+      }
+    }
+    """
+    data = graphql_request(fetch_query, {"id": project_id, "companyId": company_id})
+    project = data.get("project") or {}
+    current_playbooks: List[int] = []
+    for pb in project.get("playbooks") or []:
+        pid = pb.get("id")
+        if pid is None:
+            continue
+        try:
+            current_playbooks.append(int(pid))
+        except ValueError:
+            warning(f"Requirement ID '{pid}' is not numeric; skipping.")
+
+    if requirement_id in current_playbooks:
+        info(f"Requirement {requirement_id} already attached to project {project_id}.")
+        return
+
+    merged = [*current_playbooks, requirement_id]
+    mutation = """
+    mutation UpdateProject($input: UpdateProjectInput!) {
+      updateProject(input: $input) {
+        project { id label }
+      }
+    }
+    """
+    graphql_request(mutation, {"input": {"id": project_id, "companyId": company_id, "playbooksIds": merged}})
+    success(f"Requirement {requirement_id} attached to project {project_id}.")
+
+
+def _normalize_activity_for_input(activity: Dict[str, Any]) -> Dict[str, Any]:
+    allowed = {"id", "label", "description", "reference", "item", "category", "actionPlan"}
+    return {k: v for k, v in activity.items() if k in allowed and v is not None}
+
+
 def _validate_task_yaml(desc: str) -> Dict[str, Any]:
     cleaned = _clean_description(desc)
     if not cleaned:
@@ -954,6 +1005,138 @@ def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) 
         else:
             raise ValueError(f"Unsupported action type: {action_type}")
     return counts
+
+
+@app.command("create")
+def create_task(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company/Scope ID."),
+    label: str = typer.Option(..., "--label", "-n", help="Task label (defaults to activity label)."),
+    yaml_text: Optional[str] = typer.Option(None, "--yaml", help="Inline YAML for the activity description."),
+    yaml_file: Optional[str] = typer.Option(None, "--yaml-file", help="Path to YAML file for the activity description."),
+    requirement_id: Optional[int] = typer.Option(None, "--requirement-id", help="Append activity to an existing requirement ID."),
+    requirement_label: Optional[str] = typer.Option(None, "--requirement-label", help="Requirement label (new requirement only)."),
+    requirement_description: Optional[str] = typer.Option(None, "--requirement-description", help="Requirement description (defaults to task label)."),
+    activity_label: Optional[str] = typer.Option(None, "--activity-label", help="Activity label (defaults to task label)."),
+    reference: Optional[str] = typer.Option(None, "--reference", help="Activity reference."),
+    type_id: Optional[int] = typer.Option(None, "--type-id", help="Activity typeId."),
+    requirement_prefix: str = typer.Option(TASK_PREFIX_DEFAULT, "--prefix", help="Requirement label prefix to use (new requirement)."),
+    project_id: Optional[int] = typer.Option(None, "--project-id", "-p", help="Attach requirement to project."),
+    global_flag: bool = typer.Option(False, "--global", help="Mark new requirement as global."),
+):
+    """Create a TASK requirement with a YAML activity."""
+    _require_yaml()
+
+    if bool(yaml_text) == bool(yaml_file):
+        error("Provide exactly one of --yaml or --yaml-file.")
+        raise typer.Exit(code=1)
+
+    if requirement_id and requirement_label:
+        warning("Ignoring --requirement-label because --requirement-id was provided.")
+
+    if yaml_file:
+        try:
+            with open(yaml_file, "r", encoding="utf-8") as f:
+                yaml_text = f.read()
+        except Exception as exc:
+            error(f"Could not read YAML file '{yaml_file}': {exc}")
+            raise typer.Exit(code=1)
+
+    yaml_text = yaml_text or ""
+    validation = _validate_task_yaml(yaml_text)
+    if not validation.get("ok"):
+        reason = validation.get("reason") or "invalid_yaml"
+        error(f"Invalid task YAML: {reason}")
+        raise typer.Exit(code=1)
+
+    req_label_input = requirement_label or label
+    req_label = _build_requirement_label(requirement_prefix, req_label_input)
+    req_description = requirement_description if requirement_description is not None else label
+    act_label = activity_label or label
+
+    description_payload = f"<pre>{html_lib.escape(yaml_text)}</pre>"
+    activity: Dict[str, Any] = {
+        "label": act_label,
+        "description": description_payload,
+    }
+    if reference:
+        activity["reference"] = reference
+    if type_id is not None:
+        activity["typeId"] = type_id
+
+    mutation = """
+    mutation CreateOrUpdateRequirement($input: RequirementInput!) {
+      createOrUpdateRequirement(input: $input) {
+        requirement { id label }
+      }
+    }
+    """
+
+    activities_payload = [_normalize_activity_for_input(activity)]
+    input_data: Dict[str, Any] = {
+        "companyId": company_id,
+        "label": req_label,
+        "description": req_description,
+        "type": "Procedures",
+        "global": global_flag or None,
+        "activities": activities_payload,
+    }
+
+    if requirement_id:
+        fetch_query = """
+        query Requirement($companyId: ID!, $id: ID!) {
+          requirement(companyId: $companyId, id: $id) {
+            id
+            label
+            description
+            global
+            check {
+              id
+              label
+              description
+              reference
+              item
+              category
+              actionPlan
+              sort
+            }
+          }
+        }
+        """
+        try:
+            fetched = graphql_request(fetch_query, {"companyId": company_id, "id": requirement_id}, log_request=False)
+            req_data = fetched.get("requirement") or {}
+        except Exception as fetch_err:
+            error(f"Could not fetch existing requirement: {fetch_err}")
+            raise typer.Exit(code=1)
+
+        current_label = req_data.get("label")
+        if current_label and not _matches_prefix(current_label, requirement_prefix):
+            warning(
+                f"Requirement {requirement_id} label '{current_label}' does not match prefix '{requirement_prefix}'. "
+                "Tasks may not be picked up by list/run."
+            )
+
+        existing_activities = [_normalize_activity_for_input(a) for a in (req_data.get("check") or [])]
+        input_data = {
+            "id": requirement_id,
+            "companyId": company_id,
+            "label": requirement_label or current_label,
+            "description": requirement_description if requirement_description is not None else req_data.get("description"),
+            "activities": [*existing_activities, _normalize_activity_for_input(activity)],
+        }
+
+    input_data = {k: v for k, v in input_data.items() if v is not None}
+
+    try:
+        data = graphql_request(mutation, {"input": input_data})
+        req = data["createOrUpdateRequirement"]["requirement"]
+        req_id = req.get("id")
+        success(f"Task created: requirement {req_id} - {req.get('label')}")
+        if project_id and req_id:
+            _attach_requirement_to_project(company_id, project_id, int(req_id))
+    except Exception as e:
+        error(f"Error creating task: {e}")
+        raise typer.Exit(code=1)
 
 
 @app.command("list")
