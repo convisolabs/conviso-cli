@@ -2,7 +2,7 @@
 """
 Requirements Command Module
 ---------------------------
-Lists requirements (playbooks) so users can pick valid IDs for project associations.
+Lists requirements so users can pick valid IDs for project associations.
 """
 
 import typer
@@ -12,7 +12,7 @@ from conviso.clients.client_graphql import graphql_request
 from conviso.core.output_manager import export_data
 from conviso.schemas.requirements_schema import schema
 
-app = typer.Typer(help="List requirements/playbooks available in a given scope.")
+app = typer.Typer(help="List requirements available in a given scope.")
 
 
 @app.command("list")
@@ -25,7 +25,7 @@ def list_requirements(
     fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
     output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file for json/csv."),
 ):
-    """List requirements (playbooks) for a scope."""
+    """List requirements for a scope."""
     info(f"Listing requirements for company {company_id} (page {page}, per_page {per_page})...")
 
     query = """
@@ -99,7 +99,7 @@ def list_project_requirements(
     fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
     output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file for json/csv."),
 ):
-    """List requirements (playbooks) associated with a project."""
+    """List requirements associated with a project."""
     info(f"Listing requirements for project {project_id} in company {company_id}...")
 
     query_with_activities = """
@@ -213,7 +213,7 @@ def list_requirement_activities(
     fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
     output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file for json/csv."),
 ):
-    """List activities (checks) inside a requirement."""
+    """List activities inside a requirement."""
     if not requirement_id and not project_id:
         error("You must provide either --requirement-id or --project-id.")
         raise typer.Exit(code=1)
@@ -333,10 +333,14 @@ def create_requirement(
         None,
         "--activity",
         "-a",
-        help="Activity in format 'label|description|typeId|reference|item|category|actionPlan|templateId|sort'. Omit trailing fields if not needed.",
+        help=(
+            "Activity format: 'label|description|[typeId]|reference|item|category|actionPlan|templateId|sort'. "
+            "Required: label, description. If you don't have typeId, use 'label|description|reference' or "
+            "'label|description||reference'. Omit trailing fields if not needed."
+        ),
     ),
 ):
-    """Create a requirement (playbook)."""
+    """Create a requirement."""
     info(f"Creating requirement '{label}' for company {company_id}...")
 
     mutation = """
@@ -360,31 +364,37 @@ def create_requirement(
             if len(parts) < 2:
                 warning(f"Ignoring activity (expected at least label|description): {raw}")
                 continue
-            act = {
-                "label": parts[0],
-                "description": parts[1],
-            }
-            # Optional fields by position
-            if len(parts) > 2 and parts[2]:
-                try:
-                    act["typeId"] = int(parts[2])
-                except ValueError:
-                    warning(f"Ignoring invalid typeId in activity: {parts[2]}")
-            if len(parts) > 3 and parts[3]:
-                act["reference"] = parts[3]
-            if len(parts) > 4 and parts[4]:
-                act["item"] = parts[4]
-            if len(parts) > 5 and parts[5]:
-                act["category"] = parts[5]
-            if len(parts) > 6 and parts[6]:
-                act["actionPlan"] = parts[6]
-            if len(parts) > 7 and parts[7]:
-                try:
-                    act["vulnerabilityTemplateId"] = int(parts[7])
-                except ValueError:
-                    warning(f"Ignoring invalid vulnerabilityTemplateId in activity: {parts[7]}")
-            if len(parts) > 8 and parts[8]:
-                act["sort"] = parts[8]
+            act = {"label": parts[0], "description": parts[1]}
+
+            rest = parts[2:]
+            if rest:
+                first = rest[0]
+                if first:
+                    try:
+                        act["typeId"] = int(first)
+                        rest = rest[1:]
+                    except ValueError:
+                        act["reference"] = first
+                        rest = rest[1:]
+                else:
+                    rest = rest[1:]
+
+            field_order = ["reference", "item", "category", "actionPlan", "vulnerabilityTemplateId", "sort"]
+            start_index = 1 if "reference" in act else 0
+            for idx, value in enumerate(rest):
+                field_idx = idx + start_index
+                if field_idx >= len(field_order):
+                    break
+                if not value:
+                    continue
+                field = field_order[field_idx]
+                if field == "vulnerabilityTemplateId":
+                    try:
+                        act[field] = int(value)
+                    except ValueError:
+                        warning(f"Ignoring invalid vulnerabilityTemplateId in activity: {value}")
+                else:
+                    act[field] = value
             parsed.append(act)
         return parsed
 
@@ -421,7 +431,11 @@ def update_requirement(
         None,
         "--activity",
         "-a",
-        help="Activity in format 'label|description|typeId|reference|item|category|actionPlan|templateId|sort'. Omit trailing fields if not needed.",
+        help=(
+            "Activity format: 'label|description|[typeId]|reference|item|category|actionPlan|templateId|sort'. "
+            "Required: label, description. If you don't have typeId, use 'label|description|reference' or "
+            "'label|description||reference'. Omit trailing fields if not needed."
+        ),
     ),
 ):
     """Update an existing requirement."""
@@ -449,26 +463,36 @@ def update_requirement(
                 warning(f"Ignoring activity (expected at least label|description): {raw}")
                 continue
             act = {"label": parts[0], "description": parts[1]}
-            if len(parts) > 2 and parts[2]:
-                try:
-                    act["typeId"] = int(parts[2])
-                except ValueError:
-                    warning(f"Ignoring invalid typeId in activity: {parts[2]}")
-            if len(parts) > 3 and parts[3]:
-                act["reference"] = parts[3]
-            if len(parts) > 4 and parts[4]:
-                act["item"] = parts[4]
-            if len(parts) > 5 and parts[5]:
-                act["category"] = parts[5]
-            if len(parts) > 6 and parts[6]:
-                act["actionPlan"] = parts[6]
-            if len(parts) > 7 and parts[7]:
-                try:
-                    act["vulnerabilityTemplateId"] = int(parts[7])
-                except ValueError:
-                    warning(f"Ignoring invalid vulnerabilityTemplateId in activity: {parts[7]}")
-            if len(parts) > 8 and parts[8]:
-                act["sort"] = parts[8]
+
+            rest = parts[2:]
+            if rest:
+                first = rest[0]
+                if first:
+                    try:
+                        act["typeId"] = int(first)
+                        rest = rest[1:]
+                    except ValueError:
+                        act["reference"] = first
+                        rest = rest[1:]
+                else:
+                    rest = rest[1:]
+
+            field_order = ["reference", "item", "category", "actionPlan", "vulnerabilityTemplateId", "sort"]
+            start_index = 1 if "reference" in act else 0
+            for idx, value in enumerate(rest):
+                field_idx = idx + start_index
+                if field_idx >= len(field_order):
+                    break
+                if not value:
+                    continue
+                field = field_order[field_idx]
+                if field == "vulnerabilityTemplateId":
+                    try:
+                        act[field] = int(value)
+                    except ValueError:
+                        warning(f"Ignoring invalid vulnerabilityTemplateId in activity: {value}")
+                else:
+                    act[field] = value
             parsed.append(act)
         return parsed
 
