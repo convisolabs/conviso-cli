@@ -570,6 +570,30 @@ def _create_asset(company_id: int, payload: Dict[str, Any], apply: bool) -> Opti
     return None
 
 
+def _update_asset(company_id: int, payload: Dict[str, Any], apply: bool) -> Optional[int]:
+    if not apply:
+        return None
+    mutation = """
+    mutation UpdateAsset($input: UpdateAssetInput!) {
+      updateAsset(input: $input) { asset { id name } }
+    }
+    """
+    input_data = dict(payload)
+    input_data["companyId"] = int(company_id)
+    data = graphql_request(mutation, {"input": input_data})
+    asset = (data.get("updateAsset") or {}).get("asset") or {}
+    asset_id = asset.get("id")
+    asset_name = asset.get("name")
+    if asset_id:
+        success(f"Asset updated: ID {asset_id} - {asset_name}")
+        try:
+            return int(asset_id)
+        except Exception:
+            return None
+    warning("Asset update returned no ID.")
+    return None
+
+
 def _find_asset_by_name(company_id: int, name: str) -> Optional[int]:
     if not name:
         return None
@@ -761,7 +785,7 @@ def _actions_from_parsed(actions: List[Dict[str, Any]], items: List[Dict[str, An
 
 
 def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) -> Dict[str, int]:
-    counts = {"created": 0, "skipped": 0, "assets_created": 0}
+    counts = {"created": 0, "skipped": 0, "assets_created": 0, "assets_updated": 0}
     for entry in planned:
         action_type = entry["type"]
         mapping = entry["map"]
@@ -779,7 +803,7 @@ def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) 
             payload[k] = _render_value(v, record, context)
 
         if action_type == "assets.create":
-            allowed = {"name", "businessImpact", "dataClassification", "assetsTagList", "integrations", "environmentCompromised"}
+            allowed = {"name", "description", "businessImpact", "dataClassification", "assetsTagList", "integrations", "environmentCompromised", "exploitability"}
             filtered = {k: payload.get(k) for k in allowed if payload.get(k) not in (None, "")}
             if "name" not in filtered:
                 raise ValueError("assets.create requires 'name'")
@@ -789,11 +813,36 @@ def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) 
                 filtered["integrations"] = [t.strip() for t in filtered["integrations"].split(",") if t.strip()]
             if isinstance(filtered.get("businessImpact"), str):
                 filtered["businessImpact"] = filtered["businessImpact"].upper()
+            if isinstance(filtered.get("exploitability"), str):
+                filtered["exploitability"] = filtered["exploitability"].upper()
             if isinstance(filtered.get("environmentCompromised"), str):
                 filtered["environmentCompromised"] = filtered["environmentCompromised"].lower() == "true"
             created_id = _create_asset(company_id, filtered, apply)
             if created_id:
                 counts["assets_created"] += 1
+        elif action_type == "assets.update":
+            allowed = {"id", "assetId", "name", "description", "businessImpact", "dataClassification", "assetsTagList", "integrations", "environmentCompromised", "exploitability"}
+            filtered = {k: payload.get(k) for k in allowed if payload.get(k) not in (None, "")}
+            asset_id = filtered.get("id") or filtered.get("assetId")
+            if asset_id in (None, ""):
+                raise ValueError("assets.update requires 'id' or 'assetId'")
+            if isinstance(asset_id, str) and asset_id.isdigit():
+                asset_id = int(asset_id)
+            filtered["id"] = asset_id
+            filtered.pop("assetId", None)
+            if isinstance(filtered.get("assetsTagList"), str):
+                filtered["assetsTagList"] = [t.strip() for t in filtered["assetsTagList"].split(",") if t.strip()]
+            if isinstance(filtered.get("integrations"), str):
+                filtered["integrations"] = [t.strip() for t in filtered["integrations"].split(",") if t.strip()]
+            if isinstance(filtered.get("businessImpact"), str):
+                filtered["businessImpact"] = filtered["businessImpact"].upper()
+            if isinstance(filtered.get("exploitability"), str):
+                filtered["exploitability"] = filtered["exploitability"].upper()
+            if isinstance(filtered.get("environmentCompromised"), str):
+                filtered["environmentCompromised"] = filtered["environmentCompromised"].lower() == "true"
+            updated_id = _update_asset(company_id, filtered, apply)
+            if updated_id:
+                counts["assets_updated"] += 1
         elif action_type == "vulns.create":
             # Normalize severity values from common scanners
             severity = payload.get("severity")
@@ -821,8 +870,6 @@ def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) 
                             f"Requirement='{req_label}' Activity='{act_label}'."
                         )
                         raise typer.Exit(code=1)
-                    if asset_payload.get("description"):
-                        asset_payload.pop("description", None)
                     existing_assets = (context.get("assets") or {}).get("by_name") or {}
                     normalized_name = _normalize_asset_key(str(name))
                     if str(name) in existing_assets:
@@ -835,8 +882,10 @@ def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) 
                             asset_id = lookup_existing
                             payload["assetId"] = asset_id
                         if not asset_id:
-                            allowed = {"name", "businessImpact", "dataClassification", "assetsTagList", "integrations", "environmentCompromised"}
+                            allowed = {"name", "description", "businessImpact", "dataClassification", "assetsTagList", "integrations", "environmentCompromised", "exploitability"}
                             filtered = {k: asset_payload.get(k) for k in allowed if asset_payload.get(k) not in (None, "")}
+                            if isinstance(filtered.get("exploitability"), str):
+                                filtered["exploitability"] = filtered["exploitability"].upper()
                             if apply:
                                 created = _create_asset(company_id, filtered, apply=True)
                                 if not created:
@@ -1405,7 +1454,7 @@ def run_task(
                 do_apply = confirm
             counts = _apply_actions(planned, company_id, do_apply)
             summary(
-                f"Vulnerabilities created={counts['created']} skipped={counts['skipped']} assets_created={counts['assets_created']}"
+                f"Vulnerabilities created={counts['created']} skipped={counts['skipped']} assets_created={counts['assets_created']} assets_updated={counts['assets_updated']}"
             )
             tasks_executed += 1
 

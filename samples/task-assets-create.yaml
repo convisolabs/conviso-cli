@@ -1,0 +1,20 @@
+version: 1
+name: "Assets create (scan-json-lines)"
+steps:
+  - id: assets_create
+    name: "Create assets"
+    run:
+      cmd: "cat <<'JSONL'\n{\"name\":\"Asset A\",\"description\":\"Public website\",\"businessImpact\":\"HIGH\",\"dataClassification\":[\"NON_SENSITIVE\"],\"assetsTagList\":[\"web\",\"prod\"],\"integrations\":[\"nuclei\"],\"environmentCompromised\":false,\"exploitability\":\"INTERNET_FACING\"}\n{\"name\":\"Asset B\",\"description\":\"Internal API\",\"businessImpact\":\"MEDIUM\",\"dataClassification\":[\"PII\"],\"assetsTagList\":[\"api\"],\"integrations\":[\"naabu\"],\"environmentCompromised\":true,\"exploitability\":\"INTERNAL\"}\nJSONL"
+      parse:
+        format: "scan-json-lines"
+    actions:
+      - type: "assets.create"
+        map:
+          name: "${finding.name}"
+          description: "${finding.description}"
+          businessImpact: "${finding.businessImpact}"
+          dataClassification: "${finding.dataClassification}"
+          assetsTagList: "${finding.assetsTagList}"
+          integrations: "${finding.integrations}"
+          environmentCompromised: "${finding.environmentCompromised}"
+          exploitability: "${finding.exploitability}"
