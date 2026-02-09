@@ -110,8 +110,11 @@ Notes:
 - Only requirements with labels starting with `TASK` (e.g., `TASK - ...` or `TASK:`) are processed (configurable with `--prefix`). Listing and execution are always project-scoped.
 - Each activity must have **exactly one step** in the YAML.
 - In `vulns.create`, `assetId` is required. If defined in YAML, it takes precedence. Otherwise it is resolved via `inputs.assets`. If it cannot be resolved, the command fails.
-- To auto-create assets in `vulns.create`, use `asset.create_if_missing: true` and set `asset.map.name` to a field from the tool output. `description` is accepted in YAML but ignored by the API.
-- YAML examples: `samples/task-nmap-nuclei.yaml`, `samples/task-nuclei.yaml`
+- To auto-create assets in `vulns.create`, use `asset.create_if_missing: true` and set `asset.map.name` to a field from the tool output.
+- Supported actions: `assets.create`, `assets.update`, `vulns.create`.
+- Asset fields allowed in `assets.create` and `asset.map` (for `create_if_missing`): `name`, `description`, `businessImpact`, `dataClassification`, `assetsTagList`, `integrations`, `environmentCompromised`, `exploitability`.
+- Asset fields allowed in `assets.update`: `id` or `assetId` plus the same fields as `assets.create`.
+- YAML examples: `samples/task-nmap-nuclei.yaml`, `samples/task-nuclei.yaml`, `samples/task-assets-create.yaml`, `samples/task-assets-update.yaml`
 - `scan-json-lines` example: `samples/task-naabu.yaml`
 - Subdomains -> resolve -> ports pipeline: `samples/task-subfinder-dnsx-naabu.yaml`
 - Execution:

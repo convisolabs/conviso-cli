@@ -1,0 +1,22 @@
+version: 1
+name: "Assets update (scan-json-lines)"
+steps:
+  - id: assets_update
+    name: "Update assets"
+    run:
+      cmd: "cat <<'JSONL'\n{\"id\":123,\"name\":\"Asset A Updated\",\"description\":\"Public website (updated)\",\"businessImpact\":\"HIGH\",\"dataClassification\":[\"NON_SENSITIVE\"],\"assetsTagList\":[\"web\",\"prod\",\"critical\"],\"integrations\":[\"nuclei\"],\"environmentCompromised\":false,\"exploitability\":\"INTERNET_FACING\"}\n{\"assetId\":456,\"name\":\"Asset B Updated\",\"description\":\"Internal API (updated)\",\"businessImpact\":\"MEDIUM\",\"dataClassification\":[\"PII\"],\"assetsTagList\":[\"api\"],\"integrations\":[\"naabu\"],\"environmentCompromised\":true,\"exploitability\":\"INTERNAL\"}\nJSONL"
+      parse:
+        format: "scan-json-lines"
+    actions:
+      - type: "assets.update"
+        map:
+          id: "${finding.id}"
+          assetId: "${finding.assetId}"
+          name: "${finding.name}"
+          description: "${finding.description}"
+          businessImpact: "${finding.businessImpact}"
+          dataClassification: "${finding.dataClassification}"
+          assetsTagList: "${finding.assetsTagList}"
+          integrations: "${finding.integrations}"
+          environmentCompromised: "${finding.environmentCompromised}"
+          exploitability: "${finding.exploitability}"
