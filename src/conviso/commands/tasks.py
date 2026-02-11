@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import json
 import html as html_lib
+import hashlib
 import os
 import re
 import subprocess
+import time
 import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
@@ -27,9 +29,91 @@ except Exception:  # pragma: no cover - optional runtime dependency
     yaml = None
 
 app = typer.Typer(help="Execute YAML tasks defined in requirement activities.")
+approvals_app = typer.Typer(help="Manage approved task commands.")
+app.add_typer(approvals_app, name="approvals")
 
 TASK_PREFIX_DEFAULT = "TASK"
 _ASSET_LOOKUP_WARNED = False
+APPROVALS_DIR = os.path.join(os.path.expanduser("~"), ".config", "conviso")
+APPROVALS_FILE = os.path.join(APPROVALS_DIR, "approved_tasks.json")
+
+
+def _load_approved_commands() -> Dict[str, Dict[str, Any]]:
+    try:
+        with open(APPROVALS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            return data
+    except Exception:
+        pass
+    return {}
+
+
+def _save_approved_commands(data: Dict[str, Dict[str, Any]]):
+    os.makedirs(APPROVALS_DIR, exist_ok=True)
+    with open(APPROVALS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, sort_keys=True)
+
+
+def _command_key(cmd: str) -> str:
+    return hashlib.sha256(cmd.encode("utf-8")).hexdigest()
+
+
+def _is_command_approved(cmd: str) -> bool:
+    approvals = _load_approved_commands()
+    return _command_key(cmd) in approvals
+
+
+def _approve_command(cmd: str):
+    approvals = _load_approved_commands()
+    key = _command_key(cmd)
+    approvals[key] = {"cmd": cmd, "approved_at": int(time.time())}
+    _save_approved_commands(approvals)
+
+
+@approvals_app.command("list")
+def list_approvals():
+    """List locally approved task commands."""
+    approvals = _load_approved_commands()
+    if not approvals:
+        info("No approved commands found.")
+        return
+    rows = []
+    for key, data in approvals.items():
+        cmd = data.get("cmd") or ""
+        approved_at = data.get("approved_at") or 0
+        rows.append({"hash": key, "approvedAt": approved_at, "cmd": cmd})
+    for row in rows:
+        typer.echo(f"{row['hash']}  {row['approvedAt']}  {row['cmd']}")
+    summary(f"{len(rows)} approved command(s).")
+
+
+@approvals_app.command("clear")
+def clear_approvals():
+    """Clear locally approved task commands."""
+    if os.path.exists(APPROVALS_FILE):
+        try:
+            os.remove(APPROVALS_FILE)
+            info("Approved commands cleared.")
+            return
+        except Exception as exc:
+            error(f"Failed to clear approvals: {exc}")
+            raise typer.Exit(code=1)
+    info("No approvals file found.")
+
+
+@approvals_app.command("remove")
+def remove_approval(
+    hash_value: str = typer.Option(..., "--hash", "-h", help="Approval hash to remove."),
+):
+    """Remove a single approved command by hash."""
+    approvals = _load_approved_commands()
+    if hash_value not in approvals:
+        warning("Approval hash not found.")
+        raise typer.Exit(code=1)
+    approvals.pop(hash_value, None)
+    _save_approved_commands(approvals)
+    info("Approval removed.")
 
 
 def _require_yaml():
@@ -1291,6 +1375,7 @@ def run_task(
     project_id: int = typer.Option(..., "--project-id", "-p", help="Project ID."),
     requirement_prefix: str = typer.Option(TASK_PREFIX_DEFAULT, "--prefix", help="Requirement label prefix to match."),
     dryrun: bool = typer.Option(True, "--dryrun/--apply", help="Run in dry-run mode (default). Use --apply to apply actions."),
+    auto_approve: bool = typer.Option(False, "--auto-approve", help="Approve and persist task commands without confirmation."),
 ):
     """Execute tasks defined as YAML in activity descriptions."""
     _require_yaml()
@@ -1447,6 +1532,18 @@ def run_task(
 
             cmd = _render_string(cmd, {}, context)
             info(f"Running: {cmd}")
+            if not _is_command_approved(cmd):
+                if auto_approve:
+                    _approve_command(cmd)
+                    info("Command approved and cached locally.")
+                else:
+                    info("Command requires approval to run.")
+                    confirm = typer.confirm("Approve and run this command now?", default=False)
+                    if not confirm:
+                        warning("Command not approved. Skipping.")
+                        continue
+                    _approve_command(cmd)
+                    info("Command approved and cached locally.")
             result = subprocess.run(cmd, shell=True, text=True, capture_output=True)
             if result.returncode != 0:
                 error(f"Command failed (code {result.returncode}): {result.stderr.strip()}")
