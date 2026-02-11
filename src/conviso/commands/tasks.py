@@ -843,6 +843,32 @@ def _apply_actions(planned: List[Dict[str, Any]], company_id: int, apply: bool) 
             updated_id = _update_asset(company_id, filtered, apply)
             if updated_id:
                 counts["assets_updated"] += 1
+        elif action_type == "assets.enrich":
+            asset_id = payload.get("id") or payload.get("assetId")
+            asset_name = payload.get("name")
+            if asset_id in (None, ""):
+                resolved = None
+                if asset_name:
+                    assets_cache = (context.get("assets") or {}).get("by_name") or {}
+                    normalized_name = _normalize_asset_key(str(asset_name))
+                    if str(asset_name) in assets_cache:
+                        resolved = assets_cache.get(str(asset_name))
+                    elif normalized_name in assets_cache:
+                        resolved = assets_cache.get(normalized_name)
+                    else:
+                        resolved = _find_asset_by_name(company_id, str(asset_name))
+                if not resolved:
+                    warning("Skipping assets.enrich: asset not found (use assets.create or provide assetId).")
+                    counts["skipped"] += 1
+                    continue
+                asset_id = resolved
+            if isinstance(asset_id, str) and asset_id.isdigit():
+                asset_id = int(asset_id)
+            payload["id"] = asset_id
+            payload.pop("assetId", None)
+            updated_id = _update_asset(company_id, payload, apply)
+            if updated_id:
+                counts["assets_updated"] += 1
         elif action_type == "vulns.create":
             # Normalize severity values from common scanners
             severity = payload.get("severity")
@@ -1072,7 +1098,7 @@ def create_task(
     project_id: Optional[int] = typer.Option(None, "--project-id", "-p", help="Attach requirement to project."),
     global_flag: bool = typer.Option(False, "--global", help="Mark new requirement as global."),
 ):
-    """Create a TASK requirement with a YAML activity."""
+    """Create a TASK requirement with a YAML activity (supports assets.create, assets.update, assets.enrich, vulns.create)."""
     _require_yaml()
 
     if bool(yaml_text) == bool(yaml_file):
@@ -1264,7 +1290,7 @@ def run_task(
     company_id: int = typer.Option(..., "--company-id", "-c", help="Company/Scope ID."),
     project_id: int = typer.Option(..., "--project-id", "-p", help="Project ID."),
     requirement_prefix: str = typer.Option(TASK_PREFIX_DEFAULT, "--prefix", help="Requirement label prefix to match."),
-    apply: bool = typer.Option(False, "--apply", help="Apply actions without dry-run prompt."),
+    dryrun: bool = typer.Option(True, "--dryrun/--apply", help="Run in dry-run mode (default). Use --apply to apply actions."),
 ):
     """Execute tasks defined as YAML in activity descriptions."""
     _require_yaml()
@@ -1448,10 +1474,7 @@ def run_task(
 
             planned = _actions_from_parsed(actions, parsed_items, context)
 
-            do_apply = apply
-            if not apply:
-                confirm = typer.confirm("Apply actions now?", default=False)
-                do_apply = confirm
+            do_apply = not dryrun
             counts = _apply_actions(planned, company_id, do_apply)
             summary(
                 f"Vulnerabilities created={counts['created']} skipped={counts['skipped']} assets_created={counts['assets_created']} assets_updated={counts['assets_updated']}"

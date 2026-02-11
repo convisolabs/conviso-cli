@@ -111,14 +111,15 @@ Notes:
 - Each activity must have **exactly one step** in the YAML.
 - In `vulns.create`, `assetId` is required. If defined in YAML, it takes precedence. Otherwise it is resolved via `inputs.assets`. If it cannot be resolved, the command fails.
 - To auto-create assets in `vulns.create`, use `asset.create_if_missing: true` and set `asset.map.name` to a field from the tool output.
-- Supported actions: `assets.create`, `assets.update`, `vulns.create`.
+- Supported actions: `assets.create`, `assets.update`, `assets.enrich`, `vulns.create`.
+- `assets.enrich` only updates existing assets (requires `id`/`assetId` or `name`); it does not create new assets.
 - Asset fields allowed in `assets.create` and `asset.map` (for `create_if_missing`): `name`, `description`, `businessImpact`, `dataClassification`, `assetsTagList`, `integrations`, `environmentCompromised`, `exploitability`.
 - Asset fields allowed in `assets.update`: `id` or `assetId` plus the same fields as `assets.create`.
 - YAML examples: `samples/task-nmap-nuclei.yaml`, `samples/task-nuclei.yaml`, `samples/task-assets-create.yaml`, `samples/task-assets-update.yaml`
 - `scan-json-lines` example: `samples/task-naabu.yaml`
 - Subdomains -> resolve -> ports pipeline: `samples/task-subfinder-dnsx-naabu.yaml`
 - Execution:
-  - Dry-run with confirmation: `python -m conviso.app tasks run --company-id 443 --project-id 26102`
+  - Dry-run only (default): `python -m conviso.app tasks run --company-id 443 --project-id 26102`
   - Apply directly: `python -m conviso.app tasks run --company-id 443 --project-id 26102 --apply`
 - Pentest guide: `docs/pentest-tasks-guide.md`
 
