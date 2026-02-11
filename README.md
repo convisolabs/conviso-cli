@@ -121,6 +121,12 @@ Notes:
 - Execution:
   - Dry-run only (default): `python -m conviso.app tasks run --company-id 443 --project-id 26102`
   - Apply directly: `python -m conviso.app tasks run --company-id 443 --project-id 26102 --apply`
+  - Approve commands without prompt: `python -m conviso.app tasks run --company-id 443 --project-id 26102 --auto-approve`
+  - Command approvals are stored locally in `~/.config/conviso/approved_tasks.json` and are keyed by the full command string.
+- Manage approvals:
+  - List approvals: `python -m conviso.app tasks approvals list`
+  - Clear approvals: `python -m conviso.app tasks approvals clear`
+  - Remove approval by hash: `python -m conviso.app tasks approvals remove --hash <hash>`
 - Pentest guide: `docs/pentest-tasks-guide.md`
 
 ### scan-json-lines (agnostic format)
