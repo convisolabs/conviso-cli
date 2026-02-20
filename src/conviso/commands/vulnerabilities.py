@@ -8,6 +8,7 @@ Lists vulnerabilities (issues) with optional filters (asset IDs, pagination).
 import typer
 from typing import Optional
 import json
+from datetime import date, timedelta
 from conviso.core.notifier import info, error, summary, success
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.output_manager import export_data
@@ -26,6 +27,7 @@ def list_vulnerabilities(
     project_types: Optional[str] = typer.Option(None, "--project-types", help="Comma-separated project types (e.g. PENETRATION_TEST, WEB_PENETRATION_TESTING)."),
     cves: Optional[str] = typer.Option(None, "--cves", help="Comma-separated CVE identifiers."),
     issue_types: Optional[str] = typer.Option(None, "--types", help="Comma-separated failure types (e.g. WEB_VULNERABILITY, DAST_FINDING, SAST_FINDING, SOURCE_CODE_VULNERABILITY, NETWORK_VULNERABILITY, SCA_FINDING)."),
+    days_back: Optional[int] = typer.Option(None, "--days-back", help="Filter by created date in the last N days (sets --created-start automatically)."),
     created_start: Optional[str] = typer.Option(None, "--created-start", help="Created at >= (YYYY-MM-DD)."),
     created_end: Optional[str] = typer.Option(None, "--created-end", help="Created at <= (YYYY-MM-DD)."),
     risk_until_start: Optional[str] = typer.Option(None, "--risk-until-start", help="Risk accepted until >= (YYYY-MM-DD)."),
@@ -155,6 +157,15 @@ def list_vulnerabilities(
     assignee_list = _split_strs(assignee_emails)
     if business_impact_list:
         business_impact_list = [b.upper() for b in business_impact_list]
+
+    if days_back is not None:
+        if days_back < 0:
+            error("--days-back must be >= 0.")
+            raise typer.Exit(code=1)
+        if created_start:
+            error("Use either --days-back or --created-start, not both.")
+            raise typer.Exit(code=1)
+        created_start = (date.today() - timedelta(days=days_back)).isoformat()
 
     created_range = None
     if created_start or created_end:
