@@ -22,7 +22,7 @@ def list_projects(
     filters: Optional[List[str]] = typer.Option(
         None,
         "--filter",
-        "-f",
+        "-F",
         help="Apply filters in 'field=value' format. Supports aliases (e.g., id=123, name=foo, status=DONE).",
     ),
     sort_by: Optional[str] = typer.Option(
