@@ -6,6 +6,7 @@ Manages project operations (list, create, update, delete) via Conviso GraphQL AP
 Now standardized to use the new core/output_manager for unified output handling.
 """
 
+import math
 import typer
 from typing import Optional, List
 from conviso.core.notifier import info, success, error, summary, warning
@@ -149,6 +150,7 @@ def list_projects(
                 break
             current_page += 1
 
+
         export_data(
             rows,
             schema=schema,
@@ -157,7 +159,19 @@ def list_projects(
             title=f"Projects (Company {company_id}) - Page {page}/{total_pages or '?'}",
         )
 
-        summary(f"{len(rows)} project(s) listed out of {total_count or len(rows)} total.\n")
+        if fmt != "json":
+            total = total_count or len(rows)
+            effective_limit = max(limit, 1)
+
+            start = (page - 1) * effective_limit + 1 if total > 0 else 0
+            end = min(page * effective_limit, total)
+
+            total_pages_calc = math.ceil(total / effective_limit)
+
+            summary(
+                f"Showing {start}-{end} of {total} "
+                f"(page {page}/{total_pages_calc}).\n"
+            )
 
     except Exception as e:
         error(f"Error listing projects: {e}")
