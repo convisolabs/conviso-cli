@@ -184,6 +184,12 @@ def list_projects(
 @app.command("requirements")
 def list_project_requirements(
     project_id: int = typer.Option(..., "--project-id", "-p", help="Target project ID."),
+    requirement_id: Optional[int] = typer.Option(
+        None,
+        "--requirement-id",
+        "-r",
+        help="Filter activities by a specific requirement (playbook) ID.",
+    ),
     status: Optional[str] = typer.Option(
         None,
         "--status",
@@ -283,12 +289,6 @@ def list_project_requirements(
           startedAt
           finishedAt
           evidences { filename }
-          check {
-            id
-            label
-            category
-            checkType { label }
-          }
           playbook { id label }
           history(pagination: { page: 1, perPage: 200 }) {
             collection {
@@ -314,8 +314,13 @@ def list_project_requirements(
         rows = []
         for activity in project.get("activities") or []:
             playbook = activity.get("playbook") or {}
-            check = activity.get("check") or {}
-            check_type = (check.get("checkType") or {}).get("label") or ""
+            playbook_id = playbook.get("id")
+            if requirement_id is not None:
+                try:
+                    if int(playbook_id) != int(requirement_id):
+                        continue
+                except Exception:
+                    continue
             activity_status = (activity.get("status") or "").upper()
             activity_evidences = activity.get("evidences") or []
             history_rows = ((activity.get("history") or {}).get("collection") or [])
@@ -376,9 +381,6 @@ def list_project_requirements(
                 "activityId": activity.get("id") or "",
                 "activityTitle": activity.get("title") or "",
                 "activityStatus": activity_status,
-                "checkType": check_type,
-                "checkCategory": check.get("category") or "",
-                "checkLabel": check.get("label") or "",
                 "hasAttachments": str(has_attachments),
                 "attachments": ", ".join(attachment_names),
                 "historyEvents": str(len(history_for_output)),
