@@ -9,9 +9,11 @@ Now standardized to use the new core/output_manager for unified output handling.
 import math
 import typer
 from typing import Optional, List
+from datetime import datetime, timezone
 from conviso.core.notifier import info, success, error, summary, warning
 from conviso.clients.client_graphql import graphql_request
 from conviso.schemas.projects_schema import schema
+from conviso.schemas.project_requirements_activities_schema import schema as project_requirements_schema
 from conviso.core.output_manager import export_data
 
 app = typer.Typer(help="Manage projects via Conviso GraphQL API.")
@@ -175,6 +177,236 @@ def list_projects(
 
     except Exception as e:
         error(f"Error listing projects: {e}")
+        raise typer.Exit(code=1)
+
+
+# ---------------------- PROJECT REQUIREMENTS COMMAND ---------------------- #
+@app.command("requirements")
+def list_project_requirements(
+    project_id: int = typer.Option(..., "--project-id", "-p", help="Target project ID."),
+    status: Optional[str] = typer.Option(
+        None,
+        "--status",
+        "-s",
+        help="Activity status: IN_PROGRESS, DONE, NOT_APPLICABLE, NOT_STARTED, NOT_ACCORDING.",
+    ),
+    history_attachments: bool = typer.Option(
+        False,
+        "--history-attachments",
+        help="Only return activities with at least one attached file.",
+    ),
+    history_email: Optional[str] = typer.Option(
+        None,
+        "--history-email",
+        help="Filter by history actor email (contains, case-insensitive).",
+    ),
+    history_start: Optional[str] = typer.Option(
+        None,
+        "--history-start",
+        help="History created_at >= this value (YYYY-MM-DD or ISO-8601).",
+    ),
+    history_end: Optional[str] = typer.Option(
+        None,
+        "--history-end",
+        help="History created_at <= this value (YYYY-MM-DD or ISO-8601).",
+    ),
+    attachment_name: Optional[str] = typer.Option(
+        None,
+        "--attachment-name",
+        help="Filter by attached filename (contains, case-insensitive).",
+    ),
+    fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file (for JSON or CSV export)."),
+):
+    """List project requirements and activities with attachment/history filters."""
+    info(f"Listing requirements/activities for project {project_id}...")
+
+    allowed_status = {"IN_PROGRESS", "DONE", "NOT_APPLICABLE", "NOT_STARTED", "NOT_ACCORDING"}
+
+    def _norm(value: Optional[str]) -> str:
+        if not value:
+            return ""
+        chars = []
+        for ch in value.lower():
+            chars.append(ch if ch.isalnum() else " ")
+        return " ".join("".join(chars).split())
+
+    def _parse_dt(value: Optional[str], end_of_day: bool = False) -> Optional[datetime]:
+        if not value:
+            return None
+        raw = value.strip()
+        try:
+            if len(raw) == 10 and raw[4] == "-" and raw[7] == "-":
+                date_obj = datetime.strptime(raw, "%Y-%m-%d")
+                if end_of_day:
+                    return date_obj.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=timezone.utc)
+                return date_obj.replace(tzinfo=timezone.utc)
+            raw = raw.replace("Z", "+00:00")
+            parsed = datetime.fromisoformat(raw)
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.astimezone(timezone.utc)
+        except Exception:
+            warning(f"Ignoring invalid date/datetime filter: {value}")
+            return None
+
+    def _safe_parse_iso(value: Optional[str]) -> Optional[datetime]:
+        if not value:
+            return None
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.astimezone(timezone.utc)
+        except Exception:
+            return None
+
+    status_filter = status.strip().upper() if status else None
+    if status_filter and status_filter not in allowed_status:
+        warning(f"Unknown status '{status_filter}'. Allowed: {', '.join(sorted(allowed_status))}")
+
+    history_email_filter = (history_email or "").strip().lower() or None
+    attachment_name_filter = (attachment_name or "").strip().lower() or None
+    history_start_dt = _parse_dt(history_start, end_of_day=False)
+    history_end_dt = _parse_dt(history_end, end_of_day=True)
+    has_history_filters = bool(history_email_filter or history_start_dt or history_end_dt)
+
+    query = """
+    query ProjectRequirements($id: ID!) {
+      project(id: $id) {
+        id
+        label
+        activities {
+          id
+          title
+          status
+          startedAt
+          finishedAt
+          evidences { filename }
+          check {
+            id
+            label
+            category
+            checkType { label }
+          }
+          playbook { id label }
+          history(pagination: { page: 1, perPage: 200 }) {
+            collection {
+              id
+              createdAt
+              actionType
+              portalUser { email name }
+              evidences { filename }
+            }
+          }
+        }
+      }
+    }
+    """
+
+    try:
+        data = graphql_request(query, {"id": str(project_id)})
+        project = data.get("project")
+        if not project:
+            typer.echo("⚠️  Project not found.")
+            raise typer.Exit()
+
+        rows = []
+        for activity in project.get("activities") or []:
+            playbook = activity.get("playbook") or {}
+            check = activity.get("check") or {}
+            check_type = (check.get("checkType") or {}).get("label") or ""
+            activity_status = (activity.get("status") or "").upper()
+            activity_evidences = activity.get("evidences") or []
+            history_rows = ((activity.get("history") or {}).get("collection") or [])
+
+            attachment_names = []
+            for ev in activity_evidences:
+                filename = (ev or {}).get("filename")
+                if filename:
+                    attachment_names.append(filename)
+            for h in history_rows:
+                for ev in (h.get("evidences") or []):
+                    filename = (ev or {}).get("filename")
+                    if filename:
+                        attachment_names.append(filename)
+            # preserve order while removing duplicates
+            seen_names = set()
+            attachment_names = [n for n in attachment_names if not (n in seen_names or seen_names.add(n))]
+            has_attachments = bool(attachment_names)
+
+            if attachment_name_filter:
+                if not any(attachment_name_filter in name.lower() for name in attachment_names):
+                    continue
+
+            if status_filter and activity_status != status_filter:
+                continue
+            if history_attachments and not has_attachments:
+                continue
+
+            matched_history = []
+            for h in history_rows:
+                h_email = ((h.get("portalUser") or {}).get("email") or "").lower()
+                h_created_at = _safe_parse_iso(h.get("createdAt"))
+
+                if history_email_filter and history_email_filter not in h_email:
+                    continue
+                if history_start_dt and (h_created_at is None or h_created_at < history_start_dt):
+                    continue
+                if history_end_dt and (h_created_at is None or h_created_at > history_end_dt):
+                    continue
+                matched_history.append(h)
+
+            if has_history_filters and not matched_history:
+                continue
+
+            history_for_output = matched_history if has_history_filters else history_rows
+            history_emails = []
+            for h in history_for_output:
+                email = (h.get("portalUser") or {}).get("email") or ""
+                if email and email not in history_emails:
+                    history_emails.append(email)
+            history_dates = [h.get("createdAt") for h in history_for_output if h.get("createdAt")]
+
+            rows.append({
+                "projectId": project.get("id") or "",
+                "projectLabel": project.get("label") or "",
+                "requirementId": playbook.get("id") or "",
+                "requirementLabel": playbook.get("label") or "",
+                "activityId": activity.get("id") or "",
+                "activityTitle": activity.get("title") or "",
+                "activityStatus": activity_status,
+                "checkType": check_type,
+                "checkCategory": check.get("category") or "",
+                "checkLabel": check.get("label") or "",
+                "hasAttachments": str(has_attachments),
+                "attachments": ", ".join(attachment_names),
+                "historyEvents": str(len(history_for_output)),
+                "historyEmails": ", ".join(history_emails),
+                "historyLastAt": max(history_dates) if history_dates else "",
+                "startedAt": activity.get("startedAt") or "",
+                "finishedAt": activity.get("finishedAt") or "",
+            })
+
+        if not rows:
+            typer.echo("⚠️  No requirements/activities found for the given filters.")
+            raise typer.Exit()
+
+        export_data(
+            rows,
+            schema=project_requirements_schema,
+            fmt=fmt,
+            output=output,
+            title=f"Project {project.get('id')} - Requirements Activities",
+        )
+
+        unique_requirements = len({r["requirementId"] for r in rows if r.get("requirementId")})
+        summary(f"{len(rows)} activit(ies) listed across {unique_requirements} requirement(s).")
+
+    except typer.Exit:
+        raise
+    except Exception as e:
+        error(f"Error listing project requirements: {e}")
         raise typer.Exit(code=1)
 
 

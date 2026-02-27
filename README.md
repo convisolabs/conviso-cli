@@ -82,6 +82,7 @@ conviso --help
 
 ## Usage (examples)
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
+- Project requirements + activities: `python -m conviso.app projects requirements --project-id 12345`
 - Assets: `python -m conviso.app assets list --company-id 443 --tags cloud --attack-surface INTERNET_FACING --all`
 - Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login|REF-123"`
 - Requirements (project): `python -m conviso.app requirements project --company-id 443 --project-id 26102`
@@ -150,6 +151,24 @@ Automatic normalizations:
   - `source: "project.target_urls"`
   - `export.file: ".task/targets.txt"`
   - `export.mode: "hosts"`
+
+## Projects requirements
+- Command: `python -m conviso.app projects requirements --project-id <PROJECT_ID>`
+- Purpose: list requirements (playbooks) linked to a project with activity, attachment, and history context.
+- Output fields include: requirement/activity IDs and labels, activity status, attachment summary, history summary.
+- Filters:
+  - `--status IN_PROGRESS|DONE|NOT_APPLICABLE|NOT_STARTED|NOT_ACCORDING`
+  - `--history-attachments` only activities with at least one attachment
+  - `--attachment-name <text>` filename contains text (case-insensitive)
+  - `--history-email <text>` history actor email contains text (case-insensitive)
+  - `--history-start <YYYY-MM-DD|ISO-8601>`
+  - `--history-end <YYYY-MM-DD|ISO-8601>`
+- Examples:
+  - `python -m conviso.app projects requirements --project-id 12345 --history-attachments`
+  - `python -m conviso.app projects requirements --project-id 12345 --attachment-name 299533`
+  - `python -m conviso.app projects requirements --project-id 12345 --history-email banjos@conviso.com.br`
+  - `python -m conviso.app projects requirements --project-id 12345 --history-start 2025-12-08 --history-end 2025-12-31`
+  - `python -m conviso.app projects requirements --project-id 12345 --status DONE --history-attachments`
 
 ## SBOM
 - List: `python -m conviso.app sbom list --company-id 443 --name log4j --all --format csv --output sbom.csv`

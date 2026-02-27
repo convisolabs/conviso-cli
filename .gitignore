@@ -29,5 +29,8 @@ dist/
 *.env
 .env.*>
 
-# Task workspace
+# Local agent/task artifacts (do not commit)
+.agents/
 .task/
+.claude/
+skills-lock.json
