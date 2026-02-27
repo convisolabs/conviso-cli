@@ -155,7 +155,7 @@ Automatic normalizations:
 ## Projects requirements
 - Command: `python -m conviso.app projects requirements --project-id <PROJECT_ID>`
 - Purpose: list requirements (playbooks) linked to a project with activity, attachment, and history context.
-- Output fields include: requirement/activity IDs and labels, activity status, attachment summary, history summary (without `Check`, `Type`, and `Category` columns).
+- Output fields include: requirement/activity IDs and labels, activity status, attachment summary, history summary.
 - Filters:
   - `--requirement-id <id>` only activities from a specific requirement/playbook ID
   - `--status IN_PROGRESS|DONE|NOT_APPLICABLE|NOT_STARTED|NOT_ACCORDING`
