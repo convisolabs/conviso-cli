@@ -96,6 +96,10 @@ conviso --help
 - Tasks (create with inline YAML): `python -m conviso.app tasks create --company-id 443 --label "Quick Task" --yaml "name: quick\nsteps:\n  - action: echo\n    message: ok"`
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
 - Vulnerabilities (last 7 days): `python -m conviso.app vulns list --company-id 443 --days-back 7 --severities HIGH,CRITICAL --all`
+- Vulnerabilities by author: `python -m conviso.app vulns list --company-id 443 --author "Fernando" --all`
+- Vulnerability timeline (by vulnerability ID): `python -m conviso.app vulns timeline --id 12345`
+- Last user who changed vuln status: `python -m conviso.app vulns timeline --id 12345 --last-status-change-only`
+- Last user who changed vuln status to ANALYSIS: `python -m conviso.app vulns timeline --id 12345 --status ANALYSIS --last-status-change-only`
 
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
 
