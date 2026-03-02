@@ -82,6 +82,7 @@ conviso --help
 
 ## Usage (examples)
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
+- Projects (assignee filter): `python -m conviso.app projects list --company-id 443 --filter assignee=analyst@company.com --all`
 - Project requirements + activities: `python -m conviso.app projects requirements --project-id 12345`
 - Assets: `python -m conviso.app assets list --company-id 443 --tags cloud --attack-surface INTERNET_FACING --all`
 - Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login|REF-123"`
@@ -100,6 +101,7 @@ conviso --help
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
 
 Notes:
+- `projects list --filter` supports `assignee=<email-or-name>` to filter by allocated analyst.
 - GraphQL errors return exit code 1.
 - Use `--all` on list commands to fetch every page.
 - `--quiet` silences info logs; `--verbose` shows per-page requests when paginating.
