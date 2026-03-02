@@ -26,7 +26,7 @@ def list_projects(
         None,
         "--filter",
         "-F",
-        help="Apply filters in 'field=value' format. Supports aliases (e.g., id=123, name=foo, status=DONE).",
+        help="Apply filters in 'field=value' format. Supports aliases (e.g., id=123, name=foo, status=DONE, assignee=user@company.com).",
     ),
     sort_by: Optional[str] = typer.Option(
         None,
@@ -46,14 +46,20 @@ def list_projects(
 
     # Build search parameters
     params = {"scopeIdEq": company_id}
+    assignee_filter = None
     if filters:
         for f in filters:
             if "=" not in f:
                 warning(f"[WARN] Invalid filter syntax: {f} (expected key=value)")
                 continue
             key, value = f.split("=", 1)
-            gql_key = schema.resolve_filter_key(key.strip())
-            casted = schema.cast_filter_value(gql_key, value.strip())
+            key = key.strip()
+            value = value.strip()
+            if key.lower() == "assignee":
+                assignee_filter = value.lower()
+                continue
+            gql_key = schema.resolve_filter_key(key)
+            casted = schema.cast_filter_value(gql_key, value)
             params[gql_key] = casted
 
     variables = {
@@ -90,6 +96,9 @@ def list_projects(
           environmentCompromised
           projectType { label }
           tags { name }
+          allocatedAnalyst {
+            portalUser { name email }
+          }
           assets { id name }
           requirementsProgress { done total }
         }
@@ -99,6 +108,7 @@ def list_projects(
     """
 
     try:
+        fetch_all = all_pages or bool(assignee_filter)
         current_page = page
         rows = []
         total_pages = None
@@ -119,6 +129,21 @@ def list_projects(
                 break
 
             for p in collection:
+                assignees = []
+                for alloc in p.get("allocatedAnalyst") or []:
+                    portal_user = (alloc or {}).get("portalUser") or {}
+                    email = (portal_user.get("email") or "").strip()
+                    name = (portal_user.get("name") or "").strip()
+                    if email:
+                        assignees.append(email)
+                    elif name:
+                        assignees.append(name)
+
+                if assignee_filter:
+                    haystack = " ".join(assignees).lower()
+                    if assignee_filter not in haystack:
+                        continue
+
                 done = (p.get("requirementsProgress") or {}).get("done", 0)
                 total = (p.get("requirementsProgress") or {}).get("total", 0)
                 requirements = f"{done}/{total}"
@@ -148,10 +173,13 @@ def list_projects(
                     "tags": tags_str,
                 })
 
-            if not all_pages or (total_pages is not None and current_page >= total_pages):
+            if not fetch_all or (total_pages is not None and current_page >= total_pages):
                 break
             current_page += 1
 
+        if not rows:
+            typer.echo("⚠️  No projects found.")
+            raise typer.Exit()
 
         export_data(
             rows,
@@ -175,6 +203,8 @@ def list_projects(
                 f"(page {page}/{total_pages_calc}).\n"
             )
 
+    except typer.Exit:
+        raise
     except Exception as e:
         error(f"Error listing projects: {e}")
         raise typer.Exit(code=1)
