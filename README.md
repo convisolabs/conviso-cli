@@ -99,7 +99,9 @@ conviso --help
 - Vulnerabilities (last 7 days): `python -m conviso.app vulns list --company-id 443 --days-back 7 --severities HIGH,CRITICAL --all`
 - Vulnerabilities by author: `python -m conviso.app vulns list --company-id 443 --author "Fernando" --all`
 - Vulnerability timeline (by vulnerability ID): `python -m conviso.app vulns timeline --id 12345`
+- Vulnerabilities timeline by project: `python -m conviso.app vulns timeline --company-id 443 --project-id 26102`
 - Last user who changed vuln status: `python -m conviso.app vulns timeline --id 12345 --last-status-change-only`
+- Last user who changed status per vuln in a project: `python -m conviso.app vulns timeline --company-id 443 --project-id 26102 --last-status-change-only`
 - Last user who changed vuln status to ANALYSIS: `python -m conviso.app vulns timeline --id 12345 --status ANALYSIS --last-status-change-only`
 
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
