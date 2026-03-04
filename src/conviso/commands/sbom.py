@@ -6,8 +6,9 @@ List and import SBOM components.
 """
 
 import typer
+import time
 from typing import Optional
-from conviso.core.notifier import info, error, summary, success
+from conviso.core.notifier import info, error, summary, success, timed_summary
 from conviso.clients.client_graphql import graphql_request, graphql_request_upload
 from conviso.core.output_manager import export_data
 from conviso.schemas.sbom_schema import schema as sbom_schema
@@ -36,6 +37,7 @@ def list_sbom(
     """
     List SBOM components for a company.
     """
+    started_at = time.perf_counter()
     query = """
     query SbomComponents($companyId: ID!, $search: SbomComponentSearchInput, $page: Int, $limit: Int) {
       sbomComponents(companyId: $companyId, search: $search, page: $page, limit: $limit) {
@@ -201,7 +203,8 @@ def list_sbom(
                 summary(f"CycloneDX exported to {output}")
             else:
                 print(payload)
-            summary(f"{len(rows)} component(s) listed out of {total_count or len(rows)}.")
+            elapsed = time.perf_counter() - started_at
+            timed_summary(f"{len(rows)} component(s) listed out of {total_count or len(rows)}", elapsed)
         else:
             export_data(
                 rows,
@@ -210,7 +213,8 @@ def list_sbom(
                 output=output,
                 title=f"SBOM Components (Company {company_id}) - Page {page}/{total_pages or '?'}",
             )
-            summary(f"{len(rows)} component(s) listed out of {total_count or len(rows)}.")
+            elapsed = time.perf_counter() - started_at
+            timed_summary(f"{len(rows)} component(s) listed out of {total_count or len(rows)}", elapsed)
     except Exception as exc:
         error(f"Error listing SBOM components: {exc}")
         raise typer.Exit(code=1)

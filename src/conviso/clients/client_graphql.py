@@ -17,6 +17,17 @@ API_URL = "https://api.convisoappsec.com/graphql"
 API_KEY = os.getenv("CONVISO_API_KEY")
 DEFAULT_TIMEOUT = float(os.getenv("CONVISO_API_TIMEOUT", "30"))
 DEFAULT_RETRIES = int(os.getenv("CONVISO_API_RETRIES", "2"))
+POOL_CONNECTIONS = int(os.getenv("CONVISO_API_POOL_CONNECTIONS", "32"))
+POOL_MAXSIZE = int(os.getenv("CONVISO_API_POOL_MAXSIZE", "64"))
+
+SESSION = requests.Session()
+ADAPTER = requests.adapters.HTTPAdapter(
+    pool_connections=POOL_CONNECTIONS,
+    pool_maxsize=POOL_MAXSIZE,
+    max_retries=0,
+)
+SESSION.mount("https://", ADAPTER)
+SESSION.mount("http://", ADAPTER)
 
 
 def graphql_request(query: str, variables: dict = None, log_request: bool = True, verbose_only: bool = False) -> dict:
@@ -39,7 +50,7 @@ def graphql_request(query: str, variables: dict = None, log_request: bool = True
     last_exc = None
     for attempt in range(DEFAULT_RETRIES + 1):
         try:
-            response = requests.post(API_URL, json=payload, headers=headers, timeout=DEFAULT_TIMEOUT)
+            response = SESSION.post(API_URL, json=payload, headers=headers, timeout=DEFAULT_TIMEOUT)
             response.raise_for_status()
             data = response.json()
             if "errors" in data:
@@ -92,7 +103,7 @@ def graphql_request_upload(
 
     with open(file_path, "rb") as f:
         files = {"0": f}
-        response = requests.post(
+        response = SESSION.post(
             API_URL,
             data={"operations": json.dumps(operations), "map": json.dumps(map_part)},
             files=files,

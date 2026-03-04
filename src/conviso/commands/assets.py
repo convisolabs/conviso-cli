@@ -7,8 +7,9 @@ Now standardized with core/output_manager for unified output formats.
 """
 
 import typer
+import time
 from typing import Optional
-from conviso.core.notifier import info, success, error, summary, warning
+from conviso.core.notifier import info, success, error, summary, warning, timed_summary
 from conviso.clients.client_graphql import graphql_request
 from conviso.schemas.assets_schema import schema
 from conviso.core.output_manager import export_data
@@ -34,6 +35,8 @@ def list_assets(
 ):
     """List all assets for a specific company."""
     info(f"Listing assets for company {company_id} (page {page}, limit {limit})...")
+    started_at = time.perf_counter()
+    fmt_lower = fmt.lower()
 
     query = """
     query Assets($companyId: ID!, $limit: Int, $page: Int, $search: AssetsSearch) {
@@ -137,7 +140,9 @@ def list_assets(
                     "LOW": "green",
                     "NOT_DEFINED": "dim",
                 }.get(str(impact).upper())
-                impact_display = f"[{impact_color}]{impact}[/{impact_color}]" if impact_color else impact
+                impact_display = impact
+                if fmt_lower == "table" and impact_color:
+                    impact_display = f"[{impact_color}]{impact}[/{impact_color}]"
 
                 rows.append({
                     "id": a.get("id") or "",
@@ -165,7 +170,8 @@ def list_assets(
             title=f"Assets (Company {company_id}) - Page {page}/{total_pages or '?'}",
         )
 
-        summary(f"{len(rows)} asset(s) listed out of {total_count or len(rows)} total.\n")
+        elapsed = time.perf_counter() - started_at
+        timed_summary(f"{len(rows)} asset(s) listed out of {total_count or len(rows)} total", elapsed)
 
     except Exception as e:
         error(f"Error listing assets: {e}")

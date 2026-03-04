@@ -6,8 +6,9 @@ Lists requirements so users can pick valid IDs for project associations.
 """
 
 import typer
+import time
 from typing import Optional
-from conviso.core.notifier import info, error, success, summary, warning
+from conviso.core.notifier import info, error, success, summary, warning, timed_summary
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.output_manager import export_data
 from conviso.schemas.requirements_schema import schema
@@ -27,6 +28,7 @@ def list_requirements(
 ):
     """List requirements for a scope."""
     info(f"Listing requirements for company {company_id} (page {page}, per_page {per_page})...")
+    started_at = time.perf_counter()
 
     query = """
     query Requirements($scopeId: Int!, $pagination: BasePaginationInput!, $filters: RequirementsFilterInput) {
@@ -81,7 +83,8 @@ def list_requirements(
             output=output,
             title=f"Requirements (Company {company_id}) - Page {page}/{metadata.get('totalPages')}",
         )
-        summary(f"{len(collection)} requirement(s) listed out of {metadata.get('totalCount')}.")
+        elapsed = time.perf_counter() - started_at
+        timed_summary(f"{len(collection)} requirement(s) listed out of {metadata.get('totalCount')}", elapsed)
 
     except Exception as e:
         error(f"Error listing requirements: {e}")
@@ -101,6 +104,7 @@ def list_project_requirements(
 ):
     """List requirements associated with a project."""
     info(f"Listing requirements for project {project_id} in company {company_id}...")
+    started_at = time.perf_counter()
 
     query_with_activities = """
     query ProjectRequirements($id: ID!) {
@@ -196,9 +200,11 @@ def list_project_requirements(
             title=f"Requirements (Project {project_id}) - {project.get('label') or ''}".strip(),
         )
         if with_activities:
-            summary(f"{len(rows)} activit(ies) listed for project {project_id}.")
+            elapsed = time.perf_counter() - started_at
+            timed_summary(f"{len(rows)} activit(ies) listed for project {project_id}", elapsed)
         else:
-            summary(f"{len(collection)} requirement(s) listed for project {project_id}.")
+            elapsed = time.perf_counter() - started_at
+            timed_summary(f"{len(collection)} requirement(s) listed for project {project_id}", elapsed)
 
     except Exception as e:
         error(f"Error listing project requirements: {e}")
@@ -225,6 +231,7 @@ def list_requirement_activities(
         info(f"Listing activities for requirement {requirement_id} in company {company_id}...")
     else:
         info(f"Listing activities for requirements in project {project_id} (company {company_id})...")
+    started_at = time.perf_counter()
 
     requirement_query = """
     query Requirement($companyId: ID!, $id: ID!) {
@@ -287,7 +294,8 @@ def list_requirement_activities(
                 output=output,
                 title=f"Activities (Requirement {requirement_id}) - {req.get('label') or ''}".strip(),
             )
-            summary(f"{len(collection)} activit(ies) listed for requirement {requirement_id}.")
+            elapsed = time.perf_counter() - started_at
+            timed_summary(f"{len(collection)} activit(ies) listed for requirement {requirement_id}", elapsed)
         else:
             data = graphql_request(project_query, {"id": project_id})
             project = data.get("project") or {}
@@ -315,7 +323,8 @@ def list_requirement_activities(
                 output=output,
                 title=f"Activities (Project {project_id}) - {project.get('label') or ''}".strip(),
             )
-            summary(f"{len(rows)} activit(ies) listed for project {project_id}.")
+            elapsed = time.perf_counter() - started_at
+            timed_summary(f"{len(rows)} activit(ies) listed for project {project_id}", elapsed)
 
     except Exception as e:
         error(f"Error listing requirement activities: {e}")

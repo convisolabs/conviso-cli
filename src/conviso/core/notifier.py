@@ -25,3 +25,29 @@ def summary(message, error_count=0):
     typer.echo(f"🧾 {str(message)}")
     if error_count:
         typer.echo(f"⚠️  {error_count} error(s) occurred.")
+
+
+def format_duration(seconds: float) -> str:
+    """
+    Human-friendly duration formatting.
+    Examples: 0.42s -> 420ms, 12.3s -> 12.30s, 1075.39s -> 17m 55.39s
+    """
+    try:
+        total = float(seconds)
+    except Exception:
+        return f"{seconds}s"
+    if total < 1:
+        return f"{int(total * 1000)}ms"
+    hours = int(total // 3600)
+    total -= hours * 3600
+    minutes = int(total // 60)
+    total -= minutes * 60
+    if hours > 0:
+        return f"{hours}h {minutes}m {total:.2f}s"
+    if minutes > 0:
+        return f"{minutes}m {total:.2f}s"
+    return f"{total:.2f}s"
+
+
+def timed_summary(message_without_time: str, elapsed_seconds: float, error_count: int = 0):
+    summary(f"{message_without_time} in {format_duration(elapsed_seconds)}.", error_count=error_count)
