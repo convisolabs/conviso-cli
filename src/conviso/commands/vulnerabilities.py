@@ -14,6 +14,7 @@ import requests
 import time
 from conviso.core.notifier import info, error, summary, success, warning, timed_summary
 from conviso.core.concurrency import parallel_map, resolve_workers
+from conviso.core.validators import validate_choice, validate_csv_choices
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.output_manager import export_data
 from conviso.schemas.vulnerabilities_schema import schema
@@ -77,6 +78,20 @@ def list_vulnerabilities(
 
     SEVERITY_ALLOWED = {"NOTIFICATION", "LOW", "MEDIUM", "HIGH", "CRITICAL"}
     ATTACK_SURFACE_ALLOWED = {"INTERNET_FACING", "INTERNAL", "NOT_DEFINED"}
+    DATA_CLASS_ALLOWED = {"PII", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
+    BUSINESS_IMPACT_ALLOWED = {"LOW", "MEDIUM", "HIGH", "NOT_DEFINED"}
+    FAILURE_TYPES_ALLOWED = {
+        "DAST_FINDING",
+        "SAST_FINDING",
+        "MAST_FINDING",
+        "IAC_FINDING",
+        "SCA_FINDING",
+        "CONTAINER_FINDING",
+        "SECRET_FINDING",
+        "NETWORK_VULNERABILITY",
+        "SOURCE_CODE_VULNERABILITY",
+        "WEB_VULNERABILITY",
+    }
 
     query = """
     query Issues($companyId: ID!, $pagination: PaginationInput!, $filters: IssuesFiltersInput) {
@@ -396,27 +411,40 @@ def list_vulnerabilities(
     filters = {}
     assets_list = _split_ids(asset_ids)
     projects_list = _split_ids(project_ids)
-    severities_list = _split_strs(severities)
-    if severities_list:
-        new = []
-        for s in severities_list:
-            up = s.upper()
-            if up not in SEVERITY_ALLOWED:
-                error(f"Ignoring invalid severity: {s}")
-                continue
-            new.append(up)
-        severities_list = new or None
+    severities_list = None
+    if severities:
+        try:
+            severities_list = validate_csv_choices(severities, SEVERITY_ALLOWED, "--severities")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
     asset_tags_list = _split_strs(asset_tags)
     project_types_list = _split_strs(project_types)
     if project_types_list:
         project_types_list = [p.upper() for p in project_types_list]
     cves_list = _split_strs(cves)
-    types_list = _split_strs(issue_types)
-    data_class_list = _split_strs(data_classification)
-    business_impact_list = _split_strs(business_impact)
+    types_list = None
+    if issue_types:
+        try:
+            types_list = validate_csv_choices(issue_types, FAILURE_TYPES_ALLOWED, "--types")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
+    data_class_list = None
+    if data_classification:
+        try:
+            data_class_list = validate_csv_choices(data_classification, DATA_CLASS_ALLOWED, "--data-classification")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
+    business_impact_list = None
+    if business_impact:
+        try:
+            business_impact_list = validate_csv_choices(business_impact, BUSINESS_IMPACT_ALLOWED, "--business-impact")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
     assignee_list = _split_strs(assignee_emails)
-    if business_impact_list:
-        business_impact_list = [b.upper() for b in business_impact_list]
 
     if days_back is not None:
         if days_back < 0:
@@ -459,11 +487,12 @@ def list_vulnerabilities(
     if business_impact_list:
         filters["businessImpact"] = business_impact_list
     if exploitability:
-        up = exploitability.upper()
-        if up not in ATTACK_SURFACE_ALLOWED:
-            error(f"Ignoring invalid attack surface: {exploitability}")
-        else:
-            filters["exploitability"] = up
+        try:
+            up = validate_choice(exploitability, ATTACK_SURFACE_ALLOWED, "--attack-surface")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
+        filters["exploitability"] = up
     if assignee_list:
         filters["assigneeEmails"] = assignee_list
 

@@ -111,7 +111,7 @@ conviso --help
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
 Global performance option: `--workers <N>` sets default parallel workers for all commands (e.g. `python -m conviso.app --workers 16 vulns list ...`).
 Global output options:
-- `--repeat-header-every <N>` repeats table headers every N rows (helps when scrolling long outputs).
+- `--repeat-header <N>` repeats table headers every N rows (helps when scrolling long outputs).
 - `--columns <col1,col2,...>` selects columns for table/csv output across commands (unknown columns are ignored).
 
 Notes:
@@ -120,7 +120,7 @@ Notes:
 - Use `--all` on list commands to fetch every page.
 - `--quiet` silences info logs; `--verbose` shows per-page requests when paginating.
 - `--workers` controls default parallel workers across commands; command-level `--workers` (when available) overrides it.
-- `--repeat-header-every` and `--columns` are global and apply to all commands using table/csv output.
+- `--repeat-header` and `--columns` are global and apply to all commands using table/csv output.
 - In `vulns list`, `--contains` for deep fields (`codeSnippet`, `fileName`, `vulnerableLine`, `request`, `response`, `url`, `method`, `parameters`) auto-enables deep search.
 - `--deep-search` still exists as a manual override; `--resolve-snippet-urls` applies when deep search is active (manual or auto).
 - When `--grep` or `--contains` is used, the list includes `Matched In` to indicate which fields triggered the match.

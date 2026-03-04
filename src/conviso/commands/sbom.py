@@ -9,6 +9,7 @@ import typer
 import time
 from typing import Optional
 from conviso.core.notifier import info, error, summary, success, timed_summary
+from conviso.core.validators import validate_choice
 from conviso.clients.client_graphql import graphql_request, graphql_request_upload
 from conviso.core.output_manager import export_data
 from conviso.schemas.sbom_schema import schema as sbom_schema
@@ -71,7 +72,11 @@ def list_sbom(
     if sort_by:
         search["sortBy"] = sort_by
     if order:
-        search["order"] = order
+        try:
+            search["order"] = validate_choice(order, {"ASC", "DESC"}, "--order")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
 
     variables = {
         "companyId": str(company_id),

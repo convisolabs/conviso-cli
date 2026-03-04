@@ -10,6 +10,7 @@ import typer
 import time
 from typing import Optional
 from conviso.core.notifier import info, success, error, summary, warning, timed_summary
+from conviso.core.validators import validate_choice, validate_csv_choices
 from conviso.clients.client_graphql import graphql_request
 from conviso.schemas.assets_schema import schema
 from conviso.core.output_manager import export_data
@@ -65,6 +66,8 @@ def list_assets(
 
     BUSINESS_IMPACT_ALLOWED = {"LOW", "MEDIUM", "HIGH", "NOT_DEFINED"}
     ATTACK_SURFACE_ALLOWED = {"INTERNET_FACING", "INTERNAL", "NOT_DEFINED"}
+    THREAT_ALLOWED = {"CRITICAL", "HIGH", "MEDIUM", "LOW", "NOTIFICATION"}
+    DATA_CLASS_ALLOWED = {"PII", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
 
     def _split_list(value: Optional[str], upper: bool = False, allowed: Optional[set] = None, label: str = ""):
         if not value:
@@ -81,12 +84,21 @@ def list_assets(
             items.append(v)
         return items or None
 
+    try:
+        validated_business = validate_csv_choices(business_impact, BUSINESS_IMPACT_ALLOWED, "--business-impact")
+        validated_data_class = validate_csv_choices(data_classification, DATA_CLASS_ALLOWED, "--data-classification")
+        validated_attack_surface = validate_csv_choices(attack_surface, ATTACK_SURFACE_ALLOWED, "--attack-surface")
+        validated_threat = validate_csv_choices(threat, THREAT_ALLOWED, "--threat")
+    except ValueError as exc:
+        error(str(exc))
+        raise typer.Exit(code=1)
+
     search_filters = {
         "tags": _split_list(tags),
-        "businessImpact": _split_list(business_impact, upper=True, allowed=BUSINESS_IMPACT_ALLOWED, label="business impact"),
-        "dataClassification": _split_list(data_classification),
-        "exploitability": _split_list(attack_surface, upper=True, allowed=ATTACK_SURFACE_ALLOWED, label="attack surface"),
-        "threat": _split_list(threat, upper=True),
+        "businessImpact": validated_business,
+        "dataClassification": validated_data_class,
+        "exploitability": validated_attack_surface,
+        "threat": validated_threat,
     }
     if env_compromised:
         search_filters["environmentCompromised"] = True
@@ -193,33 +205,19 @@ def create_asset(
     info(f"Creating new asset '{name}' for company {company_id}...")
 
     BUSINESS_IMPACT_ALLOWED = {"LOW", "MEDIUM", "HIGH", "NOT_DEFINED"}
-    DATA_CLASS_ALLOWED = {"PERSONALLY_IDENTIFIABLE_INFORMATION", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
+    DATA_CLASS_ALLOWED = {"PII", "PERSONALLY_IDENTIFIABLE_INFORMATION", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
 
-    def _parse_business(value: Optional[str]):
-        if not value:
-            return None
-        up = value.strip().upper()
-        if up not in BUSINESS_IMPACT_ALLOWED:
-            warning(f"Ignoring invalid business impact: {value}")
-            return None
-        return up
-
-    def _parse_data_class(value: Optional[str]):
-        if not value:
-            return None
-        vals = []
-        for raw in value.split(","):
-            v = raw.strip().upper()
-            if not v:
-                continue
-            if v not in DATA_CLASS_ALLOWED:
-                warning(f"Ignoring invalid data classification: {raw}")
-                continue
-            vals.append(v)
-        return vals or None
-
-    parsed_business = _parse_business(business_impact)
-    parsed_data_class = _parse_data_class(data_classification)
+    try:
+        parsed_business = validate_choice(business_impact, BUSINESS_IMPACT_ALLOWED, "--business-impact")
+        parsed_data_class = validate_csv_choices(data_classification, DATA_CLASS_ALLOWED, "--data-classification")
+    except ValueError as exc:
+        error(str(exc))
+        raise typer.Exit(code=1)
+    if parsed_data_class:
+        parsed_data_class = [
+            "PERSONALLY_IDENTIFIABLE_INFORMATION" if v == "PII" else v
+            for v in parsed_data_class
+        ]
 
     mutation = """
     mutation CreateAsset($input: CreateAssetInput!) {
@@ -272,33 +270,19 @@ def update_asset(
     info(f"Updating asset ID {asset_id} in company {company_id}...")
 
     BUSINESS_IMPACT_ALLOWED = {"LOW", "MEDIUM", "HIGH", "NOT_DEFINED"}
-    DATA_CLASS_ALLOWED = {"PERSONALLY_IDENTIFIABLE_INFORMATION", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
+    DATA_CLASS_ALLOWED = {"PII", "PERSONALLY_IDENTIFIABLE_INFORMATION", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
 
-    def _parse_business(value: Optional[str]):
-        if value is None:
-            return None
-        up = value.strip().upper()
-        if up not in BUSINESS_IMPACT_ALLOWED:
-            warning(f"Ignoring invalid business impact: {value}")
-            return None
-        return up
-
-    def _parse_data_class(value: Optional[str]):
-        if value is None:
-            return None
-        vals = []
-        for raw in value.split(","):
-            v = raw.strip().upper()
-            if not v:
-                continue
-            if v not in DATA_CLASS_ALLOWED:
-                warning(f"Ignoring invalid data classification: {raw}")
-                continue
-            vals.append(v)
-        return vals or None
-
-    parsed_business = _parse_business(business_impact)
-    parsed_data_class = _parse_data_class(data_classification)
+    try:
+        parsed_business = validate_choice(business_impact, BUSINESS_IMPACT_ALLOWED, "--business-impact")
+        parsed_data_class = validate_csv_choices(data_classification, DATA_CLASS_ALLOWED, "--data-classification")
+    except ValueError as exc:
+        error(str(exc))
+        raise typer.Exit(code=1)
+    if parsed_data_class:
+        parsed_data_class = [
+            "PERSONALLY_IDENTIFIABLE_INFORMATION" if v == "PII" else v
+            for v in parsed_data_class
+        ]
 
     mutation = """
     mutation UpdateAsset($input: UpdateAssetInput!) {

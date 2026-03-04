@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from conviso.core.notifier import info, success, error, summary, warning, timed_summary
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.concurrency import parallel_map
+from conviso.core.validators import validate_choice
 from conviso.schemas.projects_schema import schema
 from conviso.schemas.project_requirements_activities_schema import schema as project_requirements_schema
 from conviso.core.output_manager import export_data
@@ -323,9 +324,11 @@ def list_project_requirements(
         except Exception:
             return None
 
-    status_filter = status.strip().upper() if status else None
-    if status_filter and status_filter not in allowed_status:
-        warning(f"Unknown status '{status_filter}'. Allowed: {', '.join(sorted(allowed_status))}")
+    try:
+        status_filter = validate_choice(status, allowed_status, "--status")
+    except ValueError as exc:
+        error(str(exc))
+        raise typer.Exit(code=1)
 
     history_email_filter = (history_email or "").strip().lower() or None
     attachment_name_filter = (attachment_name or "").strip().lower() or None

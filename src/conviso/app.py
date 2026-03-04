@@ -33,7 +33,7 @@ def main(
     workers: int = typer.Option(8, "--workers", help="Default worker threads for parallel operations across commands."),
     repeat_header_every: int = typer.Option(
         0,
-        "--repeat-header-every",
+        "--repeat-header",
         help="Repeat table headers every N rows (global output option). 0 disables.",
     ),
     columns: Optional[str] = typer.Option(
