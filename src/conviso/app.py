@@ -7,10 +7,13 @@ from conviso.commands import bulk
 from conviso.commands import sbom
 from conviso.commands import tasks
 from conviso.core.logger import log, set_verbosity
+from conviso.core.concurrency import set_default_workers
+from conviso.core.output_prefs import set_output_preferences
 from conviso.core.notifier import info, warning
 from conviso.core.version import check_for_updates, DEFAULT_REMOTE_URL, read_local_version
 import subprocess
 import os
+from typing import Optional
 
 app = typer.Typer(help="Conviso Platform CLI")
 
@@ -27,8 +30,21 @@ def main(
     ctx: typer.Context,
     quiet: bool = typer.Option(False, "--quiet", help="Silence non-error output."),
     verbose: bool = typer.Option(False, "--verbose", help="Show verbose logs (GraphQL requests, etc.)."),
+    workers: int = typer.Option(8, "--workers", help="Default worker threads for parallel operations across commands."),
+    repeat_header_every: int = typer.Option(
+        0,
+        "--repeat-header",
+        help="Repeat table headers every N rows (global output option). 0 disables.",
+    ),
+    columns: Optional[str] = typer.Option(
+        None,
+        "--columns",
+        help="Comma-separated columns for table/csv output (global output option). Example: --columns id,title,status",
+    ),
 ):
     set_verbosity(quiet=quiet, verbose=verbose)
+    set_default_workers(workers)
+    set_output_preferences(repeat_header_every=repeat_header_every, columns=columns)
 
     if ctx.resilient_parsing:
         return

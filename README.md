@@ -98,6 +98,10 @@ conviso --help
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
 - Vulnerabilities (last 7 days): `python -m conviso.app vulns list --company-id 443 --days-back 7 --severities HIGH,CRITICAL --all`
 - Vulnerabilities by author: `python -m conviso.app vulns list --company-id 443 --author "Fernando" --all`
+- Vulnerabilities with local free-text search: `python -m conviso.app vulns list --company-id 443 --all --grep "jwt"`
+- Vulnerabilities with local field filter (auto deep for deep fields): `python -m conviso.app vulns list --company-id 443 --all --contains codeSnippet=eval( --contains fileName=app.py`
+- Vulnerabilities (DAST/WEB) search by request/response: `python -m conviso.app vulns list --company-id 443 --types DAST_FINDING,WEB_VULNERABILITY --all --contains request=Authorization --contains response=stacktrace`
+- Vulnerabilities with forced deep local search: `python -m conviso.app vulns list --company-id 443 --all --contains codeSnippet=eval( --deep-search --workers 8`
 - Vulnerability timeline (by vulnerability ID): `python -m conviso.app vulns timeline --id 12345`
 - Vulnerabilities timeline by project: `python -m conviso.app vulns timeline --company-id 443 --project-id 26102`
 - Last user who changed vuln status: `python -m conviso.app vulns timeline --id 12345 --last-status-change-only`
@@ -105,12 +109,21 @@ conviso --help
 - Last user who changed vuln status to ANALYSIS: `python -m conviso.app vulns timeline --id 12345 --status ANALYSIS --last-status-change-only`
 
 Output options: `--format table|json|csv`, `--output path` to save JSON/CSV.
+Global performance option: `--workers <N>` sets default parallel workers for all commands (e.g. `python -m conviso.app --workers 16 vulns list ...`).
+Global output options:
+- `--repeat-header <N>` repeats table headers every N rows (helps when scrolling long outputs).
+- `--columns <col1,col2,...>` selects columns for table/csv output across commands (unknown columns are ignored).
 
 Notes:
 - `projects list --filter` supports `assignee=<email-or-name>` to filter by allocated analyst.
 - GraphQL errors return exit code 1.
 - Use `--all` on list commands to fetch every page.
 - `--quiet` silences info logs; `--verbose` shows per-page requests when paginating.
+- `--workers` controls default parallel workers across commands; command-level `--workers` (when available) overrides it.
+- `--repeat-header` and `--columns` are global and apply to all commands using table/csv output.
+- In `vulns list`, `--contains` for deep fields (`codeSnippet`, `fileName`, `vulnerableLine`, `request`, `response`, `url`, `method`, `parameters`) auto-enables deep search.
+- `--deep-search` still exists as a manual override; `--resolve-snippet-urls` applies when deep search is active (manual or auto).
+- When `--grep` or `--contains` is used, the list includes `Matched In` to indicate which fields triggered the match.
 - On startup the CLI checks for a newer version (via https://raw.githubusercontent.com/convisolabs/conviso-cli/main/VERSION). Set `CONVISO_CLI_SKIP_UPDATE_CHECK=1` to skip.
 - When offline, the check warns and you can force the comparison by setting `CONVISO_CLI_REMOTE_VERSION` (manual override).
 - Upgrade: `python -m conviso.app upgrade` (equiv. `conviso upgrade`) runs `git pull --ff-only` in the repo directory; if installed via pip, run `pip install .` after the pull.

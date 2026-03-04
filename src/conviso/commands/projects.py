@@ -7,11 +7,14 @@ Now standardized to use the new core/output_manager for unified output handling.
 """
 
 import math
+import time
 import typer
 from typing import Optional, List
 from datetime import datetime, timezone
-from conviso.core.notifier import info, success, error, summary, warning
+from conviso.core.notifier import info, success, error, summary, warning, timed_summary
 from conviso.clients.client_graphql import graphql_request
+from conviso.core.concurrency import parallel_map
+from conviso.core.validators import validate_choice
 from conviso.schemas.projects_schema import schema
 from conviso.schemas.project_requirements_activities_schema import schema as project_requirements_schema
 from conviso.core.output_manager import export_data
@@ -43,6 +46,7 @@ def list_projects(
 ):
     """List projects for a given company using the unified output manager."""
     info(f"Listing projects for company {company_id} (page {page}, limit {limit})...")
+    started_at = time.perf_counter()
 
     # Build search parameters
     params = {"scopeIdEq": company_id}
@@ -113,21 +117,8 @@ def list_projects(
         rows = []
         total_pages = None
         total_count = 0
-        while True:
-            variables["page"] = current_page
-            data = graphql_request(query, variables, log_request=True, verbose_only=all_pages)
-            projects_data = data["projects"]
-            collection = projects_data["collection"]
-            metadata = projects_data["metadata"]
-            total_pages = metadata.get("totalPages")
-            total_count = metadata.get("totalCount", total_count)
-
-            if not collection:
-                if current_page == page:
-                    typer.echo("⚠️  No projects found.")
-                    raise typer.Exit()
-                break
-
+        def _append_rows_from_collection(collection):
+            nonlocal rows
             for p in collection:
                 assignees = []
                 for alloc in p.get("allocatedAnalyst") or []:
@@ -173,9 +164,43 @@ def list_projects(
                     "tags": tags_str,
                 })
 
-            if not fetch_all or (total_pages is not None and current_page >= total_pages):
-                break
-            current_page += 1
+        def _fetch_page(page_num: int):
+            vars_page = dict(variables)
+            vars_page["page"] = page_num
+            data_page = graphql_request(query, vars_page, log_request=True, verbose_only=all_pages)
+            projects_page = data_page["projects"]
+            collection_page = projects_page.get("collection") or []
+            metadata_page = projects_page.get("metadata") or {}
+            return page_num, collection_page, metadata_page
+
+        page_num, collection, metadata = _fetch_page(current_page)
+        total_pages = metadata.get("totalPages")
+        total_count = metadata.get("totalCount", total_count)
+
+        if not collection:
+            typer.echo("⚠️  No projects found.")
+            raise typer.Exit()
+
+        _append_rows_from_collection(collection)
+
+        if fetch_all:
+            if total_pages is not None and current_page < total_pages:
+                page_numbers = list(range(current_page + 1, total_pages + 1))
+                page_results = parallel_map(_fetch_page, page_numbers)
+                for _, page_collection, _ in sorted(page_results, key=lambda x: x[0]):
+                    if page_collection:
+                        _append_rows_from_collection(page_collection)
+            else:
+                # Metadata missing: keep sequential pagination fallback
+                while True:
+                    current_page += 1
+                    _, page_collection, page_metadata = _fetch_page(current_page)
+                    if not page_collection:
+                        break
+                    _append_rows_from_collection(page_collection)
+                    total_pages = page_metadata.get("totalPages")
+                    if total_pages is not None and current_page >= total_pages:
+                        break
 
         if not rows:
             typer.echo("⚠️  No projects found.")
@@ -198,9 +223,11 @@ def list_projects(
 
             total_pages_calc = math.ceil(total / effective_limit)
 
-            summary(
+            elapsed = time.perf_counter() - started_at
+            timed_summary(
                 f"Showing {start}-{end} of {total} "
-                f"(page {page}/{total_pages_calc}).\n"
+                f"(page {page}/{total_pages_calc})",
+                elapsed,
             )
 
     except typer.Exit:
@@ -297,9 +324,11 @@ def list_project_requirements(
         except Exception:
             return None
 
-    status_filter = status.strip().upper() if status else None
-    if status_filter and status_filter not in allowed_status:
-        warning(f"Unknown status '{status_filter}'. Allowed: {', '.join(sorted(allowed_status))}")
+    try:
+        status_filter = validate_choice(status, allowed_status, "--status")
+    except ValueError as exc:
+        error(str(exc))
+        raise typer.Exit(code=1)
 
     history_email_filter = (history_email or "").strip().lower() or None
     attachment_name_filter = (attachment_name or "").strip().lower() or None

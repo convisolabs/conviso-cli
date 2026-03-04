@@ -21,7 +21,8 @@ from urllib.parse import urlparse
 import typer
 
 from conviso.clients.client_graphql import graphql_request
-from conviso.core.notifier import error, info, summary, warning, success
+from conviso.core.concurrency import parallel_map
+from conviso.core.notifier import error, info, summary, warning, success, timed_summary
 
 try:
     import yaml
@@ -74,6 +75,7 @@ def _approve_command(cmd: str):
 @approvals_app.command("list")
 def list_approvals():
     """List locally approved task commands."""
+    started_at = time.perf_counter()
     approvals = _load_approved_commands()
     if not approvals:
         info("No approved commands found.")
@@ -85,7 +87,8 @@ def list_approvals():
         rows.append({"hash": key, "approvedAt": approved_at, "cmd": cmd})
     for row in rows:
         typer.echo(f"{row['hash']}  {row['approvedAt']}  {row['cmd']}")
-    summary(f"{len(rows)} approved command(s).")
+    elapsed = time.perf_counter() - started_at
+    timed_summary(f"{len(rows)} approved command(s)", elapsed)
 
 
 @approvals_app.command("clear")
@@ -508,15 +511,22 @@ def _fetch_assets(company_id: int, tags: Optional[str] = None) -> List[Dict[str,
     limit = 50
     all_assets = []
     search = {"tags": [t.strip() for t in tags.split(",") if t.strip()]} if tags else None
-    while True:
-        data = graphql_request(query, {"companyId": company_id, "limit": limit, "page": page, "search": search})
-        assets = (data.get("assets") or {}).get("collection") or []
-        meta = (data.get("assets") or {}).get("metadata") or {}
-        all_assets.extend(assets)
-        total_pages = meta.get("totalPages") or 1
-        if page >= total_pages:
-            break
-        page += 1
+
+    def _fetch_page(p: int) -> tuple[int, List[Dict[str, Any]], int]:
+        data = graphql_request(query, {"companyId": company_id, "limit": limit, "page": p, "search": search})
+        assets_data = data.get("assets") or {}
+        collection = assets_data.get("collection") or []
+        meta = assets_data.get("metadata") or {}
+        total_pages = int(meta.get("totalPages") or 1)
+        return p, collection, total_pages
+
+    first_page, first_collection, total_pages = _fetch_page(page)
+    all_assets.extend(first_collection)
+    if first_page < total_pages:
+        page_numbers = list(range(first_page + 1, total_pages + 1))
+        page_results = parallel_map(_fetch_page, page_numbers)
+        for _, collection, _ in sorted(page_results, key=lambda x: x[0]):
+            all_assets.extend(collection)
     return all_assets
 
 
@@ -1309,6 +1319,7 @@ def list_tasks(
 ):
     """List tasks defined as YAML in requirement activities."""
     _require_yaml()
+    started_at = time.perf_counter()
 
     rows: List[Dict[str, Any]] = []
 
@@ -1366,7 +1377,8 @@ def list_tasks(
         output=output,
         title=f"Tasks ({'Project ' + str(project_id) if project_id else 'Templates'})",
     )
-    summary(f"{len(rows)} task(s) listed.")
+    elapsed = time.perf_counter() - started_at
+    timed_summary(f"{len(rows)} task(s) listed", elapsed)
 
 
 @app.command("run")

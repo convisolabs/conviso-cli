@@ -10,6 +10,7 @@ from typing import Optional, List, Dict, Any, Tuple
 from rich.table import Table
 from conviso.core.notifier import info, success, error, warning
 from conviso.core.bulk_loader import load_csv, bulk_process, SkipRow, BulkResult
+from conviso.core.concurrency import parallel_map
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.logger import VERBOSE
 from conviso.core.output_manager import console
@@ -575,11 +576,12 @@ def bulk_vulns(
     missing_assets = [nm for nm in asset_names if not _resolve_asset_by_name(nm)]
     info(f"Assets referenced in SARIF: {len(asset_names)}. Resolved by name: {len(resolved_assets)}. Missing: {len(missing_assets)}.")
 
-    # Auto-create missing assets by name
-    for nm in missing_assets:
-        created = _create_asset(nm)
-        if created:
-            resolved_assets[nm] = created
+    # Auto-create missing assets by name (parallel fan-out)
+    if missing_assets:
+        created_ids = parallel_map(_create_asset, missing_assets)
+        for nm, created in zip(missing_assets, created_ids):
+            if created:
+                resolved_assets[nm] = created
     # Recompute missing after creation attempts
     missing_assets = [nm for nm in asset_names if not _resolve_asset_by_name(nm)]
 

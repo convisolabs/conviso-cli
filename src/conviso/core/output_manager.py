@@ -15,7 +15,8 @@ import sys
 from typing import List, Dict, Any, Optional
 from rich.console import Console
 from rich.table import Table
-from conviso.core.notifier import info, success, error
+from conviso.core.notifier import info, success, error, warning
+from conviso.core.output_prefs import get_repeat_header_every, get_selected_columns
 
 console = Console()
 
@@ -34,9 +35,32 @@ def export_data(data: List[Dict], schema=None, fmt: str = "table", output: str =
         console.print("[yellow]⚠️ No data to export.[/yellow]")
         return
 
+    selected = get_selected_columns() or []
+    if selected:
+        key_by_lower = {k.lower(): k for k in field_keys}
+        label_by_lower = {str(label).lower(): key for key, label in zip(field_keys, columns)}
+        chosen_keys = []
+        unknown = []
+        for raw in selected:
+            token = raw.strip().lower()
+            if not token:
+                continue
+            key = key_by_lower.get(token) or label_by_lower.get(token)
+            if key and key not in chosen_keys:
+                chosen_keys.append(key)
+            elif not key:
+                unknown.append(raw)
+        if chosen_keys:
+            field_keys = chosen_keys
+            columns = [schema.display_headers.get(k, k) if schema and hasattr(schema, "display_headers") else k for k in field_keys]
+        if unknown:
+            warning(f"Ignoring unknown column(s): {', '.join(unknown)}")
+
+    filtered_data = [{k: row.get(k, "") for k in field_keys} for row in data]
+
     # --- JSON output ---
     if fmt == "json":
-        result = json.dumps(data, indent=2, ensure_ascii=False)
+        result = json.dumps(filtered_data, indent=2, ensure_ascii=False)
 
         # If output file is specified, save to disk
         if output:
@@ -54,19 +78,19 @@ def export_data(data: List[Dict], schema=None, fmt: str = "table", output: str =
             with open(output, "w", newline="", encoding="utf-8") as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=field_keys)
                 writer.writeheader()
-                writer.writerows(data)
+                writer.writerows(filtered_data)
             console.print(f"[green]File saved to {output}[/green]")
         else:
             writer = csv.DictWriter(sys.stdout, fieldnames=field_keys)
             writer.writeheader()
-            writer.writerows(data)
+            writer.writerows(filtered_data)
         return
 
     # --- TABLE output ---
     else:
         # Detect numeric columns to right-align
         def _is_numeric_column(key: str) -> bool:
-            for row in data:
+            for row in filtered_data:
                 val = row.get(key)
                 if val is None or val == "":
                     continue
@@ -77,26 +101,34 @@ def export_data(data: List[Dict], schema=None, fmt: str = "table", output: str =
             return True
 
         numeric_cols = {k: _is_numeric_column(k) for k in field_keys}
+        repeat_every = get_repeat_header_every()
 
-        table = Table(
-            title=title or "Results",
-            show_header=True,
-            header_style="bold cyan",
-            row_styles=["none", "dim"],  # zebra striping for readability
-        )
-        for col_key, col_name in zip(field_keys, columns):
-            table.add_column(
-                col_name,
-                overflow="ellipsis",
-                max_width=25,
-                justify="right" if numeric_cols.get(col_key) else "left",
-                no_wrap=False,
+        def _build_table(chunk: List[Dict], table_title: Optional[str] = None):
+            table = Table(
+                title=table_title or "Results",
+                show_header=True,
+                header_style="bold cyan",
+                row_styles=["none", "dim"],
             )
+            for col_key, col_name in zip(field_keys, columns):
+                table.add_column(
+                    col_name,
+                    overflow="ellipsis",
+                    max_width=25,
+                    justify="right" if numeric_cols.get(col_key) else "left",
+                    no_wrap=False,
+                )
+            for row in chunk:
+                table.add_row(*(str(row.get(k, "")) for k in field_keys))
+            return table
 
-        for row in data:
-            table.add_row(*(str(row.get(k, "")) for k in field_keys))
-
-        console.print(table)
+        if repeat_every and repeat_every > 0 and len(filtered_data) > repeat_every:
+            for i in range(0, len(filtered_data), repeat_every):
+                chunk = filtered_data[i:i + repeat_every]
+                chunk_title = title if i == 0 else ""
+                console.print(_build_table(chunk, chunk_title))
+        else:
+            console.print(_build_table(filtered_data, title or "Results"))
 
 
 
