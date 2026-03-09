@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=82.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,26 +7,29 @@ name = "conviso-cli"
 dynamic = ["version"]
 description = "CLI to interact with Conviso Platform via GraphQL."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [
     { name = "Conviso Labs", email = "suporte@convisoappsec.com" }
 ]
 classifiers = [
+    "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
     "Environment :: Console",
 ]
 
 dependencies = [
-    "typer>=0.21.1",
-    "rich>=14.3.1",
+    "typer>=0.24.1",
+    "rich>=14.3.3",
     "requests>=2.32.5",
-    "python-dotenv>=1.2.1",
-    "pyyaml>=6.0.1"
+    "python-dotenv>=1.2.2",
+    "pyyaml>=6.0.3"
 ]
 
 [project.urls]
