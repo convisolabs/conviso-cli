@@ -29,6 +29,7 @@ def list_vulnerabilities(
     asset_ids: Optional[str] = typer.Option(None, "--asset-ids", "-a", help="Comma-separated asset IDs to filter."),
     project_ids: Optional[str] = typer.Option(None, "--project-ids", "-P", help="Comma-separated project IDs to filter."),
     severities: Optional[str] = typer.Option(None, "--severities", "-s", help="Comma-separated severities (NOTIFICATION,LOW,MEDIUM,HIGH,CRITICAL)."),
+    status: Optional[str] = typer.Option(None,"--status",help="Comma-separated vulnerability status labels (CREATED,DRAFT,IDENTIFIED,IN_PROGRESS,AWAITING_VALIDATION,FIX_ACCEPTED,RISK_ACCEPTED,FALSE_POSITIVE,SUPPRESSED)."),
     asset_tags: Optional[str] = typer.Option(None, "--asset-tags", "-t", help="Comma-separated asset tags."),
     project_types: Optional[str] = typer.Option(None, "--project-types", help="Comma-separated project types (e.g. PENETRATION_TEST, WEB_PENETRATION_TESTING)."),
     cves: Optional[str] = typer.Option(None, "--cves", help="Comma-separated CVE identifiers."),
@@ -77,6 +78,17 @@ def list_vulnerabilities(
     fmt_lower = fmt.lower()
 
     SEVERITY_ALLOWED = {"NOTIFICATION", "LOW", "MEDIUM", "HIGH", "CRITICAL"}
+    STATUS_ALLOWED = {
+        "CREATED",
+        "DRAFT",
+        "IDENTIFIED",
+        "IN_PROGRESS",
+        "AWAITING_VALIDATION",
+        "FIX_ACCEPTED",
+        "RISK_ACCEPTED",
+        "FALSE_POSITIVE",
+        "SUPPRESSED",
+    }
     ATTACK_SURFACE_ALLOWED = {"INTERNET_FACING", "INTERNAL", "NOT_DEFINED"}
     DATA_CLASS_ALLOWED = {"PII", "PAYMENT_CARD_INDUSTRY", "NON_SENSITIVE", "NOT_DEFINED"}
     BUSINESS_IMPACT_ALLOWED = {"LOW", "MEDIUM", "HIGH", "NOT_DEFINED"}
@@ -418,6 +430,13 @@ def list_vulnerabilities(
         except ValueError as exc:
             error(str(exc))
             raise typer.Exit(code=1)
+    status_list = None
+    if status:
+        try:
+            status_list = validate_csv_choices(status, STATUS_ALLOWED, "--status")
+        except ValueError as exc:
+            error(str(exc))
+            raise typer.Exit(code=1)
     asset_tags_list = _split_strs(asset_tags)
     project_types_list = _split_strs(project_types)
     if project_types_list:
@@ -468,6 +487,8 @@ def list_vulnerabilities(
         filters["projectIds"] = projects_list
     if severities_list:
         filters["severities"] = severities_list
+    if status_list:
+        filters["statuses"] = status_list
     if asset_tags_list:
         filters["assetTags"] = asset_tags_list
     if project_types_list:
