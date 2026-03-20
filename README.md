@@ -96,6 +96,7 @@ conviso --help
 - Tasks (only valid YAML): `python -m conviso.app tasks list --company-id 443 --project-id 26102 --only-valid`
 - Tasks (create with inline YAML): `python -m conviso.app tasks create --company-id 443 --label "Quick Task" --yaml "name: quick\nsteps:\n  - action: echo\n    message: ok"`
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
+- Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --status RISK_ACCEPTED,AWAITING_VALIDATION --all`
 - Vulnerabilities (last 7 days): `python -m conviso.app vulns list --company-id 443 --days-back 7 --severities HIGH,CRITICAL --all`
 - Vulnerabilities by author: `python -m conviso.app vulns list --company-id 443 --author "Fernando" --all`
 - Vulnerabilities with local free-text search: `python -m conviso.app vulns list --company-id 443 --all --grep "jwt"`
