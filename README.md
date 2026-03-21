@@ -103,6 +103,7 @@ conviso --help
 - Vulnerabilities with local field filter (auto deep for deep fields): `python -m conviso.app vulns list --company-id 443 --all --contains codeSnippet=eval( --contains fileName=app.py`
 - Vulnerabilities (DAST/WEB) search by request/response: `python -m conviso.app vulns list --company-id 443 --types DAST_FINDING,WEB_VULNERABILITY --all --contains request=Authorization --contains response=stacktrace`
 - Vulnerabilities with forced deep local search: `python -m conviso.app vulns list --company-id 443 --all --contains codeSnippet=eval( --deep-search --workers 8`
+- Vulnerabilities (SCA) checking patches against OSV: `python -m conviso.app vulns check-sca-patches --company-id 443 --severities HIGH,CRITICAL --status RISK_ACCEPTED --all`
 - Vulnerability timeline (by vulnerability ID): `python -m conviso.app vulns timeline --id 12345`
 - Vulnerabilities timeline by project: `python -m conviso.app vulns timeline --company-id 443 --project-id 26102`
 - Last user who changed vuln status: `python -m conviso.app vulns timeline --id 12345 --last-status-change-only`

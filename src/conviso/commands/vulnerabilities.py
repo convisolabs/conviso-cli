@@ -2100,3 +2100,288 @@ def update_vulnerability(
     except Exception as exc:
         error(f"Error updating vulnerability: {exc}")
         raise typer.Exit(code=1)
+
+
+
+# ---------------------- CHECK SCA PATCHES ---------------------- #
+@app.command("check-sca-patches", help="Check OSV for available patches for SCA vulnerabilities and optionally update them.")
+def check_sca_patches(
+    company_id: int = typer.Option(..., "--company-id", "-c", help="Company ID."),
+    asset_ids: Optional[str] = typer.Option(None, "--asset-ids", "-a", help="Comma-separated asset IDs to filter."),
+    severities: Optional[str] = typer.Option(None, "--severities", "-s", help="Comma-separated severities (NOTIFICATION,LOW,MEDIUM,HIGH,CRITICAL)."),
+    status: Optional[str] = typer.Option(None,"--status",help="Comma-separated vulnerability status labels."),
+    asset_tags: Optional[str] = typer.Option(None, "--asset-tags", "-t", help="Comma-separated asset tags."),
+    cves: Optional[str] = typer.Option(None, "--cves", help="Comma-separated CVE identifiers."),
+    page: int = typer.Option(1, "--page", "-p", help="Page number."),
+    per_page: int = typer.Option(50, "--per-page", "-l", help="Items per page."),
+    all_pages: bool = typer.Option(False, "--all", help="Fetch all pages."),
+    fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file for json/csv."),
+):
+    """Check OSV for available patches for open SCA vulnerabilities without a patched version."""
+    info(f"Checking SCA patches for company {company_id}...")
+
+    def _split_ids(value: Optional[str]):
+        if not value: return None
+        ids = []
+        for raw in value.split(","):
+            raw = raw.strip()
+            if not raw: continue
+            try: ids.append(int(raw))
+            except ValueError: continue
+        return ids or None
+
+    def _split_strs(value: Optional[str]):
+        if not value: return None
+        vals = [v.strip() for v in value.split(",") if v.strip()]
+        return vals or None
+
+    query_sca = """
+    query IssuesSca($companyId: ID!, $pagination: PaginationInput!, $filters: IssuesFiltersInput) {
+      issues(companyId: $companyId, pagination: $pagination, filters: $filters) {
+        collection {
+          id
+          title
+          status
+          type
+          asset { 
+              id 
+            name 
+            assetsTagList 
+          }
+          ... on ScaFinding {
+            severity
+            detail { 
+              package 
+              affectedVersion 
+              patchedVersion 
+              cve 
+            }
+          }
+        }
+        metadata { 
+          currentPage 
+          totalPages 
+        }
+      }
+    }
+    """
+    
+    SEVERITY_ALLOWED = {"NOTIFICATION", "LOW", "MEDIUM", "HIGH", "CRITICAL"}
+    STATUS_ALLOWED = {"CREATED", "DRAFT", "IDENTIFIED", "IN_PROGRESS", "AWAITING_VALIDATION", "FIX_ACCEPTED", "RISK_ACCEPTED", "FALSE_POSITIVE", "SUPPRESSED"}
+    
+    assets_list = _split_ids(asset_ids)
+    
+    severities_list = None
+    if severities:
+        severities_list = [s.strip().upper() for s in severities.split(",") if s.strip()]
+        for s in severities_list:
+            if s not in SEVERITY_ALLOWED:
+                error(f"Invalid severity '{s}'. Allowed: {', '.join(SEVERITY_ALLOWED)}")
+                raise typer.Exit(code=1)
+                
+    status_list = None
+    if status:
+        status_list = [s.strip().upper() for s in status.split(",") if s.strip()]
+        for s in status_list:
+            if s not in STATUS_ALLOWED:
+                error(f"Invalid status '{s}'. Allowed: {', '.join(STATUS_ALLOWED)}")
+                raise typer.Exit(code=1)
+                
+    asset_tags_list = _split_strs(asset_tags)
+    cves_list = _split_strs(cves)
+    
+    filters = {
+        "failureTypes": ["SCA_FINDING"],
+        "statuses": status_list or ["CREATED", "IDENTIFIED", "IN_PROGRESS", "AWAITING_VALIDATION"]
+    }
+    if assets_list: filters["assetIds"] = assets_list
+    if severities_list: filters["severities"] = severities_list
+    if asset_tags_list: filters["assetTags"] = asset_tags_list
+    if cves_list: filters["cves"] = cves_list
+        
+    fetch_all = all_pages
+    current_page = page
+    all_issues = []
+    
+    vars_base = {
+        "companyId": str(company_id),
+        "pagination": {"page": current_page, "perPage": per_page if not fetch_all else 200},
+        "filters": filters
+    }
+
+    def _fetch_page(page_num: int):
+        vars_page = dict(vars_base)
+        vars_page["pagination"]["page"] = page_num
+        res = graphql_request(query_sca, vars_page, log_request=True, verbose_only=True)
+        return page_num, res
+
+    try:
+        page_num, res = _fetch_page(current_page)
+        issues_data = res.get("issues") or {}
+        collection = issues_data.get("collection") or []
+        metadata = issues_data.get("metadata") or {}
+        
+        for vuln in collection:
+            if vuln.get("type") == "SCA_FINDING":
+                all_issues.append(vuln)
+                
+        total_p = metadata.get("totalPages") or 1
+        
+        if fetch_all and total_p > current_page:
+            page_numbers = list(range(current_page + 1, total_p + 1))
+            page_results = parallel_map(_fetch_page, page_numbers)
+            
+            for _, p_res in sorted(page_results, key=lambda x: x[0]):
+                p_issues_data = p_res.get("issues") or {}
+                p_coll = p_issues_data.get("collection") or []
+                for vuln in p_coll:
+                    if vuln.get("type") == "SCA_FINDING":
+                        all_issues.append(vuln)
+                        
+    except Exception as e:
+        error(f"Error fetching vulnerabilities: {e}")
+        raise typer.Exit(code=1)
+            
+    target_issues = []
+    for vuln in all_issues:
+        detail = vuln.get("detail") or {}
+        patched_ver = detail.get("patchedVersion")
+        cve = detail.get("cve")
+        package = detail.get("package")
+        asset = vuln.get("asset") or {}
+        tags = ", ".join(asset.get("assetsTagList") or [])
+        severity_value = vuln.get("severity") or ""
+        
+        sev_color_map = {
+            "CRITICAL": "bold white on red",
+            "HIGH": "bold red",
+            "MEDIUM": "yellow",
+            "LOW": "green",
+            "NOTIFICATION": "cyan"
+        }
+        sev_display = severity_value
+        sev_style = sev_color_map.get(severity_value.upper(), None)
+        if sev_style:
+            sev_display = f"[{sev_style}]{severity_value}[/{sev_style}]"
+            
+        if not patched_ver and (cve or package):
+            target_issues.append({
+                "id": vuln.get("id"),
+                "asset_id": asset.get("id") or "-",
+                "title": vuln.get("title"),
+                "cve": cve,
+                "package": package,
+                "affectedVersion": detail.get("affectedVersion"),
+                "asset_name": asset.get("name") or "-",
+                "asset_tags": tags or "-",
+                "status": vuln.get("status") or "-",
+                "severity_display": sev_display,
+            })
+            
+    if not target_issues:
+        success("No open SCA vulnerabilities missing a patched version found.")
+        return
+        
+    info(f"Found {len(target_issues)} SCA vulnerabilities missing patchedVersion. Querying OSV in parallel...")
+
+    def _get_best_fixed_version(affected_list, pkg_match=None):
+        git_fixes = []
+        db_spec_fixes = set()
+        eco_fixes = set()
+        
+        for affected in affected_list:
+            if pkg_match:
+                pkg_name = (affected.get("package") or {}).get("name")
+                if pkg_name and pkg_name != pkg_match:
+                    continue
+            
+            for r in affected.get("ranges", []):
+                rtype = r.get("type")
+                for v_event in (r.get("database_specific") or {}).get("versions", []):
+                    if "fixed" in v_event:
+                        db_spec_fixes.add(v_event["fixed"])
+                        
+                for event in r.get("events", []):
+                    if "fixed" in event:
+                        val = event["fixed"]
+                        if rtype in ("ECOSYSTEM", "SEMVER"):
+                            eco_fixes.add(val)
+                        elif rtype == "GIT" and val not in git_fixes:
+                            git_fixes.append(val)
+                            
+            for v_event in (affected.get("database_specific") or {}).get("versions", []):
+                if "fixed" in v_event:
+                    db_spec_fixes.add(v_event["fixed"])
+
+        if eco_fixes:
+            return ", ".join(eco_fixes)
+        if db_spec_fixes:
+            return ", ".join(db_spec_fixes)
+        if git_fixes:
+            return git_fixes[-1]
+        return None
+
+    http_session = requests.Session()
+
+    def _process_osv_issue(issue):
+        cve = issue["cve"]
+        package = issue["package"]
+        current_version = issue["affectedVersion"]
+        found_patch = None
+        
+        try:
+            if cve:
+                resp = http_session.get(f"https://api.osv.dev/v1/vulns/{cve}", timeout=10)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    found_patch = _get_best_fixed_version(data.get("affected", []))
+                    if not found_patch:
+                        for alias in data.get("aliases", []):
+                            alias_resp = http_session.get(f"https://api.osv.dev/v1/vulns/{alias}", timeout=10)
+                            if alias_resp.status_code == 200:
+                                alias_data = alias_resp.json()
+                                found_patch = _get_best_fixed_version(alias_data.get("affected", []))
+                                if found_patch:
+                                    break                 
+            elif package and current_version:
+                payload = {"version": current_version, "package": {"name": package}}
+                resp = http_session.post("https://api.osv.dev/v1/query", json=payload, timeout=10)
+                if resp.status_code == 200:
+                    for vuln in resp.json().get("vulns", []):
+                        found_patch = _get_best_fixed_version(vuln.get("affected", []), pkg_match=package)
+                        if found_patch:
+                            break           
+        except Exception as e:
+            warning(f"Error querying OSV for issue {issue['id']}: {e}")
+            
+        if found_patch:
+            return {
+                "Vuln ID": str(issue["id"]),
+                "Asset ID": str(issue["asset_id"]),
+                "Asset Name": issue["asset_name"],
+                "Asset Tags": issue["asset_tags"],
+                "Package": package or "-",
+                "Status": issue["status"],
+                "Severity": issue["severity_display"],
+                "CVE": cve or "-",
+                "Current Version": current_version or "-",
+                "OSV Patched Version": found_patch
+            }
+        return None
+
+    raw_results = parallel_map(_process_osv_issue, target_issues)
+    
+    formatted_issues = [r for r in raw_results if r is not None]
+            
+    if not formatted_issues:
+        warning("No patched versions found via OSV.")
+        return
+        
+    export_data(
+        data=formatted_issues,
+        fmt=fmt.lower(),
+        output=output,
+        title="OSV Patches Found"
+    )
+    summary(f"Found patched versions for {len(formatted_issues)} vulnerabilities.")
