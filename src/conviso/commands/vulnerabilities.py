@@ -10,6 +10,8 @@ from typing import Optional, List, Tuple
 import json
 import re
 from datetime import date, datetime, timedelta, timezone
+from collections import defaultdict
+import itertools
 import requests
 import time
 from conviso.core.notifier import info, error, summary, success, warning, timed_summary
@@ -2202,7 +2204,6 @@ def check_sca_patches(
         
     fetch_all = all_pages
     current_page = page
-    all_issues = []
     
     vars_base = {
         "companyId": str(company_id),
@@ -2210,124 +2211,128 @@ def check_sca_patches(
         "filters": filters
     }
 
+    grouped_issues = defaultdict(list)
+    total_issues_count = 0
+
     def _fetch_page(page_num: int):
         vars_page = dict(vars_base)
         vars_page["pagination"]["page"] = page_num
         res = graphql_request(query_sca, vars_page, log_request=True, verbose_only=True)
         return page_num, res
 
+    def _process_collection(collection):
+        nonlocal total_issues_count
+        for vuln in collection:
+            if vuln.get("type") != "SCA_FINDING":
+                continue
+                
+            detail = vuln.get("detail") or {}
+            patched_ver = detail.get("patchedVersion")
+            cve = detail.get("cve")
+            package = detail.get("package")
+            
+            if not patched_ver and (cve or package):
+                asset = vuln.get("asset") or {}
+                tags = ", ".join(asset.get("assetsTagList") or [])
+                severity_value = vuln.get("severity") or ""
+                
+                sev_color_map = {
+                    "CRITICAL": "bold white on red",
+                    "HIGH": "bold red",
+                    "MEDIUM": "yellow",
+                    "LOW": "green",
+                    "NOTIFICATION": "cyan"
+                }
+                sev_display = severity_value
+                sev_style = sev_color_map.get(severity_value.upper(), None)
+                if sev_style:
+                    sev_display = f"[{sev_style}]{severity_value}[/{sev_style}]"
+                    
+                current_version = detail.get("affectedVersion")
+                
+                issue_data = {
+                    "Vuln ID": str(vuln.get("id")),
+                    "Asset ID": str(asset.get("id") or "-"),
+                    "Asset Name": asset.get("name") or "-",
+                    "Asset Tags": tags or "-",
+                    "Package": package or "-",
+                    "Status": vuln.get("status") or "-",
+                    "Severity": sev_display,
+                    "CVE": cve or "-",
+                    "Current Version": current_version or "-",
+                }
+                
+                query_key = (cve, package, current_version)
+                grouped_issues[query_key].append(issue_data)
+                total_issues_count += 1
+
     try:
         page_num, res = _fetch_page(current_page)
         issues_data = res.get("issues") or {}
-        collection = issues_data.get("collection") or []
-        metadata = issues_data.get("metadata") or {}
-        
-        for vuln in collection:
-            if vuln.get("type") == "SCA_FINDING":
-                all_issues.append(vuln)
+        _process_collection(issues_data.get("collection") or [])
                 
-        total_p = metadata.get("totalPages") or 1
+        total_p = (issues_data.get("metadata") or {}).get("totalPages") or 1
         
         if fetch_all and total_p > current_page:
             page_numbers = list(range(current_page + 1, total_p + 1))
             page_results = parallel_map(_fetch_page, page_numbers)
             
             for _, p_res in sorted(page_results, key=lambda x: x[0]):
-                p_issues_data = p_res.get("issues") or {}
-                p_coll = p_issues_data.get("collection") or []
-                for vuln in p_coll:
-                    if vuln.get("type") == "SCA_FINDING":
-                        all_issues.append(vuln)
+                p_coll = (p_res.get("issues") or {}).get("collection") or []
+                _process_collection(p_coll)
                         
     except Exception as e:
         error(f"Error fetching vulnerabilities: {e}")
         raise typer.Exit(code=1)
             
-    target_issues = []
-    for vuln in all_issues:
-        detail = vuln.get("detail") or {}
-        patched_ver = detail.get("patchedVersion")
-        cve = detail.get("cve")
-        package = detail.get("package")
-        asset = vuln.get("asset") or {}
-        tags = ", ".join(asset.get("assetsTagList") or [])
-        severity_value = vuln.get("severity") or ""
-        
-        sev_color_map = {
-            "CRITICAL": "bold white on red",
-            "HIGH": "bold red",
-            "MEDIUM": "yellow",
-            "LOW": "green",
-            "NOTIFICATION": "cyan"
-        }
-        sev_display = severity_value
-        sev_style = sev_color_map.get(severity_value.upper(), None)
-        if sev_style:
-            sev_display = f"[{sev_style}]{severity_value}[/{sev_style}]"
-            
-        if not patched_ver and (cve or package):
-            target_issues.append({
-                "id": vuln.get("id"),
-                "asset_id": asset.get("id") or "-",
-                "title": vuln.get("title"),
-                "cve": cve,
-                "package": package,
-                "affectedVersion": detail.get("affectedVersion"),
-                "asset_name": asset.get("name") or "-",
-                "asset_tags": tags or "-",
-                "status": vuln.get("status") or "-",
-                "severity_display": sev_display,
-            })
-            
-    if not target_issues:
+    if total_issues_count == 0:
         success("No open SCA vulnerabilities missing a patched version found.")
         return
         
-    info(f"Found {len(target_issues)} SCA vulnerabilities missing patchedVersion. Querying OSV in parallel...")
+    info(f"Found {total_issues_count} SCA vulnerabilities missing patchedVersion. Querying OSV in parallel...")
+
+    def _extract_fixes(affected):
+        ranges = affected.get("ranges", [])
+
+        yield from (
+            ("DB_SPEC", v["fixed"])
+            for r in ranges
+            for v in (r.get("database_specific") or {}).get("versions", [])
+            if "fixed" in v
+        )
+        yield from (
+            (r.get("type"), e["fixed"])
+            for r in ranges
+            for e in r.get("events", [])
+            if "fixed" in e
+        )
+        yield from (
+            ("DB_SPEC", v["fixed"])
+            for v in (affected.get("database_specific") or {}).get("versions", [])
+            if "fixed" in v
+        )
 
     def _get_best_fixed_version(affected_list, pkg_match=None):
-        git_fixes = []
-        db_spec_fixes = set()
-        eco_fixes = set()
-        
-        for affected in affected_list:
-            if pkg_match:
-                pkg_name = (affected.get("package") or {}).get("name")
-                if pkg_name and pkg_name != pkg_match:
-                    continue
-            
-            for r in affected.get("ranges", []):
-                rtype = r.get("type")
-                for v_event in (r.get("database_specific") or {}).get("versions", []):
-                    if "fixed" in v_event:
-                        db_spec_fixes.add(v_event["fixed"])
-                        
-                for event in r.get("events", []):
-                    if "fixed" in event:
-                        val = event["fixed"]
-                        if rtype in ("ECOSYSTEM", "SEMVER"):
-                            eco_fixes.add(val)
-                        elif rtype == "GIT" and val not in git_fixes:
-                            git_fixes.append(val)
-                            
-            for v_event in (affected.get("database_specific") or {}).get("versions", []):
-                if "fixed" in v_event:
-                    db_spec_fixes.add(v_event["fixed"])
+        def _matches(a):
+            name = (a.get("package") or {}).get("name")
+            return not pkg_match or not name or name == pkg_match
 
-        if eco_fixes:
-            return ", ".join(eco_fixes)
-        if db_spec_fixes:
-            return ", ".join(db_spec_fixes)
-        if git_fixes:
-            return git_fixes[-1]
-        return None
+        all_fixes = list(itertools.chain.from_iterable(
+            _extract_fixes(a) for a in affected_list if _matches(a)
+        ))
+
+        eco_fixes    = {v for t, v in all_fixes if t in ("ECOSYSTEM", "SEMVER")}
+        db_spec_fixes = {v for t, v in all_fixes if t == "DB_SPEC"}
+        git_fixes    = [v for t, v in all_fixes if t == "GIT"]
+
+        if eco_fixes:     return ", ".join(eco_fixes)
+        if db_spec_fixes: return ", ".join(db_spec_fixes)
+        return git_fixes[-1] if git_fixes else None
 
     http_session = requests.Session()
 
-    def _process_osv_issue(issue):
-        cve = issue["cve"]
-        package = issue["package"]
-        current_version = issue["affectedVersion"]
+    def _fetch_osv_patch(query_key):
+        cve, package, current_version = query_key
         found_patch = None
         
         try:
@@ -2337,42 +2342,42 @@ def check_sca_patches(
                     data = resp.json()
                     found_patch = _get_best_fixed_version(data.get("affected", []))
                     if not found_patch:
-                        for alias in data.get("aliases", []):
-                            alias_resp = http_session.get(f"https://api.osv.dev/v1/vulns/{alias}", timeout=10)
-                            if alias_resp.status_code == 200:
-                                alias_data = alias_resp.json()
-                                found_patch = _get_best_fixed_version(alias_data.get("affected", []))
-                                if found_patch:
-                                    break                 
+                        found_patch = next(
+                            (
+                                patch
+                                for alias in data.get("aliases", [])
+                                for alias_resp in [http_session.get(f"https://api.osv.dev/v1/vulns/{alias}", timeout=10)]
+                                if alias_resp.status_code == 200
+                                for patch in [_get_best_fixed_version(alias_resp.json().get("affected", []))]
+                                if patch
+                            ),
+                            None,
+                        )
             elif package and current_version:
                 payload = {"version": current_version, "package": {"name": package}}
                 resp = http_session.post("https://api.osv.dev/v1/query", json=payload, timeout=10)
                 if resp.status_code == 200:
-                    for vuln in resp.json().get("vulns", []):
-                        found_patch = _get_best_fixed_version(vuln.get("affected", []), pkg_match=package)
-                        if found_patch:
-                            break           
+                    found_patch = next(
+                    (
+                        patch
+                        for vuln in resp.json().get("vulns", [])
+                        for patch in [_get_best_fixed_version(vuln.get("affected", []), pkg_match=package)]
+                        if patch
+                    ),
+                    None,
+                ) 
         except Exception as e:
-            warning(f"Error querying OSV for issue {issue['id']}: {e}")
+            warning(f"Error querying OSV for {cve or package}: {e}")
             
-        if found_patch:
-            return {
-                "Vuln ID": str(issue["id"]),
-                "Asset ID": str(issue["asset_id"]),
-                "Asset Name": issue["asset_name"],
-                "Asset Tags": issue["asset_tags"],
-                "Package": package or "-",
-                "Status": issue["status"],
-                "Severity": issue["severity_display"],
-                "CVE": cve or "-",
-                "Current Version": current_version or "-",
-                "OSV Patched Version": found_patch
-            }
-        return None
+        return query_key, found_patch
 
-    raw_results = parallel_map(_process_osv_issue, target_issues)
+    raw_results = parallel_map(_fetch_osv_patch, grouped_issues.keys())
     
-    formatted_issues = [r for r in raw_results if r is not None]
+    formatted_issues = [
+        {**issue_data, "OSV Patched Version": patch}
+        for query_key, patch in raw_results if patch
+        for issue_data in grouped_issues[query_key]
+    ]
             
     if not formatted_issues:
         warning("No patched versions found via OSV.")
