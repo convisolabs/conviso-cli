@@ -6,6 +6,7 @@ from conviso.commands import vulnerabilities
 from conviso.commands import bulk
 from conviso.commands import sbom
 from conviso.commands import tasks
+from conviso.commands import accesscontrol
 from conviso.core.logger import log, set_verbosity
 from conviso.core.concurrency import set_default_workers
 from conviso.core.output_prefs import set_output_preferences
@@ -24,6 +25,7 @@ app.add_typer(vulnerabilities.app, name="vulns", help="List vulnerabilities/issu
 app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
 app.add_typer(sbom.app, name="sbom", help="List/import SBOM components.")
 app.add_typer(tasks.app, name="tasks", help="Execute YAML tasks from requirements.")
+app.add_typer(accesscontrol.app, name="accesscontrol", help="Manage access control and user profile settings.")
 
 @app.callback(invoke_without_command=True)
 def main(
