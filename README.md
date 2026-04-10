@@ -83,6 +83,9 @@ conviso --help
 ## Usage (examples)
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
 - Projects (assignee filter): `python -m conviso.app projects list --company-id 443 --filter assignee=analyst@company.com --all`
+- Project status update: `python -m conviso.app projects status ANALYSIS --id 12345`
+- User access profile update: `python -m conviso.app accesscontrol user-profile --company-id 443 --user-id 123 --profile-id 7`
+- User teams update: `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11`
 - Project requirements + activities: `python -m conviso.app projects requirements --project-id 12345`
 - Assets: `python -m conviso.app assets list --company-id 443 --tags cloud --attack-surface INTERNET_FACING --all`
 - Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login|REF-123"`
@@ -194,6 +197,37 @@ Automatic normalizations:
   - `python -m conviso.app projects requirements --project-id 12345 --history-start 2025-12-08 --history-end 2025-12-31`
   - `python -m conviso.app projects requirements --project-id 12345 --requirement-id 123 --status NOT_ACCORDING`
   - `python -m conviso.app projects requirements --project-id 12345 --status DONE --history-attachments`
+
+## Project status
+- Command: `python -m conviso.app projects status <STATUS> --id <PROJECT_ID>`
+- Purpose: update only the project status without using the generic `projects update` command.
+- Allowed values: `PLANNED`, `ANALYSIS`, `PAUSED`, `DONE`, `DISCONTINUED`
+- Behavior: validates the informed status and normalizes it to uppercase before sending it to `updateProjectStatus`.
+- Example:
+  - `python -m conviso.app projects status ANALYSIS --id 12345`
+
+## Access control
+- Command: `python -m conviso.app accesscontrol user-profile --company-id <COMPANY_ID> --user-id <USER_ID> --profile-id <PROFILE_ID>`
+- Purpose: change the access profile associated with a user using `updatePortalUserAccess`.
+- Safety: asks for confirmation before applying; use `--force` to skip the prompt.
+- Required fields:
+  - `--company-id <id>`
+  - `--user-id <id>`
+  - `--profile-id <id>`
+- Examples:
+  - `python -m conviso.app accesscontrol user-profile --company-id 443 --user-id 123 --profile-id 7`
+  - `python -m conviso.app accesscontrol user-profile --company-id 443 --user-id 123 --profile-id 7 --force`
+- Command: `python -m conviso.app accesscontrol user-teams --company-id <COMPANY_ID> --user-id <USER_ID> [--team-ids <ID1,ID2,...>|--clear]`
+- Purpose: change the teams associated with a user while preserving the current access profile.
+- Safety: asks for confirmation before applying; use `--force` to skip the prompt.
+- Required fields:
+  - `--company-id <id>`
+  - `--user-id <id>`
+  - `--team-ids <id1,id2,...>` or `--clear`
+- Examples:
+  - `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11`
+  - `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --clear`
+  - `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11 --force`
 
 ## SBOM
 - List: `python -m conviso.app sbom list --company-id 443 --name log4j --all --format csv --output sbom.csv`

@@ -20,6 +20,7 @@ from conviso.schemas.project_requirements_activities_schema import schema as pro
 from conviso.core.output_manager import export_data
 
 app = typer.Typer(help="Manage projects via Conviso GraphQL API.")
+PROJECT_STATUS_ALLOWED = {"PLANNED", "ANALYSIS", "PAUSED", "DONE", "DISCONTINUED"}
 
 # ---------------------- LIST COMMAND ---------------------- #
 @app.command("list")
@@ -767,6 +768,57 @@ def update_project(
         success(f"Project updated successfully: ID {project['id']} - {project['label']}")
     except Exception as e:
         error(f"Error updating project: {e}")
+        raise typer.Exit(code=1)
+
+
+# ---------------------- STATUS COMMAND ---------------------- #
+@app.command("status")
+def update_project_status(
+    status: str = typer.Argument(
+        ...,
+        metavar="STATUS",
+        help="New project status. Allowed: PLANNED, ANALYSIS, PAUSED, DONE, DISCONTINUED.",
+    ),
+    project_id: int = typer.Option(..., "--id", "-i", help="Project ID to update."),
+):
+    """Update only the status of an existing project."""
+    try:
+        normalized_status = validate_choice(status, PROJECT_STATUS_ALLOWED, "status")
+    except ValueError as exc:
+        error(str(exc))
+        raise typer.Exit(code=1)
+
+    info(f"Updating status for project ID {project_id} to {normalized_status}...")
+
+    mutation = """
+    mutation UpdateProjectStatus($input: UpdateProjectStatusInput!) {
+      updateProjectStatus(input: $input) {
+        errors
+        project {
+          id
+          label
+          status
+        }
+      }
+    }
+    """
+
+    try:
+        data = graphql_request(
+            mutation,
+            {"input": {"id": project_id, "projectStatus": normalized_status}},
+        )
+        result = data["updateProjectStatus"]
+        errors = result.get("errors") or []
+        if errors:
+            raise RuntimeError("; ".join(str(err) for err in errors))
+        project = result["project"]
+        success(
+            f"Project status updated successfully: ID {project['id']} - "
+            f"{project['label']} -> {project.get('status') or normalized_status}"
+        )
+    except Exception as e:
+        error(f"Error updating project status: {e}")
         raise typer.Exit(code=1)
 
 
