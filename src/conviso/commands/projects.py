@@ -207,27 +207,38 @@ def list_projects(
             typer.echo("⚠️  No projects found.")
             raise typer.Exit()
 
+        if fetch_all:
+            disp_page, disp_total_pages = 1, 1
+            total = len(rows)
+            start, end = (1, total) if total > 0 else (0, 0)
+        else:
+            disp_page = page
+            disp_total_pages = total_pages or '?'
+            total = total_count or len(rows)
+            effective_limit = max(limit, 1)
+            start = (page - 1) * effective_limit + 1 if total > 0 else 0
+            end = min(page * effective_limit, total)
+
         export_data(
             rows,
             schema=schema,
             fmt=fmt,
             output=output,
-            title=f"Projects (Company {company_id}) - Page {page}/{total_pages or '?'}",
+            title=f"Projects (Company {company_id}) - Page {disp_page}/{disp_total_pages}",
         )
 
         if fmt != "json":
-            total = total_count or len(rows)
-            effective_limit = max(limit, 1)
-
-            start = (page - 1) * effective_limit + 1 if total > 0 else 0
-            end = min(page * effective_limit, total)
-
-            total_pages_calc = math.ceil(total / effective_limit)
+            if not fetch_all and disp_total_pages != '?':
+                total_pages_calc = disp_total_pages
+            elif fetch_all:
+                total_pages_calc = 1
+            else:
+                total_pages_calc = math.ceil(total / max(limit, 1))
 
             elapsed = time.perf_counter() - started_at
             timed_summary(
                 f"Showing {start}-{end} of {total} "
-                f"(page {page}/{total_pages_calc})",
+                f"(page {disp_page}/{total_pages_calc})",
                 elapsed,
             )
 

@@ -100,12 +100,14 @@ conviso --help
 - Tasks (only valid YAML): `python -m conviso.app tasks list --company-id 443 --project-id 26102 --only-valid`
 - Tasks (create with inline YAML): `python -m conviso.app tasks create --company-id 443 --label "Quick Task" --yaml "name: quick\nsteps:\n  - action: echo\n    message: ok"`
 - Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --severities HIGH,CRITICAL --asset-tags cloud --all`
+- Vulnerabilities: `python -m conviso.app vulns list --company-id 443 --status RISK_ACCEPTED,AWAITING_VALIDATION --all`
 - Vulnerabilities (last 7 days): `python -m conviso.app vulns list --company-id 443 --days-back 7 --severities HIGH,CRITICAL --all`
 - Vulnerabilities by author: `python -m conviso.app vulns list --company-id 443 --author "Fernando" --all`
 - Vulnerabilities with local free-text search: `python -m conviso.app vulns list --company-id 443 --all --grep "jwt"`
 - Vulnerabilities with local field filter (auto deep for deep fields): `python -m conviso.app vulns list --company-id 443 --all --contains codeSnippet=eval( --contains fileName=app.py`
 - Vulnerabilities (DAST/WEB) search by request/response: `python -m conviso.app vulns list --company-id 443 --types DAST_FINDING,WEB_VULNERABILITY --all --contains request=Authorization --contains response=stacktrace`
 - Vulnerabilities with forced deep local search: `python -m conviso.app vulns list --company-id 443 --all --contains codeSnippet=eval( --deep-search --workers 8`
+- Vulnerabilities (SCA) checking patches against OSV: `python -m conviso.app vulns check-sca-patches --company-id 443 --severities HIGH,CRITICAL --status RISK_ACCEPTED --all`
 - Vulnerability timeline (by vulnerability ID): `python -m conviso.app vulns timeline --id 12345`
 - Vulnerabilities timeline by project: `python -m conviso.app vulns timeline --company-id 443 --project-id 26102`
 - Last user who changed vuln status: `python -m conviso.app vulns timeline --id 12345 --last-status-change-only`
