@@ -86,6 +86,7 @@ conviso --help
 - Project status update: `python -m conviso.app projects status ANALYSIS --id 12345`
 - User access profile update: `python -m conviso.app accesscontrol user-profile --company-id 443 --user-id 123 --profile-id 7`
 - User teams update: `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11`
+- Bulk user access update: `python -m conviso.app accesscontrol bulk-users --file users.csv`
 - Project requirements + activities: `python -m conviso.app projects requirements --project-id 12345`
 - Assets: `python -m conviso.app assets list --company-id 443 --tags cloud --attack-surface INTERNET_FACING --all`
 - Requirements: `python -m conviso.app requirements create --company-id 443 --label "Req" --description "Desc" --activity "Login|Check login|REF-123"`
@@ -228,6 +229,30 @@ Automatic normalizations:
   - `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11`
   - `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --clear`
   - `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11 --force`
+- Command: `python -m conviso.app accesscontrol bulk-users --file <CSV_FILE>`
+- Purpose: bulk update user access profiles and teams across different companies using CSV.
+- Safety: always runs dry-run first; use `--preview-only` to stop after preview or `--force` to skip the apply confirmation.
+- CSV columns:
+  - `company_id` required
+  - `user_id` required
+  - `profile_id` optional if only changing teams; current profile is preserved automatically
+  - `team_ids` optional comma-separated team IDs
+  - `clear_teams` optional `true|false`
+- Rules:
+  - each row must change at least one thing: `profile_id`, `team_ids`, or `clear_teams=true`
+  - do not use `team_ids` and `clear_teams=true` together on the same row
+- Examples:
+  - `python -m conviso.app accesscontrol bulk-users --file users.csv`
+  - `python -m conviso.app accesscontrol bulk-users --file users.csv --preview-only`
+  - `python -m conviso.app accesscontrol bulk-users --file users.csv --force`
+
+Example CSV:
+```csv
+company_id,user_id,profile_id,team_ids,clear_teams
+443,123,7,"10,11",false
+444,456,9,,false
+445,789,,,true
+```
 
 ## SBOM
 - List: `python -m conviso.app sbom list --company-id 443 --name log4j --all --format csv --output sbom.csv`
