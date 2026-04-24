@@ -1333,22 +1333,22 @@ def list_tasks(
       project(id: $id) {
         id
         label
-        playbooks {
+        projectRequirements {
           id
           label
-          check { id label description }
+          activities { id title description }
         }
       }
     }
     """
     data = graphql_request(project_query, {"id": project_id})
     project = data.get("project") or {}
-    playbooks = project.get("playbooks") or []
-    for req in playbooks:
+    project_requirements = project.get("projectRequirements") or []
+    for req in project_requirements:
         label = (req.get("label") or "").strip()
         if not _matches_prefix(label, requirement_prefix):
             continue
-        for act in req.get("check") or []:
+        for act in req.get("activities") or []:
             validation = _validate_task_yaml(act.get("description") or "")
             if not validation.get("ok") and not show_invalid:
                 continue
@@ -1358,7 +1358,7 @@ def list_tasks(
                 "requirementId": req.get("id"),
                 "requirementLabel": req.get("label"),
                 "activityId": act.get("id"),
-                "activityLabel": act.get("label"),
+                "activityLabel": act.get("title"),
                 "taskName": validation.get("name") or "",
                 "steps": validation.get("steps") or "",
                 "status": "ok" if validation.get("ok") else validation.get("reason"),
@@ -1400,17 +1400,17 @@ def run_task(
       project(id: $id) {
         id
         label
-        playbooks {
+        projectRequirements {
           id
           label
-          check { id label description }
+          activities { id title description }
         }
       }
     }
     """
     data = graphql_request(query, {"id": project_id}, log_request=False)
     project = data.get("project") or {}
-    playbooks = project.get("playbooks") or []
+    project_requirements = project.get("projectRequirements") or []
 
     tasks_found = 0
     tasks_executed = 0
@@ -1421,14 +1421,14 @@ def run_task(
         "assets": {"by_name": {}},
     }
 
-    for req in playbooks:
+    for req in project_requirements:
         label = (req.get("label") or "").strip()
         if not _matches_prefix(label, requirement_prefix):
             continue
         tasks_found += 1
         info(f"Requirement '{label}' matched prefix '{requirement_prefix}'.")
 
-        activities = req.get("check") or []
+        activities = req.get("activities") or []
         for act in activities:
             desc = _clean_description(act.get("description") or "")
             if not desc:
@@ -1453,7 +1453,7 @@ def run_task(
                 continue
             if len(steps) != 1:
                 req_label = req.get("label") or ""
-                act_label = act.get("label") or ""
+                act_label = act.get("title") or ""
                 error(
                     "Activity YAML must have exactly 1 step. "
                     f"Company={company_id} Project={project_id} "
@@ -1461,7 +1461,7 @@ def run_task(
                 )
                 raise typer.Exit(code=1)
 
-            info(f"Executing task from activity {act.get('id')} - {act.get('label')}")
+            info(f"Executing task from activity {act.get('id')} - {act.get('title')}")
 
             step = steps[0]
             step_id = step.get("id") or "step"
@@ -1470,7 +1470,7 @@ def run_task(
 
             context = dict(base_context)
             context["requirement"] = {"id": req.get("id"), "label": req.get("label")}
-            context["activity"] = {"id": act.get("id"), "label": act.get("label")}
+            context["activity"] = {"id": act.get("id"), "label": act.get("title")}
 
             inputs = step.get("inputs") or {}
             if "assets" in inputs:

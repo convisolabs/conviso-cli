@@ -111,15 +111,16 @@ def list_project_requirements(
       project(id: $id) {
         id
         label
-        playbooks {
+        projectRequirements {
           id
           label
           global
           updatedAt
           createdAt
-          check {
+          checklist { id label }
+          activities {
             id
-            label
+            title
             description
             reference
           }
@@ -133,12 +134,13 @@ def list_project_requirements(
       project(id: $id) {
         id
         label
-        playbooks {
+        projectRequirements {
           id
           label
           global
           updatedAt
           createdAt
+          checklist { id label }
         }
       }
     }
@@ -147,7 +149,7 @@ def list_project_requirements(
     try:
         data = graphql_request(query_with_activities if with_activities else query_requirements_only, {"id": project_id})
         project = data.get("project") or {}
-        collection = project.get("playbooks") or []
+        collection = project.get("projectRequirements") or []
 
         if not collection:
             typer.echo("No requirements found for this project.")
@@ -156,11 +158,13 @@ def list_project_requirements(
         rows = []
         if with_activities:
             for r in collection:
-                checks = r.get("check") or []
-                if not checks:
+                activities = r.get("activities") or []
+                if not activities:
                     rows.append({
                         "requirementId": r.get("id"),
                         "requirementLabel": r.get("label"),
+                        "templateRequirementId": ((r.get("checklist") or {}).get("id") or r.get("checklistId") or ""),
+                        "templateRequirementLabel": ((r.get("checklist") or {}).get("label") or ""),
                         "global": r.get("global"),
                         "updatedAt": r.get("updatedAt"),
                         "createdAt": r.get("createdAt"),
@@ -170,15 +174,17 @@ def list_project_requirements(
                         "reference": "",
                     })
                     continue
-                for a in checks:
+                for a in activities:
                     rows.append({
                         "requirementId": r.get("id"),
                         "requirementLabel": r.get("label"),
+                        "templateRequirementId": ((r.get("checklist") or {}).get("id") or r.get("checklistId") or ""),
+                        "templateRequirementLabel": ((r.get("checklist") or {}).get("label") or ""),
                         "global": r.get("global"),
                         "updatedAt": r.get("updatedAt"),
                         "createdAt": r.get("createdAt"),
                         "activityId": a.get("id"),
-                        "activityLabel": a.get("label"),
+                        "activityLabel": a.get("title"),
                         "description": a.get("description"),
                         "reference": a.get("reference"),
                     })
@@ -187,6 +193,8 @@ def list_project_requirements(
                 rows.append({
                     "id": r.get("id"),
                     "label": r.get("label"),
+                    "templateRequirementId": ((r.get("checklist") or {}).get("id") or r.get("checklistId") or ""),
+                    "templateRequirementLabel": ((r.get("checklist") or {}).get("label") or ""),
                     "global": r.get("global"),
                     "updatedAt": r.get("updatedAt"),
                     "createdAt": r.get("createdAt"),
@@ -253,12 +261,13 @@ def list_requirement_activities(
       project(id: $id) {
         id
         label
-        playbooks {
+        projectRequirements {
           id
           label
-          check {
+          checklist { id label }
+          activities {
             id
-            label
+            title
             description
             reference
           }
@@ -299,16 +308,18 @@ def list_requirement_activities(
         else:
             data = graphql_request(project_query, {"id": project_id})
             project = data.get("project") or {}
-            playbooks = project.get("playbooks") or []
+            project_requirements = project.get("projectRequirements") or []
 
-            for req in playbooks:
-                checks = req.get("check") or []
-                for a in checks:
+            for req in project_requirements:
+                activities = req.get("activities") or []
+                for a in activities:
                     rows.append({
                         "requirementId": req.get("id"),
                         "requirementLabel": req.get("label"),
+                        "templateRequirementId": ((req.get("checklist") or {}).get("id") or req.get("checklistId") or ""),
+                        "templateRequirementLabel": ((req.get("checklist") or {}).get("label") or ""),
                         "id": a.get("id"),
-                        "label": a.get("label"),
+                        "label": a.get("title"),
                         "description": a.get("description"),
                         "reference": a.get("reference"),
                     })
