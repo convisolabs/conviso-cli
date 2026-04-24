@@ -257,7 +257,7 @@ def list_project_requirements(
         None,
         "--requirement-id",
         "-r",
-        help="Filter activities by a specific requirement (playbook) ID.",
+        help="Filter activities by a specific project requirement ID.",
     ),
     status: Optional[str] = typer.Option(
         None,
@@ -353,21 +353,28 @@ def list_project_requirements(
       project(id: $id) {
         id
         label
-        activities {
+        projectRequirements {
           id
-          title
-          status
-          startedAt
-          finishedAt
-          evidences { filename }
-          playbook { id label }
-          history(pagination: { page: 1, perPage: 200 }) {
-            collection {
-              id
-              createdAt
-              actionType
-              portalUser { email name }
-              evidences { filename }
+          label
+          checklist {
+            id
+            label
+          }
+          activities {
+            id
+            title
+            status
+            startedAt
+            finishedAt
+            evidences { filename }
+            history(pagination: { page: 1, perPage: 200 }) {
+              collection {
+                id
+                createdAt
+                actionType
+                portalUser { email name }
+                evidences { filename }
+              }
             }
           }
         }
@@ -383,83 +390,82 @@ def list_project_requirements(
             raise typer.Exit()
 
         rows = []
-        for activity in project.get("activities") or []:
-            playbook = activity.get("playbook") or {}
-            playbook_id = playbook.get("id")
+        for project_requirement in project.get("projectRequirements") or []:
+            project_requirement_id = project_requirement.get("id")
             if requirement_id is not None:
                 try:
-                    if int(playbook_id) != int(requirement_id):
+                    if int(project_requirement_id) != int(requirement_id):
                         continue
                 except Exception:
                     continue
-            activity_status = (activity.get("status") or "").upper()
-            activity_evidences = activity.get("evidences") or []
-            history_rows = ((activity.get("history") or {}).get("collection") or [])
+            for activity in project_requirement.get("activities") or []:
+                activity_status = (activity.get("status") or "").upper()
+                activity_evidences = activity.get("evidences") or []
+                history_rows = ((activity.get("history") or {}).get("collection") or [])
 
-            attachment_names = []
-            for ev in activity_evidences:
-                filename = (ev or {}).get("filename")
-                if filename:
-                    attachment_names.append(filename)
-            for h in history_rows:
-                for ev in (h.get("evidences") or []):
+                attachment_names = []
+                for ev in activity_evidences:
                     filename = (ev or {}).get("filename")
                     if filename:
                         attachment_names.append(filename)
-            # preserve order while removing duplicates
-            seen_names = set()
-            attachment_names = [n for n in attachment_names if not (n in seen_names or seen_names.add(n))]
-            has_attachments = bool(attachment_names)
+                for h in history_rows:
+                    for ev in (h.get("evidences") or []):
+                        filename = (ev or {}).get("filename")
+                        if filename:
+                            attachment_names.append(filename)
+                seen_names = set()
+                attachment_names = [n for n in attachment_names if not (n in seen_names or seen_names.add(n))]
+                has_attachments = bool(attachment_names)
 
-            if attachment_name_filter:
-                if not any(attachment_name_filter in name.lower() for name in attachment_names):
+                if attachment_name_filter:
+                    if not any(attachment_name_filter in name.lower() for name in attachment_names):
+                        continue
+
+                if status_filter and activity_status != status_filter:
+                    continue
+                if history_attachments and not has_attachments:
                     continue
 
-            if status_filter and activity_status != status_filter:
-                continue
-            if history_attachments and not has_attachments:
-                continue
+                matched_history = []
+                for h in history_rows:
+                    h_email = ((h.get("portalUser") or {}).get("email") or "").lower()
+                    h_created_at = _safe_parse_iso(h.get("createdAt"))
 
-            matched_history = []
-            for h in history_rows:
-                h_email = ((h.get("portalUser") or {}).get("email") or "").lower()
-                h_created_at = _safe_parse_iso(h.get("createdAt"))
+                    if history_email_filter and history_email_filter not in h_email:
+                        continue
+                    if history_start_dt and (h_created_at is None or h_created_at < history_start_dt):
+                        continue
+                    if history_end_dt and (h_created_at is None or h_created_at > history_end_dt):
+                        continue
+                    matched_history.append(h)
 
-                if history_email_filter and history_email_filter not in h_email:
+                if has_history_filters and not matched_history:
                     continue
-                if history_start_dt and (h_created_at is None or h_created_at < history_start_dt):
-                    continue
-                if history_end_dt and (h_created_at is None or h_created_at > history_end_dt):
-                    continue
-                matched_history.append(h)
 
-            if has_history_filters and not matched_history:
-                continue
+                history_for_output = matched_history if has_history_filters else history_rows
+                history_emails = []
+                for h in history_for_output:
+                    email = (h.get("portalUser") or {}).get("email") or ""
+                    if email and email not in history_emails:
+                        history_emails.append(email)
+                history_dates = [h.get("createdAt") for h in history_for_output if h.get("createdAt")]
 
-            history_for_output = matched_history if has_history_filters else history_rows
-            history_emails = []
-            for h in history_for_output:
-                email = (h.get("portalUser") or {}).get("email") or ""
-                if email and email not in history_emails:
-                    history_emails.append(email)
-            history_dates = [h.get("createdAt") for h in history_for_output if h.get("createdAt")]
-
-            rows.append({
-                "projectId": project.get("id") or "",
-                "projectLabel": project.get("label") or "",
-                "requirementId": playbook.get("id") or "",
-                "requirementLabel": playbook.get("label") or "",
-                "activityId": activity.get("id") or "",
-                "activityTitle": activity.get("title") or "",
-                "activityStatus": activity_status,
-                "hasAttachments": str(has_attachments),
-                "attachments": ", ".join(attachment_names),
-                "historyEvents": str(len(history_for_output)),
-                "historyEmails": ", ".join(history_emails),
-                "historyLastAt": max(history_dates) if history_dates else "",
-                "startedAt": activity.get("startedAt") or "",
-                "finishedAt": activity.get("finishedAt") or "",
-            })
+                rows.append({
+                    "projectId": project.get("id") or "",
+                    "projectLabel": project.get("label") or "",
+                    "requirementId": project_requirement.get("id") or "",
+                    "requirementLabel": project_requirement.get("label") or "",
+                    "activityId": activity.get("id") or "",
+                    "activityTitle": activity.get("title") or "",
+                    "activityStatus": activity_status,
+                    "hasAttachments": str(has_attachments),
+                    "attachments": ", ".join(attachment_names),
+                    "historyEvents": str(len(history_for_output)),
+                    "historyEmails": ", ".join(history_emails),
+                    "historyLastAt": max(history_dates) if history_dates else "",
+                    "startedAt": activity.get("startedAt") or "",
+                    "finishedAt": activity.get("finishedAt") or "",
+                })
 
         if not rows:
             typer.echo("⚠️  No requirements/activities found for the given filters.")

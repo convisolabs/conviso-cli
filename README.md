@@ -181,10 +181,10 @@ Automatic normalizations:
 
 ## Projects requirements
 - Command: `python -m conviso.app projects requirements --project-id <PROJECT_ID>`
-- Purpose: list requirements (playbooks) linked to a project with activity, attachment, and history context.
+- Purpose: list project requirements linked to a project with activity, attachment, and history context.
 - Output fields include: requirement/activity IDs and labels, activity status, attachment summary, history summary.
 - Filters:
-  - `--requirement-id <id>` only activities from a specific requirement/playbook ID
+  - `--requirement-id <id>` only activities from a specific project requirement ID
   - `--status IN_PROGRESS|DONE|NOT_APPLICABLE|NOT_STARTED|NOT_ACCORDING`
   - `--history-attachments` only activities with at least one attachment
   - `--attachment-name <text>` filename contains text (case-insensitive)
