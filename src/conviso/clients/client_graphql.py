@@ -118,3 +118,60 @@ def graphql_request_upload(
             logger.log(f"GraphQL error payload: {data}", style="red", verbose_only=True)
         raise Exception(f"GraphQL errors: {data['errors']}")
     return data["data"]
+
+
+def graphql_request_upload_many(
+    query: str,
+    variables: dict,
+    file_params: list[tuple[str, str]],
+    log_request: bool = True,
+    verbose_only: bool = False,
+) -> dict:
+    """
+    Perform a GraphQL multipart request with one or more Upload scalars.
+    file_params: list of tuples in the form (variable_path, file_path),
+    for example [("input.archives.0", "/tmp/a.txt"), ("input.archives.1", "/tmp/b.txt")].
+    """
+    api_key = API_KEY or os.getenv("CONVISO_API_KEY")
+    if not api_key:
+        raise EnvironmentError("⚠️ Missing CONVISO_API_KEY in environment or .env file")
+
+    headers = {
+        "x-api-key": api_key,
+    }
+
+    if log_request:
+        logger.log(f"Sending GraphQL multipart request to {API_URL}", verbose_only=verbose_only)
+        if logger.VERBOSE:
+            logger.log(f"GraphQL variables: {variables}", verbose_only=True)
+
+    operations = {"query": query, "variables": variables}
+    map_part = {}
+    file_handles = []
+    files = {}
+
+    try:
+        for index, (file_param, file_path) in enumerate(file_params):
+            map_part[str(index)] = [f"variables.{file_param}"]
+            file_handle = open(file_path, "rb")
+            file_handles.append(file_handle)
+            files[str(index)] = file_handle
+
+        response = SESSION.post(
+            API_URL,
+            data={"operations": json.dumps(operations), "map": json.dumps(map_part)},
+            files=files,
+            headers=headers,
+            timeout=DEFAULT_TIMEOUT,
+        )
+    finally:
+        for file_handle in file_handles:
+            file_handle.close()
+
+    response.raise_for_status()
+    data = response.json()
+    if "errors" in data:
+        if logger.VERBOSE:
+            logger.log(f"GraphQL error payload: {data}", style="red", verbose_only=True)
+        raise Exception(f"GraphQL errors: {data['errors']}")
+    return data["data"]

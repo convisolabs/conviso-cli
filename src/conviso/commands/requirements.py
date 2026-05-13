@@ -7,9 +7,10 @@ Lists requirements so users can pick valid IDs for project associations.
 
 import typer
 import time
+import os
 from typing import Optional
 from conviso.core.notifier import info, error, success, summary, warning, timed_summary
-from conviso.clients.client_graphql import graphql_request
+from conviso.clients.client_graphql import graphql_request, graphql_request_upload_many
 from conviso.core.output_manager import export_data
 from conviso.schemas.requirements_schema import schema
 
@@ -339,6 +340,96 @@ def list_requirement_activities(
 
     except Exception as e:
         error(f"Error listing requirement activities: {e}")
+        raise typer.Exit(code=1)
+
+
+@app.command("attach")
+def attach_activity_files(
+    activity_id: int = typer.Option(
+        ...,
+        "--activity-id",
+        "-a",
+        help="Activity ID. Discover valid IDs with: python -m conviso.app requirements activities --project-id <PROJECT_ID> --company-id <COMPANY_ID>",
+    ),
+    reason: str = typer.Option(
+        ...,
+        "--reason",
+        "-r",
+        help="Reason for attaching the file(s). This field is required by the API.",
+    ),
+    files: list[str] = typer.Option(
+        ...,
+        "--file",
+        "-f",
+        help="Path to a file to upload. Repeat the option to attach multiple files.",
+    ),
+):
+    """Attach one or more files to a requirement activity."""
+    info(f"Uploading {len(files)} file(s) to activity {activity_id}...")
+
+    mutation = """
+    mutation AddActivityAttachment($input: AddActivityAttachmentInput!) {
+      addActivityAttachment(input: $input) {
+        activity {
+          id
+          title
+          evidences { filename }
+        }
+        errors
+      }
+    }
+    """
+
+    normalized_paths = []
+    for file_path in files:
+        full_path = os.path.abspath(file_path)
+        if not os.path.isfile(full_path):
+            error(f"File not found: {file_path}")
+            raise typer.Exit(code=1)
+        normalized_paths.append(full_path)
+
+    variables = {
+        "input": {
+            "id": str(activity_id),
+            "reason": reason,
+            "archives": [None for _ in normalized_paths],
+        }
+    }
+
+    file_params = [
+        (f"input.archives.{index}", file_path)
+        for index, file_path in enumerate(normalized_paths)
+    ]
+
+    try:
+        data = graphql_request_upload_many(
+            mutation,
+            variables=variables,
+            file_params=file_params,
+            log_request=True,
+            verbose_only=True,
+        )
+        payload = data.get("addActivityAttachment") or {}
+        payload_errors = payload.get("errors") or []
+        activity = payload.get("activity") or {}
+
+        if payload_errors:
+            error(f"API returned attachment error(s): {'; '.join(payload_errors)}")
+            raise typer.Exit(code=1)
+
+        evidence_names = [
+            evidence.get("filename")
+            for evidence in activity.get("evidences") or []
+            if evidence.get("filename")
+        ]
+        attached_names = ", ".join(os.path.basename(path) for path in normalized_paths)
+        success(
+            f"Attached {len(normalized_paths)} file(s) to activity {activity.get('id') or activity_id}: {attached_names}"
+        )
+        if evidence_names:
+            summary(f"Activity now has evidences: {', '.join(evidence_names)}")
+    except Exception as e:
+        error(f"Error attaching file(s) to activity: {e}")
         raise typer.Exit(code=1)
 
 
