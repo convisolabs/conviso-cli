@@ -15,12 +15,116 @@ from conviso.core.notifier import info, success, error, summary, warning, timed_
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.concurrency import parallel_map
 from conviso.core.validators import validate_choice
-from conviso.schemas.projects_schema import schema
+from conviso.schemas.projects_schema import schema, project_type_schema
 from conviso.schemas.project_requirements_activities_schema import schema as project_requirements_schema
 from conviso.core.output_manager import export_data
 
 app = typer.Typer(help="Manage projects via Conviso GraphQL API.")
 PROJECT_STATUS_ALLOWED = {"PLANNED", "ANALYSIS", "PAUSED", "DONE", "DISCONTINUED"}
+
+
+@app.command("types")
+def list_project_types(
+    page: int = typer.Option(1, "--page", "-p", help="Page number."),
+    limit: int = typer.Option(50, "--limit", "-l", help="Items per page."),
+    fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file (for JSON or CSV export)."),
+    all_pages: bool = typer.Option(False, "--all", help="Fetch all pages."),
+):
+    """List available project types and their IDs for use with project creation/update."""
+    info(f"Listing project types (page {page}, limit {limit})...")
+    started_at = time.perf_counter()
+
+    query = """
+    query ProjectTypes($page: Int, $limit: Int, $params: ProjectTypeSearch) {
+      projectTypes(page: $page, limit: $limit, params: $params) {
+        collection {
+          id
+          label
+          code
+          description
+          defaultDuration
+        }
+        metadata { totalPages }
+      }
+    }
+    """
+
+    variables = {
+        "page": page,
+        "limit": limit,
+        "params": {},
+    }
+
+    try:
+        rows = []
+        current_page = page
+
+        def _append_rows(collection):
+            for project_type in collection:
+                rows.append({
+                    "id": project_type.get("id") or "",
+                    "label": project_type.get("label") or "",
+                    "code": project_type.get("code") or "",
+                    "defaultDuration": project_type.get("defaultDuration") or "",
+                    "description": project_type.get("description") or "",
+                })
+
+        def _fetch_page(page_num: int):
+            vars_page = dict(variables)
+            vars_page["page"] = page_num
+            data_page = graphql_request(query, vars_page, log_request=True, verbose_only=all_pages)
+            project_types_page = data_page["projectTypes"]
+            collection_page = project_types_page.get("collection") or []
+            metadata_page = project_types_page.get("metadata") or {}
+            return page_num, collection_page, metadata_page
+
+        _, collection, metadata = _fetch_page(current_page)
+        total_pages = metadata.get("totalPages")
+
+        if not collection:
+            typer.echo("⚠️  No project types found.")
+            raise typer.Exit()
+
+        _append_rows(collection)
+
+        if all_pages:
+            if total_pages is not None and current_page < total_pages:
+                page_numbers = list(range(current_page + 1, total_pages + 1))
+                page_results = parallel_map(_fetch_page, page_numbers)
+                for _, page_collection, _ in sorted(page_results, key=lambda x: x[0]):
+                    if page_collection:
+                        _append_rows(page_collection)
+            else:
+                while True:
+                    current_page += 1
+                    _, page_collection, _ = _fetch_page(current_page)
+                    if not page_collection:
+                        break
+                    _append_rows(page_collection)
+                    if len(page_collection) < limit:
+                        break
+
+        export_data(
+            rows,
+            schema=project_type_schema,
+            fmt=fmt,
+            output=output,
+            title="Project Types",
+        )
+
+        elapsed = time.perf_counter() - started_at
+        if fmt != "json":
+            if all_pages:
+                timed_summary(f"Listed {len(rows)} project type(s).", elapsed)
+            else:
+                timed_summary(f"Listed {len(rows)} project type(s) from page {page}.", elapsed)
+
+    except typer.Exit:
+        raise
+    except Exception as e:
+        error(f"Error listing project types: {e}")
+        raise typer.Exit(code=1)
 
 # ---------------------- LIST COMMAND ---------------------- #
 @app.command("list")
@@ -496,7 +600,12 @@ def create_project(
     label: str = typer.Option(..., "--name", "-n", help="Project name or label"),
     goal: str = typer.Option(..., "--goal", "-g", help="Project goal or purpose"),
     scope: str = typer.Option(..., "--scope", "-s", help="Scope or context of the project"),
-    type_id: int = typer.Option(..., "--type-id", "-t", help="Project type ID"),
+    type_id: int = typer.Option(
+        ...,
+        "--type-id",
+        "-t",
+        help="Project type ID. Discover valid IDs with: python -m conviso.app projects types",
+    ),
     start_date: str = typer.Option(None, "--start-date", help="Start date (YYYY-MM-DD)"),
     end_date: str = typer.Option(None, "--end-date", help="End date (YYYY-MM-DD)"),
     estimated_hours: str = typer.Option(None, "--hours", help="Estimated hours"),
@@ -504,7 +613,7 @@ def create_project(
     assets: Optional[str] = typer.Option(None, "--assets", help="Comma-separated asset IDs."),
     requirements: Optional[str] = typer.Option(None, "--requirements", help="Comma-separated requirement IDs."),
 ):
-    """Create a new project in the specified company."""
+    """Create a new project in the specified company. Use `projects types` to discover valid type IDs."""
     info(f"Creating project '{label}' in company {company_id}...")
 
     def _split_assets(value: Optional[str]) -> Optional[List[int]]:
