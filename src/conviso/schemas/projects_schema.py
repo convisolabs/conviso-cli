@@ -194,7 +194,6 @@ schema = ProjectSchema()
 
 class ProjectTypeSchema:
     """Display schema for project type listings."""
-
     def __init__(self):
         self.display_fields: List[str] = [
             "id",

@@ -84,6 +84,9 @@ conviso --help
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
 - Project types: `python -m conviso.app projects types --all`
 - Projects (assignee filter): `python -m conviso.app projects list --company-id 443 --filter assignee=analyst@company.com --all`
+- Projects types: `python -m conviso.app projects types`
+- Assets list: `python -m conviso.app assets list --company-id 443`
+- Projects (create with assignee, estimated hours, and assets): `python -m conviso.app projects create --company-id 443 --name "New Project" --goal "Validate scope" --scope "External perimeter" --type-id 14 --start-date 2026-05-19 --estimated-hours 2 --assign rmonteiro@conviso.com.br --assets 123`
 - Project status update: `python -m conviso.app projects status ANALYSIS --id 12345`
 - User access profile update: `python -m conviso.app accesscontrol user-profile --company-id 443 --user-id 123 --profile-id 7`
 - User teams update: `python -m conviso.app accesscontrol user-teams --company-id 443 --user-id 123 --team-ids 10,11`

@@ -23,8 +23,10 @@ app = typer.Typer(help="Manage projects via Conviso GraphQL API.")
 PROJECT_STATUS_ALLOWED = {"PLANNED", "ANALYSIS", "PAUSED", "DONE", "DISCONTINUED"}
 
 
+# ---------------------- TYPES COMMAND ---------------------- #
 @app.command("types")
 def list_project_types(
+    search: Optional[str] = typer.Option(None, "--search", help="Filter project types by label or description."),
     page: int = typer.Option(1, "--page", "-p", help="Page number."),
     limit: int = typer.Option(50, "--limit", "-l", help="Items per page."),
     fmt: str = typer.Option("table", "--format", "-f", help="Output format: table, json, csv."),
@@ -35,6 +37,9 @@ def list_project_types(
     info(f"Listing project types (page {page}, limit {limit})...")
     started_at = time.perf_counter()
 
+    params = {}
+    if search:
+        params["labelCont"] = search.strip()
     query = """
     query ProjectTypes($page: Int, $limit: Int, $params: ProjectTypeSearch) {
       projectTypes(page: $page, limit: $limit, params: $params) {
@@ -45,7 +50,7 @@ def list_project_types(
           description
           defaultDuration
         }
-        metadata { totalPages }
+        metadata { totalCount totalPages }
       }
     }
     """
@@ -53,22 +58,12 @@ def list_project_types(
     variables = {
         "page": page,
         "limit": limit,
-        "params": {},
+        "params": params or None,
     }
 
     try:
         rows = []
         current_page = page
-
-        def _append_rows(collection):
-            for project_type in collection:
-                rows.append({
-                    "id": project_type.get("id") or "",
-                    "label": project_type.get("label") or "",
-                    "code": project_type.get("code") or "",
-                    "defaultDuration": project_type.get("defaultDuration") or "",
-                    "description": project_type.get("description") or "",
-                })
 
         def _fetch_page(page_num: int):
             vars_page = dict(variables)
@@ -81,11 +76,21 @@ def list_project_types(
 
         _, collection, metadata = _fetch_page(current_page)
         total_pages = metadata.get("totalPages")
+        total_count = metadata.get("totalCount", 0)
 
         if not collection:
             typer.echo("⚠️  No project types found.")
             raise typer.Exit()
 
+        def _append_rows(items):
+            for item in items:
+                rows.append({
+                    "id": item.get("id") or "",
+                    "label": item.get("label") or "",
+                    "code": item.get("code") or "",
+                    "defaultDuration": item.get("defaultDuration") or "",
+                    "description": item.get("description") or "",
+                })
         _append_rows(collection)
 
         if all_pages:
@@ -116,7 +121,8 @@ def list_project_types(
         elapsed = time.perf_counter() - started_at
         if fmt != "json":
             if all_pages:
-                timed_summary(f"Listed {len(rows)} project type(s).", elapsed)
+                total_label = total_count or len(rows)
+                timed_summary(f"Listed {len(rows)} project type(s) out of {total_label}.", elapsed)
             else:
                 timed_summary(f"Listed {len(rows)} project type(s) from page {page}.", elapsed)
 
@@ -608,9 +614,10 @@ def create_project(
     ),
     start_date: str = typer.Option(None, "--start-date", help="Start date (YYYY-MM-DD)"),
     end_date: str = typer.Option(None, "--end-date", help="End date (YYYY-MM-DD)"),
-    estimated_hours: str = typer.Option(None, "--hours", help="Estimated hours"),
+    estimated_hours: Optional[str] = typer.Option(None, "--estimated-hours", "--hours", help="Estimated hours."),
+    assignees: Optional[str] = typer.Option(None, "--assign", help="Comma-separated assignee emails."),
     tags: Optional[str] = typer.Option(None, "--tags", help="Comma-separated tags."),
-    assets: Optional[str] = typer.Option(None, "--assets", help="Comma-separated asset IDs."),
+    assets: Optional[str] = typer.Option(None, "--assets", help="Comma-separated asset IDs. Required by the API."),
     requirements: Optional[str] = typer.Option(None, "--requirements", help="Comma-separated requirement IDs."),
 ):
     """Create a new project in the specified company. Use `projects types` to discover valid type IDs."""
@@ -646,6 +653,13 @@ def create_project(
                 warning(f"Ignoring invalid requirement ID: {raw}")
         return parsed
 
+    def _split_csv_str(value: Optional[str]) -> Optional[List[str]]:
+        """Split comma-separated strings into a trimmed list."""
+        if value is None:
+            return None
+        parsed = [raw.strip() for raw in value.split(",") if raw.strip()]
+        return parsed or None
+
     mutation = """
     mutation CreateProject($input: CreateProjectInput!) {
       createProject(input: $input) {
@@ -660,6 +674,9 @@ def create_project(
           endDate
           estimatedHours
           projectType { id label }
+          allocatedAnalyst {
+            portalUser { email }
+          }
         }
       }
     }
@@ -667,6 +684,11 @@ def create_project(
 
     assets_ids = _split_assets(assets)
     playbooks_ids = _split_requirements(requirements)
+    assignee_emails = _split_csv_str(assignees)
+
+    if not assets_ids:
+        error("Project creation requires at least one asset. Use --assets <id>[,<id>...] or run 'python -m conviso.app assets list --company-id <ID>' to find valid asset IDs.")
+        raise typer.Exit(code=1)
 
     input_data = {
         "companyId": company_id,
@@ -678,6 +700,7 @@ def create_project(
         "endDate": end_date,
         "estimatedHours": estimated_hours,
         "tags": tags.split(",") if tags else None,
+        "allocatedPortalUserEmails": assignee_emails,
         "assetsIds": assets_ids if assets_ids else None,
         "playbooksIds": playbooks_ids if playbooks_ids else None,
     }
@@ -688,7 +711,13 @@ def create_project(
         project = data["createProject"]["project"]
         success(f"Project created successfully: ID {project['id']} - {project['label']}")
     except Exception as e:
-        error(f"Error creating project: {e}")
+        message = str(e)
+        if "Invalid project type" in message:
+            error(f"Error creating project: {message}. Use 'python -m conviso.app projects types' to find a valid --type-id.")
+        elif "Assets can't be blank" in message:
+            error("Error creating project: Assets can't be blank. Pass --assets <id>[,<id>...] with at least one valid asset ID.")
+        else:
+            error(f"Error creating project: {e}")
         raise typer.Exit(code=1)
 
 
