@@ -40,7 +40,6 @@ def list_project_types(
     params = {}
     if search:
         params["labelCont"] = search.strip()
-
     query = """
     query ProjectTypes($page: Int, $limit: Int, $params: ProjectTypeSearch) {
       projectTypes(page: $page, limit: $limit, params: $params) {
@@ -70,8 +69,10 @@ def list_project_types(
             vars_page = dict(variables)
             vars_page["page"] = page_num
             data_page = graphql_request(query, vars_page, log_request=True, verbose_only=all_pages)
-            payload = data_page["projectTypes"]
-            return page_num, payload.get("collection") or [], payload.get("metadata") or {}
+            project_types_page = data_page["projectTypes"]
+            collection_page = project_types_page.get("collection") or []
+            metadata_page = project_types_page.get("metadata") or {}
+            return page_num, collection_page, metadata_page
 
         _, collection, metadata = _fetch_page(current_page)
         total_pages = metadata.get("totalPages")
@@ -90,7 +91,6 @@ def list_project_types(
                     "defaultDuration": item.get("defaultDuration") or "",
                     "description": item.get("description") or "",
                 })
-
         _append_rows(collection)
 
         if all_pages:

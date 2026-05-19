@@ -82,6 +82,7 @@ conviso --help
 
 ## Usage (examples)
 - Projects: `python -m conviso.app projects list --company-id 443 --all`
+- Project types: `python -m conviso.app projects types --all`
 - Projects (assignee filter): `python -m conviso.app projects list --company-id 443 --filter assignee=analyst@company.com --all`
 - Projects types: `python -m conviso.app projects types`
 - Assets list: `python -m conviso.app assets list --company-id 443`
@@ -96,6 +97,7 @@ conviso --help
 - Requirements (project): `python -m conviso.app requirements project --company-id 443 --project-id 26102`
 - Requirements (activities): `python -m conviso.app requirements activities --company-id 443 --requirement-id 1503`
 - Requirements (project activities): `python -m conviso.app requirements activities --company-id 443 --project-id 26102`
+- Requirements (attach files to activity): `python -m conviso.app requirements attach --activity-id 12345 --reason "Evidence for validation" --file ./evidence.png`
 - Tasks (create from YAML): `python -m conviso.app tasks create --company-id 443 --project-id 26102 --label "Nuclei Scan" --yaml-file samples/task-nuclei.yaml`
 - Tasks (append to requirement): `python -m conviso.app tasks create --company-id 443 --requirement-id 2174 --label "Nuclei Scan" --yaml-file samples/task-nuclei.yaml`
 - Tasks (execute YAML from requirements): `python -m conviso.app tasks run --company-id 443 --project-id 26102`
@@ -201,6 +203,25 @@ Automatic normalizations:
   - `python -m conviso.app projects requirements --project-id 12345 --history-start 2025-12-08 --history-end 2025-12-31`
   - `python -m conviso.app projects requirements --project-id 12345 --requirement-id 123 --status NOT_ACCORDING`
   - `python -m conviso.app projects requirements --project-id 12345 --status DONE --history-attachments`
+
+## Project types
+- Command: `python -m conviso.app projects types [--page <N>] [--limit <N>] [--all]`
+- Purpose: list available project types with their IDs before using `projects create --type-id` or `projects update --type-id`.
+- Output fields include: project type `id`, `label`, `code`, `defaultDuration`, `description`.
+- Examples:
+  - `python -m conviso.app projects types --all`
+  - `python -m conviso.app projects types --limit 20 --format json`
+
+## Requirement activity attachments
+- Command: `python -m conviso.app requirements attach --activity-id <ACTIVITY_ID> --reason <TEXT> --file <PATH> [--file <PATH> ...]`
+- Purpose: upload one or more files as evidences to a requirement activity.
+- Notes:
+  - discover valid activity IDs with `python -m conviso.app requirements activities --project-id <PROJECT_ID> --company-id <COMPANY_ID>`
+  - `--reason` is required by the API
+  - repeat `--file` to upload multiple files in the same request
+- Examples:
+  - `python -m conviso.app requirements attach --activity-id 12345 --reason "Evidence for validation" --file ./evidence.png`
+  - `python -m conviso.app requirements attach --activity-id 12345 --reason "Supporting documents" --file ./evidence-1.png --file ./report.pdf`
 
 ## Project status
 - Command: `python -m conviso.app projects status <STATUS> --id <PROJECT_ID>`
