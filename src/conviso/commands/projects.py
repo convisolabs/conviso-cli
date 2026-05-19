@@ -15,9 +15,8 @@ from conviso.core.notifier import info, success, error, summary, warning, timed_
 from conviso.clients.client_graphql import graphql_request
 from conviso.core.concurrency import parallel_map
 from conviso.core.validators import validate_choice
-from conviso.schemas.projects_schema import schema
+from conviso.schemas.projects_schema import schema, project_type_schema
 from conviso.schemas.project_requirements_activities_schema import schema as project_requirements_schema
-from conviso.schemas.project_types_schema import schema as project_types_schema
 from conviso.core.output_manager import export_data
 
 app = typer.Typer(help="Manage projects via Conviso GraphQL API.")
@@ -34,8 +33,8 @@ def list_project_types(
     output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file (for JSON or CSV export)."),
     all_pages: bool = typer.Option(False, "--all", help="Fetch all pages."),
 ):
-    """List available project types and their IDs."""
-    info("Listing available project types...")
+    """List available project types and their IDs for use with project creation/update."""
+    info(f"Listing project types (page {page}, limit {limit})...")
     started_at = time.perf_counter()
 
     params = {}
@@ -48,30 +47,33 @@ def list_project_types(
         collection {
           id
           label
+          code
           description
+          defaultDuration
         }
         metadata { totalCount totalPages }
       }
     }
     """
 
+    variables = {
+        "page": page,
+        "limit": limit,
+        "params": params or None,
+    }
+
     try:
         rows = []
         current_page = page
-        total_pages = None
-        total_count = 0
 
         def _fetch_page(page_num: int):
-            data_page = graphql_request(
-                query,
-                {"page": page_num, "limit": limit, "params": params or None},
-                log_request=True,
-                verbose_only=all_pages,
-            )
+            vars_page = dict(variables)
+            vars_page["page"] = page_num
+            data_page = graphql_request(query, vars_page, log_request=True, verbose_only=all_pages)
             payload = data_page["projectTypes"]
             return page_num, payload.get("collection") or [], payload.get("metadata") or {}
 
-        page_num, collection, metadata = _fetch_page(current_page)
+        _, collection, metadata = _fetch_page(current_page)
         total_pages = metadata.get("totalPages")
         total_count = metadata.get("totalCount", 0)
 
@@ -84,29 +86,45 @@ def list_project_types(
                 rows.append({
                     "id": item.get("id") or "",
                     "label": item.get("label") or "",
+                    "code": item.get("code") or "",
+                    "defaultDuration": item.get("defaultDuration") or "",
                     "description": item.get("description") or "",
                 })
 
         _append_rows(collection)
 
-        if all_pages and total_pages and current_page < total_pages:
-            page_numbers = list(range(current_page + 1, total_pages + 1))
-            page_results = parallel_map(_fetch_page, page_numbers)
-            for _, page_collection, _ in sorted(page_results, key=lambda x: x[0]):
-                _append_rows(page_collection)
+        if all_pages:
+            if total_pages is not None and current_page < total_pages:
+                page_numbers = list(range(current_page + 1, total_pages + 1))
+                page_results = parallel_map(_fetch_page, page_numbers)
+                for _, page_collection, _ in sorted(page_results, key=lambda x: x[0]):
+                    if page_collection:
+                        _append_rows(page_collection)
+            else:
+                while True:
+                    current_page += 1
+                    _, page_collection, _ = _fetch_page(current_page)
+                    if not page_collection:
+                        break
+                    _append_rows(page_collection)
+                    if len(page_collection) < limit:
+                        break
 
         export_data(
             rows,
-            schema=project_types_schema,
+            schema=project_type_schema,
             fmt=fmt,
             output=output,
             title="Project Types",
         )
 
+        elapsed = time.perf_counter() - started_at
         if fmt != "json":
-            elapsed = time.perf_counter() - started_at
-            shown_total = len(rows) if all_pages else total_count or len(rows)
-            timed_summary(f"Showing {len(rows)} project type(s) out of {shown_total}.", elapsed)
+            if all_pages:
+                total_label = total_count or len(rows)
+                timed_summary(f"Listed {len(rows)} project type(s) out of {total_label}.", elapsed)
+            else:
+                timed_summary(f"Listed {len(rows)} project type(s) from page {page}.", elapsed)
 
     except typer.Exit:
         raise
@@ -588,7 +606,12 @@ def create_project(
     label: str = typer.Option(..., "--name", "-n", help="Project name or label"),
     goal: str = typer.Option(..., "--goal", "-g", help="Project goal or purpose"),
     scope: str = typer.Option(..., "--scope", "-s", help="Scope or context of the project"),
-    type_id: int = typer.Option(..., "--type-id", "-t", help="Project type ID"),
+    type_id: int = typer.Option(
+        ...,
+        "--type-id",
+        "-t",
+        help="Project type ID. Discover valid IDs with: python -m conviso.app projects types",
+    ),
     start_date: str = typer.Option(None, "--start-date", help="Start date (YYYY-MM-DD)"),
     end_date: str = typer.Option(None, "--end-date", help="End date (YYYY-MM-DD)"),
     estimated_hours: Optional[str] = typer.Option(None, "--estimated-hours", "--hours", help="Estimated hours."),
@@ -597,7 +620,7 @@ def create_project(
     assets: Optional[str] = typer.Option(None, "--assets", help="Comma-separated asset IDs. Required by the API."),
     requirements: Optional[str] = typer.Option(None, "--requirements", help="Comma-separated requirement IDs."),
 ):
-    """Create a new project in the specified company."""
+    """Create a new project in the specified company. Use `projects types` to discover valid type IDs."""
     info(f"Creating project '{label}' in company {company_id}...")
 
     def _split_assets(value: Optional[str]) -> Optional[List[int]]:

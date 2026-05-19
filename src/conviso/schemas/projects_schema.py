@@ -190,3 +190,31 @@ class ProjectSchema:
 
 # Singleton instance
 schema = ProjectSchema()
+
+
+class ProjectTypeSchema:
+    def __init__(self):
+        self.display_fields: List[str] = [
+            "id",
+            "label",
+            "code",
+            "defaultDuration",
+            "description",
+        ]
+
+        self.display_headers: Dict[str, str] = {
+            "id": "ID",
+            "label": "Label",
+            "code": "Code",
+            "defaultDuration": "Default Duration",
+            "description": "Description",
+        }
+
+    def display_name(self, field: str) -> str:
+        return self.display_headers.get(field, field)
+
+    def all_display_fields(self) -> List[str]:
+        return list(self.display_fields)
+
+
+project_type_schema = ProjectTypeSchema()
