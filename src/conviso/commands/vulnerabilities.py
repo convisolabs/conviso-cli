@@ -7,6 +7,7 @@ Lists vulnerabilities (issues) with optional filters (asset IDs, pagination).
 
 import typer
 from typing import Optional, List, Tuple
+from pathlib import Path
 import json
 import re
 from datetime import date, datetime, timedelta, timezone
@@ -2390,3 +2391,207 @@ def check_sca_patches(
         title="OSV Patches Found"
     )
     summary(f"Found patched versions for {len(formatted_issues)} vulnerabilities.")
+
+
+@app.command("batch")
+def batch_findings(
+    asset_id: str = typer.Option(
+        ...,
+        "--asset-id",
+        "-a",
+        help="Asset ID (required)"
+    ),
+    file: Path = typer.Option(
+        ...,
+        "--file",
+        "-f",
+        help="JSON or CSV file with findings (required)"
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Preview changes without applying"
+    ),
+    upsert: bool = typer.Option(
+        False,
+        "--upsert",
+        help="Update existing findings if ID present, create if not"
+    ),
+    fmt: str = typer.Option(
+        "table",
+        "--format",
+        help="Output format: table, json [default: table]"
+    )
+) -> None:
+    """
+    Batch create or update findings for an asset (preferred over 'bulk vulns').
+
+    Fast atomic GraphQL mutation (single request) supporting polymorphic finding types:
+    SAST, SCA, DAST, Container, IaC, Secret, API.
+
+    Note: This is the modern replacement for 'conviso bulk vulns' command.
+    Benefits:
+    - Single GraphQL mutation (faster, atomic)
+    - Native upsert mode
+    - Better error handling (per-finding errors)
+    - Multiple finding type support
+
+    JSON Example (SAST):
+    ```json
+    [
+      {
+        "assetId": 27516,
+        "sast": {
+          "assetId": 27516,
+          "title": "SQL Injection",
+          "description": "User input not sanitized",
+          "severity": "CRITICAL",
+          "fileName": "app.py",
+          "vulnerableLine": 42,
+          "firstLine": 40,
+          "codeSnippet": "query = f'SELECT * FROM users WHERE id = {user_id}'",
+          "solution": "Use parameterized queries",
+          "impactLevel": "HIGH",
+          "probabilityLevel": "HIGH"
+        }
+      }
+    ]
+    ```
+
+    See examples/sample_sast_findings.json for a complete working example.
+    """
+    from conviso.core.batch_loader import load_findings_from_file
+
+    try:
+        # Load findings from file
+        info(f"Loading findings from {file}...")
+        findings = load_findings_from_file(file)
+
+        if not findings:
+            error("No findings in file")
+            raise typer.Exit(1)
+
+        info(f"Loaded {len(findings)} findings")
+
+        # Dry-run preview
+        if dry_run:
+            info(f"[DRY-RUN] Would batch {len(findings)} findings to asset {asset_id}")
+            if fmt.lower() == "json":
+                typer.echo(json.dumps(findings, indent=2))
+            else:
+                # Show as table
+                from rich.table import Table
+                from rich.console import Console
+                console = Console()
+                table = Table(title=f"Preview ({len(findings)} findings)")
+                table.add_column("Title", style="cyan")
+                table.add_column("Type", style="magenta")
+                table.add_column("Severity", style="bold red")
+                for finding in findings:
+                    # Extract title and severity from polymorphic types
+                    title = 'N/A'
+                    severity = 'N/A'
+                    type_key = 'N/A'
+
+                    for key in ['sast', 'sca', 'dast', 'container', 'iac', 'secret', 'api']:
+                        if key in finding:
+                            type_obj = finding[key]
+                            title = type_obj.get('title', 'N/A')
+                            severity = type_obj.get('severity', 'N/A')
+                            type_key = key.upper()
+                            break
+
+                    table.add_row(title, type_key, severity)
+                console.print(table)
+            return
+
+        # Execute batch mutation
+        info(f"Batching {len(findings)} findings to asset {asset_id}...")
+
+        mutation = """
+        mutation batchCreateOrUpdateFindings($findings: [CreateOrUpdateFindingPolymorphicInput!]!) {
+          batchCreateOrUpdateFindings(input: { findings: $findings }) {
+            issues {
+              id
+              title
+            }
+            findingErrors {
+              index
+              code
+              message
+            }
+          }
+        }
+        """
+
+        variables = {
+            "findings": findings,
+        }
+
+        result = graphql_request(mutation, variables)
+        batch_result = result.get('batchCreateOrUpdateFindings', {})
+
+        # Display results
+        display_batch_results(batch_result, fmt.lower())
+
+        # Exit code
+        errors = batch_result.get('findingErrors', [])
+        if errors:
+            warning(f"{len(errors)} errors occurred")
+            raise typer.Exit(1)
+
+        issues = batch_result.get('issues', [])
+        success(f"Batch complete! Created {len(issues)} findings")
+
+    except FileNotFoundError as e:
+        error(f"File error: {e}")
+        raise typer.Exit(1)
+    except ValueError as e:
+        error(f"Validation error: {e}")
+        raise typer.Exit(1)
+    except Exception as e:
+        error(f"Error: {str(e)}")
+        raise typer.Exit(1)
+
+
+def display_batch_results(result: dict, format: str) -> None:
+    """Display batch operation results."""
+    from rich.table import Table
+    from rich.console import Console
+
+    console = Console()
+
+    if format == "json":
+        typer.echo(json.dumps(result, indent=2))
+        return
+
+    # Table format
+    issues = result.get('issues', [])
+    if issues:
+        console.print(f"\n✅ Created ({len(issues)}):", style="bold green")
+        table = Table()
+        table.add_column("ID", style="cyan")
+        table.add_column("Title")
+
+        for issue in issues:
+            table.add_row(
+                issue.get('id', ''),
+                issue.get('title', '')
+            )
+        console.print(table)
+
+    errors = result.get('findingErrors', [])
+    if errors:
+        console.print(f"\n❌ Errors ({len(errors)}):", style="bold red")
+        table = Table()
+        table.add_column("Row", style="yellow")
+        table.add_column("Message")
+        table.add_column("Code", style="magenta")
+
+        for error in errors:
+            table.add_row(
+                str(error.get('index', '?')),
+                error.get('message', ''),
+                error.get('code', '')
+            )
+        console.print(table)

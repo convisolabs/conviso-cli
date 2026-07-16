@@ -5,6 +5,7 @@ import time
 import json
 from dotenv import load_dotenv
 import conviso.core.logger as logger
+from conviso.core.auth import get_api_key
 
 cwd_env = os.path.join(os.getcwd(), ".env")
 
@@ -14,7 +15,7 @@ else:
     load_dotenv()
 
 API_URL = "https://api.convisoappsec.com/graphql"
-API_KEY = os.getenv("CONVISO_API_KEY")
+API_KEY = get_api_key()
 DEFAULT_TIMEOUT = float(os.getenv("CONVISO_API_TIMEOUT", "30"))
 DEFAULT_RETRIES = int(os.getenv("CONVISO_API_RETRIES", "2"))
 POOL_CONNECTIONS = int(os.getenv("CONVISO_API_POOL_CONNECTIONS", "32"))
@@ -32,9 +33,9 @@ SESSION.mount("http://", ADAPTER)
 
 def graphql_request(query: str, variables: dict = None, log_request: bool = True, verbose_only: bool = False) -> dict:
     """Perform a GraphQL request with optional logging and timeout."""
-    api_key = API_KEY or os.getenv("CONVISO_API_KEY")
+    api_key = get_api_key()
     if not api_key:
-        raise EnvironmentError("⚠️ Missing CONVISO_API_KEY in environment or .env file")
+        raise EnvironmentError("⚠️ Missing API key. Run 'conviso auth login' or set CONVISO_API_KEY environment variable")
 
     headers = {
         "Content-Type": "application/json",
@@ -85,9 +86,9 @@ def graphql_request_upload(
     file_param: name of the variable for the Upload (e.g., "file").
     file_path: path to the file to upload.
     """
-    api_key = API_KEY or os.getenv("CONVISO_API_KEY")
+    api_key = get_api_key()
     if not api_key:
-        raise EnvironmentError("⚠️ Missing CONVISO_API_KEY in environment or .env file")
+        raise EnvironmentError("⚠️ Missing API key. Run 'conviso auth login' or set CONVISO_API_KEY environment variable")
 
     headers = {
         "x-api-key": api_key,
@@ -132,9 +133,9 @@ def graphql_request_upload_many(
     file_params: list of tuples in the form (variable_path, file_path),
     for example [("input.archives.0", "/tmp/a.txt"), ("input.archives.1", "/tmp/b.txt")].
     """
-    api_key = API_KEY or os.getenv("CONVISO_API_KEY")
+    api_key = get_api_key()
     if not api_key:
-        raise EnvironmentError("⚠️ Missing CONVISO_API_KEY in environment or .env file")
+        raise EnvironmentError("⚠️ Missing API key. Run 'conviso auth login' or set CONVISO_API_KEY environment variable")
 
     headers = {
         "x-api-key": api_key,

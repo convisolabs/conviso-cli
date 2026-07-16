@@ -38,6 +38,7 @@ dependencies = [
 
 [project.scripts]
 conviso = "conviso.app:app"
+cvs = "conviso.app:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -7,11 +7,13 @@ from conviso.commands import bulk
 from conviso.commands import sbom
 from conviso.commands import tasks
 from conviso.commands import accesscontrol
+from conviso.commands import auth
 from conviso.core.logger import log, set_verbosity
 from conviso.core.concurrency import set_default_workers
 from conviso.core.output_prefs import set_output_preferences
 from conviso.core.notifier import info, warning
 from conviso.core.version import check_for_updates, DEFAULT_REMOTE_URL, read_local_version
+from conviso.core.auth import is_logged_in
 import subprocess
 import os
 import sys
@@ -20,6 +22,7 @@ from pathlib import Path
 
 app = typer.Typer(help="Conviso Platform CLI")
 
+app.add_typer(auth.app, name="auth", help="Manage authentication and login.")
 app.add_typer(projects.app, name="projects", help="Manage projects in the Conviso Platform.")
 app.add_typer(assets.app, name="assets", help="Manage assets in the Conviso Platform.")
 app.add_typer(requirements.app, name="requirements", help="List requirements/playbooks.")
@@ -34,6 +37,7 @@ def main(
     ctx: typer.Context,
     quiet: bool = typer.Option(False, "--quiet", help="Silence non-error output."),
     verbose: bool = typer.Option(False, "--verbose", help="Show verbose logs (GraphQL requests, etc.)."),
+    version: bool = typer.Option(False, "--version", help="Show version."),
     workers: int = typer.Option(8, "--workers", help="Default worker threads for parallel operations across commands."),
     repeat_header_every: int = typer.Option(
         0,
@@ -46,12 +50,27 @@ def main(
         help="Comma-separated columns for table/csv output (global output option). Example: --columns id,title,status",
     ),
 ):
+    if version:
+        print(f"conviso {read_local_version()}")
+        raise typer.Exit(0)
+
     set_verbosity(quiet=quiet, verbose=verbose)
     set_default_workers(workers)
     set_output_preferences(repeat_header_every=repeat_header_every, columns=columns)
 
     if ctx.resilient_parsing:
         return
+
+    # Check if user is trying to use a command that requires authentication
+    commands_requiring_auth = {"projects", "assets", "requirements", "vulns", "bulk", "sbom", "tasks", "accesscontrol"}
+    invoked_subcommand = ctx.invoked_subcommand
+
+    if invoked_subcommand and invoked_subcommand in commands_requiring_auth and not is_logged_in():
+        warning("⚠️  You are not logged in.")
+        info("Run 'conviso auth login' to authenticate first.")
+        info("(or set CONVISO_API_KEY environment variable)")
+        raise typer.Exit(1)
+
     try:
         local, remote, outdated, remote_missing = check_for_updates()
         if outdated and remote:
