@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security Gate Rules",
+  "description": "Schema for the security gate rules YAML file used by 'conviso security-gate --rules-file'.",
+  "type": "object",
+  "required": ["rules"],
+  "additionalProperties": false,
+  "properties": {
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of security gate rules.",
+      "items": {
+        "type": "object",
+        "required": ["from", "severity"],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "description": "Source scope for this rule. Currently only 'any' is supported.",
+            "enum": ["any"]
+          },
+          "severity": {
+            "type": "object",
+            "description": "Per-severity thresholds. At least one severity level must be specified.",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "patternProperties": {
+              "^(critical|high|medium|low)$": {
+                "type": "object",
+                "required": ["maximum"],
+                "additionalProperties": false,
+                "properties": {
+                  "maximum": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Maximum number of open vulnerabilities allowed for this severity level. Use 0 to block any occurrence."
+                  },
+                  "max_days_to_fix": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Only count vulnerabilities older than this many days. Vulnerabilities created within this window are tolerated."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

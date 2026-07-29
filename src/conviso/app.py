@@ -8,6 +8,7 @@ from conviso.commands import sbom
 from conviso.commands import tasks
 from conviso.commands import accesscontrol
 from conviso.commands import auth
+from conviso.commands import security_gate
 from conviso.core.logger import log, set_verbosity
 from conviso.core.concurrency import set_default_workers
 from conviso.core.output_prefs import set_output_preferences
@@ -31,6 +32,9 @@ app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
 app.add_typer(sbom.app, name="sbom", help="List/import SBOM components.")
 app.add_typer(tasks.app, name="tasks", help="Execute YAML tasks from requirements.")
 app.add_typer(accesscontrol.app, name="accesscontrol", help="Manage access control and user profile settings.")
+app.command("security-gate", help="Run security gate checks against the Conviso Platform.")(
+    security_gate.run_security_gate
+)
 
 @app.callback(invoke_without_command=True)
 def main(
@@ -62,7 +66,7 @@ def main(
         return
 
     # Check if user is trying to use a command that requires authentication
-    commands_requiring_auth = {"projects", "assets", "requirements", "vulns", "bulk", "sbom", "tasks", "accesscontrol"}
+    commands_requiring_auth = {"projects", "assets", "requirements", "vulns", "bulk", "sbom", "tasks", "accesscontrol", "security-gate"}
     invoked_subcommand = ctx.invoked_subcommand
 
     if invoked_subcommand and invoked_subcommand in commands_requiring_auth and not is_logged_in():

@@ -6,7 +6,7 @@ import pytest
 import json
 import tempfile
 from pathlib import Path
-from src.conviso.core.batch_loader import (
+from conviso.core.batch_loader import (
     load_findings_from_file,
     validate_findings,
     normalize_key
