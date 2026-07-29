@@ -17,6 +17,21 @@ Two execution modes:
    queries ``issuesStats`` for each severity level (optionally scoped by
    ``max_days_to_fix``).  The threshold comparison is performed locally.
 
+Branch filtering (--branch):
+   When provided, scopes the evaluation to vulnerabilities associated with
+   the given branch name.  Vulnerabilities without a branch association
+   (legacy, NULL-branch) are excluded from the evaluation in this mode.
+   This applies to both execution modes.
+
+   NOTE: every execution with --branch incurs one extra GraphQL call to
+   resolve the branch name → ID before the main gate query (BranchLookup).
+   This is an accepted trade-off; future optimisation could cache or batch
+   this lookup.
+
+   Follow-up opportunity: auto-detect branch from CI environment variables
+   (GITHUB_REF_NAME, CI_COMMIT_REF_NAME, CONVISO_BRANCH, etc.) when
+   --branch is not explicitly passed.
+
 Exit codes:
   0 — gate PASSED (all rules satisfied).
   1 — gate FAILED (threshold exceeded) OR technical error (network / auth /
@@ -29,7 +44,7 @@ import yaml
 import jsonschema
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from typing import Optional, List
 
 import typer
 
@@ -52,8 +67,8 @@ app = typer.Typer(help="Run security gate checks against the Conviso Platform.")
 # ---------------------------------------------------------------------------
 
 _SECURITY_GATE_RUN_QUERY = """
-query SecurityGateRun($assetId: ID!, $page: Int!, $perPage: Int!) {
-  securityGateRun(assetId: $assetId) {
+query SecurityGateRun($assetId: ID!, $page: Int!, $perPage: Int!, $branchId: ID) {
+  securityGateRun(assetId: $assetId, branchId: $branchId) {
     asset {
       id
       name
@@ -91,13 +106,15 @@ query IssuesStats(
   $asset_id: [ID!],
   $company_id: ID!,
   $statuses: [IssueStatusLabel!],
-  $end_date: ISO8601DateTime
+  $end_date: ISO8601DateTime,
+  $branch_names: [String!]
 ) {
   issuesStats(
     companyId: $company_id
     filters: {
       assetIds: $asset_id
       statuses: $statuses
+      branchNames: $branch_names
       createdAtRange: {
         endDate: $end_date
       }
@@ -106,6 +123,18 @@ query IssuesStats(
     severities {
       value
       count
+    }
+  }
+}
+"""
+
+_BRANCHES_QUERY = """
+query BranchLookup($companyId: ID!, $assetId: ID!) {
+  branches(companyId: $companyId, assetId: $assetId) {
+    collection {
+      id
+      name
+      default
     }
   }
 }
@@ -135,7 +164,7 @@ def assert_security_rules(
         None,
         "--company-id",
         "-c",
-        help="Company ID. Required when --rules-file is provided.",
+        help="Company ID. Required when --rules-file or --branch is provided.",
         envvar="CONVISO_COMPANY_ID",
     ),
     rules_file: Optional[Path] = typer.Option(
@@ -151,6 +180,19 @@ def assert_security_rules(
         dir_okay=False,
         readable=True,
     ),
+    branch: Optional[str] = typer.Option(
+        None,
+        "--branch",
+        "-b",
+        help=(
+            "Branch name to scope the security gate evaluation. "
+            "Only vulnerabilities associated with this exact branch name will be "
+            "evaluated. Vulnerabilities without a branch association (legacy / "
+            "NULL-branch issues) are NOT included in this evaluation. "
+            "Requires --company-id. Branch name comparison is case-sensitive."
+        ),
+        envvar="CONVISO_BRANCH",
+    ),
     output: Optional[str] = typer.Option(
         None,
         "--output",
@@ -163,8 +205,11 @@ def assert_security_rules(
 
     Without --rules-file: delegates to the Conviso Platform (securityGateRun).
     With --rules-file:    evaluates YAML-defined thresholds locally via issuesStats.
+
+    Use --branch to restrict evaluation to a specific branch. Legacy vulnerabilities
+    without a branch association are excluded when --branch is used.
     """
-    # --- Conditional parameter validation (Typer has no native conditional required) ---
+    # --- Conditional parameter validation ---
     if rules_file and not company_id:
         error(
             "--company-id is required when --rules-file is provided. "
@@ -172,13 +217,29 @@ def assert_security_rules(
         )
         raise typer.Exit(code=1)
 
+    if branch and not company_id:
+        error(
+            "--company-id is required when --branch is provided. "
+            "Set it via --company-id or the CONVISO_COMPANY_ID environment variable."
+        )
+        raise typer.Exit(code=1)
+
+    # --- Branch warning ---
+    if branch:
+        warning(
+            f"Branch filter active: '--branch {branch}'. "
+            "Only vulnerabilities explicitly associated with this branch will be "
+            "evaluated. Legacy vulnerabilities without a branch association "
+            "(NULL-branch) are NOT included in this evaluation."
+        )
+
     started_at = time.perf_counter()
 
     try:
         if rules_file:
-            _run_local_rules_gate(asset_id, company_id, rules_file, output)
+            _run_local_rules_gate(asset_id, company_id, rules_file, output, branch=branch)
         else:
-            _run_platform_gate(asset_id, output)
+            _run_platform_gate(asset_id, output, company_id=company_id, branch=branch)
     except typer.Exit:
         raise
     except Exception as exc:
@@ -190,18 +251,77 @@ def assert_security_rules(
 
 
 # ---------------------------------------------------------------------------
+# Branch resolution
+# ---------------------------------------------------------------------------
+
+def _resolve_branch_id(asset_id: int, company_id: int, branch_name: str) -> str:
+    """
+    Resolve a branch name to its platform ID via the BranchLookup query.
+
+    Raises typer.Exit(code=1) on:
+    - network / API errors  (technical error — not a gate policy failure)
+    - branch name not found (configuration error — lists available branches)
+
+    Branch name comparison is case-sensitive (strict match, per API contract).
+    """
+    try:
+        data = graphql_request(
+            _BRANCHES_QUERY,
+            {"companyId": str(company_id), "assetId": str(asset_id)},
+        )
+    except Exception as exc:
+        error(
+            f"Failed to fetch branches for asset {asset_id}: {exc}\n"
+            "This is a technical error during branch lookup, NOT a gate policy failure. "
+            "Check your API key and network connectivity."
+        )
+        raise typer.Exit(code=1)
+
+    collection: List[dict] = (data.get("branches") or {}).get("collection") or []
+
+    for branch in collection:
+        if branch.get("name") == branch_name:
+            return str(branch["id"])
+
+    available = [b.get("name", "") for b in collection if b.get("name")]
+    available_str = ", ".join(f"'{n}'" for n in available) if available else "(none found)"
+    error(
+        f"Branch '{branch_name}' not found for asset {asset_id}. "
+        f"Branch name comparison is case-sensitive. "
+        f"Available branches: {available_str}"
+    )
+    raise typer.Exit(code=1)
+
+
+# ---------------------------------------------------------------------------
 # Platform gate flow
 # ---------------------------------------------------------------------------
 
-def _run_platform_gate(asset_id: int, output: Optional[str]) -> None:
+def _run_platform_gate(
+    asset_id: int,
+    output: Optional[str],
+    company_id: Optional[int] = None,
+    branch: Optional[str] = None,
+) -> None:
     """Execute the security gate using Conviso Platform-configured rules."""
     info(f"Running security gate (platform rules) for asset {asset_id}...")
+
+    # Resolve branch name → ID before calling the main gate query
+    branch_id: Optional[str] = None
+    if branch:
+        branch_id = _resolve_branch_id(asset_id, company_id, branch)
+        info(f"Branch '{branch}' resolved to ID: {branch_id}")
 
     try:
         # First request: page 1 to get total count and initial collection
         data = graphql_request(
             _SECURITY_GATE_RUN_QUERY,
-            {"assetId": str(asset_id), "page": 1, "perPage": _PAGE_SIZE},
+            {
+                "assetId": str(asset_id),
+                "page": 1,
+                "perPage": _PAGE_SIZE,
+                "branchId": branch_id,
+            },
         )
     except Exception as exc:
         error(
@@ -233,7 +353,7 @@ def _run_platform_gate(asset_id: int, output: Optional[str]) -> None:
 
     # Fetch remaining pages if there are more failing vulns than the first page
     if total_count > _PAGE_SIZE:
-        collection = _fetch_all_failing_pages(asset_id, total_count, collection)
+        collection = _fetch_all_failing_pages(asset_id, total_count, collection, branch_id=branch_id)
 
     # Inject the full collection back so the output JSON is complete
     result["failingVulnerabilities"] = {
@@ -265,6 +385,7 @@ def _fetch_all_failing_pages(
     asset_id: int,
     total_count: int,
     first_page_collection: list,
+    branch_id: Optional[str] = None,
 ) -> list:
     """Fetch pages 2..N of failing vulnerabilities and merge with page 1."""
     import math
@@ -275,7 +396,12 @@ def _fetch_all_failing_pages(
         try:
             data = graphql_request(
                 _SECURITY_GATE_RUN_QUERY,
-                {"assetId": str(asset_id), "page": page_num, "perPage": _PAGE_SIZE},
+                {
+                    "assetId": str(asset_id),
+                    "page": page_num,
+                    "perPage": _PAGE_SIZE,
+                    "branchId": branch_id,
+                },
                 log_request=True,
                 verbose_only=True,
             )
@@ -301,6 +427,7 @@ def _run_local_rules_gate(
     company_id: int,
     rules_file: Path,
     output: Optional[str],
+    branch: Optional[str] = None,
 ) -> None:
     """Evaluate local YAML rules against the live issuesStats from the Platform."""
     info(f"Running security gate (local rules) for asset {asset_id}...")
@@ -329,6 +456,9 @@ def _run_local_rules_gate(
     info(f"Rules loaded from '{rules_file.name}':")
     info(f"  {yaml.dump(rules, default_flow_style=True).strip()}")
 
+    # Branch names are passed directly to issuesStats (no ID lookup needed)
+    branch_names: Optional[List[str]] = [branch] if branch else None
+
     # --- Determine if any severity has max_days_to_fix ---
     days_by_severity = _extract_days_by_severity(rules)
     has_sla_filter = any(d > 0 for d in days_by_severity.values())
@@ -356,6 +486,7 @@ def _run_local_rules_gate(
                         "company_id": str(company_id),
                         "statuses": _OPEN_STATUSES,
                         "end_date": end_date_iso,
+                        "branch_names": branch_names,
                     },
                 )
             except Exception as exc:
@@ -381,6 +512,7 @@ def _run_local_rules_gate(
                     "company_id": str(company_id),
                     "statuses": _OPEN_STATUSES,
                     "end_date": None,
+                    "branch_names": branch_names,
                 },
             )
         except Exception as exc:
@@ -409,6 +541,7 @@ def _run_local_rules_gate(
             "mode": "local_rules",
             "asset_id": asset_id,
             "company_id": company_id,
+            "branch": branch,
             "rules_file": str(rules_file),
             "issues": all_issues_normalized,
             "result": gate_response,

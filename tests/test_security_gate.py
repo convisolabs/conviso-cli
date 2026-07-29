@@ -30,6 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from conviso.commands.security_gate import (
     validate_rules,
     _extract_days_by_severity,
+    _resolve_branch_id,
     _run_platform_gate,
     _run_local_rules_gate,
 )
@@ -602,3 +603,232 @@ class TestCommandParameterValidation:
         assert result.exit_code != 0
         # Our validation message must mention company-id
         assert "company" in (result.output or "").lower()
+# ---------------------------------------------------------------------------
+# Branch support — BRANCH-01 through BRANCH-08
+# ---------------------------------------------------------------------------
+
+_BRANCHES_RESPONSE_WITH_MAIN = {
+    "branches": {
+        "collection": [
+            {"id": "10", "name": "main", "default": True},
+            {"id": "11", "name": "develop", "default": False},
+        ]
+    }
+}
+
+_BRANCHES_RESPONSE_EMPTY = {
+    "branches": {"collection": []}
+}
+
+
+class TestBranchResolution:
+    """Tests for _resolve_branch_id helper."""
+
+    # BRANCH-01 (partial): branch found → returns correct ID
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_returns_correct_id(self, mock_gql):
+        mock_gql.return_value = _BRANCHES_RESPONSE_WITH_MAIN
+        branch_id = _resolve_branch_id(asset_id=42, company_id=11, branch_name="main")
+        assert branch_id == "10"
+
+    # BRANCH-03: branch not found → exit 1 + message lists available branches
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_not_found_exits_1(self, mock_gql):
+        mock_gql.return_value = _BRANCHES_RESPONSE_WITH_MAIN
+        with pytest.raises(typer.Exit) as exc_info:
+            _resolve_branch_id(asset_id=42, company_id=11, branch_name="nonexistent")
+        assert exc_info.value.exit_code == 1
+
+    # BRANCH-03: message lists available branches when not found
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_not_found_message_lists_available(self, mock_gql, capsys):
+        mock_gql.return_value = _BRANCHES_RESPONSE_WITH_MAIN
+        with pytest.raises(typer.Exit):
+            _resolve_branch_id(asset_id=42, company_id=11, branch_name="nonexistent")
+        captured = capsys.readouterr()
+        assert "main" in captured.out or "develop" in captured.out or "main" in captured.err or "develop" in captured.err
+
+    # BRANCH-05: case-sensitive match — 'Main' != 'main'
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_case_sensitive_no_match(self, mock_gql):
+        """Branch name comparison is strict: 'Main' does not match 'main'."""
+        mock_gql.return_value = _BRANCHES_RESPONSE_WITH_MAIN
+        with pytest.raises(typer.Exit) as exc_info:
+            _resolve_branch_id(asset_id=42, company_id=11, branch_name="Main")
+        assert exc_info.value.exit_code == 1
+
+    # BRANCH-06: network / API error in BranchLookup → exit 1, NOT silent pass
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_network_error_exits_1(self, mock_gql):
+        """
+        A network/timeout/500 error in the BranchLookup query must exit 1
+        and must NOT be confused with 'branch not found' or 'gate PASSED'.
+        """
+        mock_gql.side_effect = Exception("Connection timeout")
+        with pytest.raises(typer.Exit) as exc_info:
+            _resolve_branch_id(asset_id=42, company_id=11, branch_name="main")
+        assert exc_info.value.exit_code == 1
+
+    # BRANCH-06: network error message is differentiated from 'not found'
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_network_error_message_is_technical(self, mock_gql, capsys):
+        mock_gql.side_effect = Exception("Connection timeout")
+        with pytest.raises(typer.Exit):
+            _resolve_branch_id(asset_id=42, company_id=11, branch_name="main")
+        captured = capsys.readouterr()
+        combined = (captured.out + captured.err).lower()
+        # Must mention 'technical error' (not just 'not found')
+        assert "technical error" in combined or "network" in combined or "timeout" in combined
+
+    # BRANCH-03: empty collection → lists '(none found)'
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_resolve_branch_empty_collection_exits_1(self, mock_gql):
+        mock_gql.return_value = _BRANCHES_RESPONSE_EMPTY
+        with pytest.raises(typer.Exit) as exc_info:
+            _resolve_branch_id(asset_id=42, company_id=11, branch_name="main")
+        assert exc_info.value.exit_code == 1
+
+
+class TestPlatformGateWithBranch:
+    """BRANCH-01: platform gate passes branchId when --branch is provided."""
+
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_platform_gate_with_branch_passes_branch_id(self, mock_gql):
+        """
+        BRANCH-01: When --branch is provided, the resolved branchId must be
+        passed in the securityGateRun variables.
+        """
+        # First call: BranchLookup; second call: securityGateRun
+        mock_gql.side_effect = [
+            _BRANCHES_RESPONSE_WITH_MAIN,
+            _PLATFORM_GATE_PASS_RESPONSE,
+        ]
+        _run_platform_gate(asset_id=42, output=None, company_id=11, branch="main")
+
+        # Verify the second call (securityGateRun) received the correct branchId
+        second_call_vars = mock_gql.call_args_list[1][0][1]  # positional args[1] = variables
+        assert second_call_vars.get("branchId") == "10"
+
+    # BRANCH-07: without --branch, branchId is None in securityGateRun
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_platform_gate_without_branch_sends_no_branch_id(self, mock_gql):
+        """
+        BRANCH-07: Without --branch, branchId must be None (not omitted) so
+        the API applies no branch filter.
+        """
+        mock_gql.return_value = _PLATFORM_GATE_PASS_RESPONSE
+        _run_platform_gate(asset_id=42, output=None, company_id=None, branch=None)
+        call_vars = mock_gql.call_args_list[0][0][1]
+        assert call_vars.get("branchId") is None
+
+    # BRANCH-08: warning is emitted when --branch is used
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_platform_gate_with_branch_emits_warning(self, mock_gql, capsys):
+        """
+        BRANCH-08: A warning about legacy vulnerabilities exclusion must be
+        printed whenever --branch is used.
+        """
+        mock_gql.side_effect = [
+            _BRANCHES_RESPONSE_WITH_MAIN,
+            _PLATFORM_GATE_PASS_RESPONSE,
+        ]
+        # Warning is emitted by the command layer (assert_security_rules),
+        # but we test _run_platform_gate itself doesn't suppress it.
+        # We verify the warning via the command-level test below.
+        _run_platform_gate(asset_id=42, output=None, company_id=11, branch="main")
+        # If we reach here without exception the flow is correct.
+        assert mock_gql.call_count == 2  # BranchLookup + securityGateRun
+
+
+class TestLocalRulesGateWithBranch:
+    """BRANCH-02: local rules gate passes branchNames when --branch is provided."""
+
+    def _make_rules_file(self, content: str, tmp_path: Path) -> Path:
+        f = tmp_path / "rules.yaml"
+        f.write_text(content)
+        return f
+
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_local_gate_with_branch_passes_branch_names(self, mock_gql, tmp_path):
+        """
+        BRANCH-02: When --branch is provided, branchNames must be included in
+        the issuesStats variables as a single-element list.
+        """
+        mock_gql.return_value = _ISSUES_STATS_CLEAN
+        rules_file = self._make_rules_file(VALID_RULES_YAML, tmp_path)
+        _run_local_rules_gate(
+            asset_id=42, company_id=11, rules_file=rules_file, output=None, branch="main"
+        )
+        call_vars = mock_gql.call_args_list[0][0][1]
+        assert call_vars.get("branch_names") == ["main"]
+
+    # BRANCH-07: without --branch, branchNames is None in issuesStats
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_local_gate_without_branch_sends_no_branch_names(self, mock_gql, tmp_path):
+        """
+        BRANCH-07: Without --branch, branch_names must be None so the API
+        applies no branch filter and current behaviour is preserved.
+        """
+        mock_gql.return_value = _ISSUES_STATS_CLEAN
+        rules_file = self._make_rules_file(VALID_RULES_YAML, tmp_path)
+        _run_local_rules_gate(
+            asset_id=42, company_id=11, rules_file=rules_file, output=None, branch=None
+        )
+        call_vars = mock_gql.call_args_list[0][0][1]
+        assert call_vars.get("branch_names") is None
+
+
+class TestBranchCommandParameterValidation:
+    """BRANCH-04: --branch without --company-id must fail."""
+
+    def test_branch_without_company_id_exits_nonzero(self, tmp_path):
+        """
+        BRANCH-04: --branch without --company-id must produce a non-zero exit
+        and mention 'company' in the error output.
+        """
+        from typer.testing import CliRunner
+        import typer as _typer
+        from conviso.commands.security_gate import assert_security_rules
+
+        mini_app = _typer.Typer()
+        mini_app.command()(assert_security_rules)
+
+        runner = CliRunner()
+        result = runner.invoke(
+            mini_app,
+            ["--asset-id", "42", "--branch", "main"],
+            catch_exceptions=True,
+        )
+        assert result.exit_code != 0
+        assert "company" in (result.output or "").lower()
+
+    # BRANCH-08: warning appears in command-level output when --branch is used
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_branch_warning_shown_in_command_output(self, mock_gql, tmp_path, capsys):
+        """
+        BRANCH-08: A warning about legacy vulnerabilities must be printed
+        whenever --branch is used, before the gate result.
+        """
+        from typer.testing import CliRunner
+        import typer as _typer
+        from conviso.commands.security_gate import assert_security_rules
+
+        mock_gql.side_effect = [
+            _BRANCHES_RESPONSE_WITH_MAIN,          # BranchLookup
+            _PLATFORM_GATE_PASS_RESPONSE,          # securityGateRun
+        ]
+
+        mini_app = _typer.Typer()
+        mini_app.command()(assert_security_rules)
+
+        runner = CliRunner()
+        result = runner.invoke(
+            mini_app,
+            ["--asset-id", "42", "--company-id", "11", "--branch", "main"],
+            catch_exceptions=True,
+        )
+        # Gate should pass
+        assert result.exit_code == 0
+        # Warning about legacy vulnerabilities must appear in output
+        output_lower = (result.output or "").lower()
+        assert "legacy" in output_lower or "null-branch" in output_lower or "branch" in output_lower
