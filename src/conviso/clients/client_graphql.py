@@ -14,7 +14,7 @@ if os.path.exists(cwd_env):
 else:
     load_dotenv()
 
-API_URL = os.getenv("CONVISO_API_URL", "https://api.convisoappsec.com").rstrip("/") + "/graphql"
+API_URL = "https://api.convisoappsec.com/graphql"
 API_KEY = get_api_key()
 DEFAULT_TIMEOUT = float(os.getenv("CONVISO_API_TIMEOUT", "30"))
 DEFAULT_RETRIES = int(os.getenv("CONVISO_API_RETRIES", "2"))
