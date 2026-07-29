@@ -32,7 +32,9 @@ app.add_typer(bulk.app, name="bulk", help="Bulk operations via CSV.")
 app.add_typer(sbom.app, name="sbom", help="List/import SBOM components.")
 app.add_typer(tasks.app, name="tasks", help="Execute YAML tasks from requirements.")
 app.add_typer(accesscontrol.app, name="accesscontrol", help="Manage access control and user profile settings.")
-app.add_typer(security_gate.app, name="security-gate", help="Run security gate checks against the Conviso Platform.")
+app.command("security-gate", help="Run security gate checks against the Conviso Platform.")(
+    security_gate.run_security_gate
+)
 
 @app.callback(invoke_without_command=True)
 def main(

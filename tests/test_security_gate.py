@@ -584,11 +584,11 @@ class TestCommandParameterValidation:
         """
         from typer.testing import CliRunner
         import typer as _typer
-        from conviso.commands.security_gate import assert_security_rules
+        from conviso.commands.security_gate import run_security_gate
 
         # Build a mini app containing just the one command to avoid routing issues
         mini_app = _typer.Typer()
-        mini_app.command()(assert_security_rules)
+        mini_app.command()(run_security_gate)
 
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text(VALID_RULES_YAML)
@@ -723,18 +723,15 @@ class TestPlatformGateWithBranch:
 
     # BRANCH-08: warning is emitted when --branch is used
     @patch("conviso.commands.security_gate.graphql_request")
-    def test_platform_gate_with_branch_emits_warning(self, mock_gql, capsys):
+    def test_platform_gate_with_branch_calls_api_twice(self, mock_gql, capsys):
         """
-        BRANCH-08: A warning about legacy vulnerabilities exclusion must be
-        printed whenever --branch is used.
+        Verify that using --branch in platform mode correctly executes both
+        the BranchLookup query and the main securityGateRun query without errors.
         """
         mock_gql.side_effect = [
             _BRANCHES_RESPONSE_WITH_MAIN,
             _PLATFORM_GATE_PASS_RESPONSE,
         ]
-        # Warning is emitted by the command layer (assert_security_rules),
-        # but we test _run_platform_gate itself doesn't suppress it.
-        # We verify the warning via the command-level test below.
         _run_platform_gate(asset_id=42, output=None, company_id=11, branch="main")
         # If we reach here without exception the flow is correct.
         assert mock_gql.call_count == 2  # BranchLookup + securityGateRun
@@ -788,10 +785,10 @@ class TestBranchCommandParameterValidation:
         """
         from typer.testing import CliRunner
         import typer as _typer
-        from conviso.commands.security_gate import assert_security_rules
+        from conviso.commands.security_gate import run_security_gate
 
         mini_app = _typer.Typer()
-        mini_app.command()(assert_security_rules)
+        mini_app.command()(run_security_gate)
 
         runner = CliRunner()
         result = runner.invoke(
@@ -804,14 +801,14 @@ class TestBranchCommandParameterValidation:
 
     # BRANCH-08: warning appears in command-level output when --branch is used
     @patch("conviso.commands.security_gate.graphql_request")
-    def test_branch_warning_shown_in_command_output(self, mock_gql, tmp_path, capsys):
+    def test_branch_command_executes_successfully(self, mock_gql, tmp_path, capsys):
         """
-        BRANCH-08: A warning about legacy vulnerabilities must be printed
-        whenever --branch is used, before the gate result.
+        Verify that executing the command with --branch completes successfully,
+        resolving the branch and evaluating the gate.
         """
         from typer.testing import CliRunner
         import typer as _typer
-        from conviso.commands.security_gate import assert_security_rules
+        from conviso.commands.security_gate import run_security_gate
 
         mock_gql.side_effect = [
             _BRANCHES_RESPONSE_WITH_MAIN,          # BranchLookup
@@ -819,7 +816,7 @@ class TestBranchCommandParameterValidation:
         ]
 
         mini_app = _typer.Typer()
-        mini_app.command()(assert_security_rules)
+        mini_app.command()(run_security_gate)
 
         runner = CliRunner()
         result = runner.invoke(
@@ -829,6 +826,6 @@ class TestBranchCommandParameterValidation:
         )
         # Gate should pass
         assert result.exit_code == 0
-        # Warning about legacy vulnerabilities must appear in output
         output_lower = (result.output or "").lower()
-        assert "legacy" in output_lower or "null-branch" in output_lower or "branch" in output_lower
+        # Verify info logs show the branch was resolved
+        assert "resolved to id:" in output_lower

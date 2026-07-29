@@ -59,9 +59,6 @@ from conviso.core.security_gate_formatter import (
     format_truncation_notice,
     format_local_rules_summary,
 )
-
-app = typer.Typer(help="Run security gate checks against the Conviso Platform.")
-
 # ---------------------------------------------------------------------------
 # GraphQL queries
 # ---------------------------------------------------------------------------
@@ -151,8 +148,7 @@ _PAGE_SIZE = 10
 # Command
 # ---------------------------------------------------------------------------
 
-@app.command("assert-security-rules")
-def assert_security_rules(
+def run_security_gate(
     asset_id: int = typer.Option(
         ...,
         "--asset-id",
@@ -224,14 +220,7 @@ def assert_security_rules(
         )
         raise typer.Exit(code=1)
 
-    # --- Branch warning ---
-    if branch:
-        warning(
-            f"Branch filter active: '--branch {branch}'. "
-            "Only vulnerabilities explicitly associated with this branch will be "
-            "evaluated. Legacy vulnerabilities without a branch association "
-            "(NULL-branch) are NOT included in this evaluation."
-        )
+
 
     started_at = time.perf_counter()
 
