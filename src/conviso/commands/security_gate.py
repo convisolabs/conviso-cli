@@ -25,8 +25,8 @@ Branch filtering (--branch):
 
    NOTE: every execution with --branch incurs one extra GraphQL call to
    resolve the branch name → ID before the main gate query (BranchLookup).
-   This is an accepted trade-off; future optimisation could cache or batch
-   this lookup.
+   This is an accepted trade-off to validate branch existence and avoid false PASSes.
+   Future optimisation could cache or batch this lookup.
 
    Follow-up opportunity: auto-detect branch from CI environment variables
    (GITHUB_REF_NAME, CI_COMMIT_REF_NAME, CONVISO_BRANCH, etc.) when
@@ -444,6 +444,12 @@ def _run_local_rules_gate(
 
     info(f"Rules loaded from '{rules_file.name}':")
     info(f"  {yaml.dump(rules, default_flow_style=True).strip()}")
+
+    # Validate branch existence before querying issuesStats — without this,
+    # a nonexistent branch silently returns zero vulnerabilities and the
+    # gate would PASS by mistake (false PASS).
+    if branch:
+        _resolve_branch_id(asset_id, company_id, branch)
 
     # Branch names are passed directly to issuesStats (no ID lookup needed)
     branch_names: Optional[List[str]] = [branch] if branch else None

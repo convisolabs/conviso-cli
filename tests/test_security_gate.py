@@ -746,17 +746,51 @@ class TestLocalRulesGateWithBranch:
         return f
 
     @patch("conviso.commands.security_gate.graphql_request")
+    def test_local_gate_with_nonexistent_branch_fails(self, mock_gql, tmp_path):
+        """
+        A nonexistent branch in local rules mode must fail with exit 1,
+        NOT silently pass with zero vulnerabilities.
+        """
+        mock_gql.return_value = _BRANCHES_RESPONSE_WITH_MAIN  # only BranchLookup called
+        rules_file = self._make_rules_file(VALID_RULES_YAML, tmp_path)
+        with pytest.raises(typer.Exit) as exc_info:
+            _run_local_rules_gate(
+                asset_id=42, company_id=11, rules_file=rules_file, output=None,
+                branch="nonexistent",
+            )
+        assert exc_info.value.exit_code == 1
+
+    @patch("conviso.commands.security_gate.graphql_request")
+    def test_local_gate_with_valid_branch_calls_lookup_first(self, mock_gql, tmp_path):
+        mock_gql.side_effect = [
+            _BRANCHES_RESPONSE_WITH_MAIN,  # BranchLookup
+            _ISSUES_STATS_CLEAN,           # issuesStats
+        ]
+        rules_file = self._make_rules_file(VALID_RULES_YAML, tmp_path)
+        _run_local_rules_gate(
+            asset_id=42, company_id=11, rules_file=rules_file, output=None,
+            branch="main",
+        )
+        assert mock_gql.call_count == 2
+        # Confirm branch_names still passed correctly to issuesStats after validation
+        issues_stats_vars = mock_gql.call_args_list[1][0][1]
+        assert issues_stats_vars.get("branch_names") == ["main"]
+
+    @patch("conviso.commands.security_gate.graphql_request")
     def test_local_gate_with_branch_passes_branch_names(self, mock_gql, tmp_path):
         """
         BRANCH-02: When --branch is provided, branchNames must be included in
         the issuesStats variables as a single-element list.
         """
-        mock_gql.return_value = _ISSUES_STATS_CLEAN
+        mock_gql.side_effect = [
+            _BRANCHES_RESPONSE_WITH_MAIN,
+            _ISSUES_STATS_CLEAN
+        ]
         rules_file = self._make_rules_file(VALID_RULES_YAML, tmp_path)
         _run_local_rules_gate(
             asset_id=42, company_id=11, rules_file=rules_file, output=None, branch="main"
         )
-        call_vars = mock_gql.call_args_list[0][0][1]
+        call_vars = mock_gql.call_args_list[1][0][1]
         assert call_vars.get("branch_names") == ["main"]
 
     # BRANCH-07: without --branch, branchNames is None in issuesStats
