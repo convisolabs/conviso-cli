@@ -211,7 +211,7 @@ def list_projects(
           environmentCompromised
           projectType { label }
           tags { name }
-          allocatedAnalyst {
+          assignedUsers {
             portalUser { name email }
           }
           assets { id name }
@@ -232,7 +232,7 @@ def list_projects(
             nonlocal rows
             for p in collection:
                 assignees = []
-                for alloc in p.get("allocatedAnalyst") or []:
+                for alloc in p.get("assignedUsers") or []:
                     portal_user = (alloc or {}).get("portalUser") or {}
                     email = (portal_user.get("email") or "").strip()
                     name = (portal_user.get("name") or "").strip()
@@ -674,7 +674,7 @@ def create_project(
           endDate
           estimatedHours
           projectType { id label }
-          allocatedAnalyst {
+          assignedUsers {
             portalUser { email }
           }
         }
