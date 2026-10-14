@@ -16,21 +16,25 @@ jobs:
   authorize:
     runs-on: ubuntu-latest
     steps:
-      - name: Ensure actor has admin or maintain role on the repository
+      - name: Ensure tag pusher and run initiator have admin or maintain role
         env:
           GH_TOKEN: ${{ github.token }}
-          ACTOR: ${{ github.triggering_actor }}
+          ACTOR: ${{ github.actor }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
         run: |
-          ROLE="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${ACTOR}/permission" --jq '.role_name' || echo none)"
-          case "$ROLE" in
-            admin|maintain)
-              echo "$ACTOR is allowed to release (role: $ROLE)."
-              ;;
-            *)
-              echo "$ACTOR is not allowed to release (role: $ROLE)."
-              exit 1
-              ;;
-          esac
+          # actor is who pushed the tag; triggering_actor is who started this run (differs on re-runs).
+          for USER in "$ACTOR" "$TRIGGERING_ACTOR"; do
+            ROLE="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${USER}/permission" --jq '.role_name' || echo none)"
+            case "$ROLE" in
+              admin|maintain)
+                echo "$USER is allowed to release (role: $ROLE)."
+                ;;
+              *)
+                echo "$USER is not allowed to release (role: $ROLE)."
+                exit 1
+                ;;
+            esac
+          done
 
   tests:
     needs: authorize
