@@ -82,6 +82,19 @@ jobs:
         run: python -m build
       - name: Check distribution
         run: twine check dist/*
+      - name: Smoke test built wheel
+        run: |
+          python -m venv /tmp/wheel-venv
+          /tmp/wheel-venv/bin/pip install dist/*.whl
+          cd /tmp
+          /tmp/wheel-venv/bin/conviso --version
+          /tmp/wheel-venv/bin/python -c "
+          from pathlib import Path
+          import conviso
+          pkg = Path(next(iter(conviso.__path__)))
+          for name in ('VERSION', 'security_gate_rules_schema.json'):
+              assert (pkg / name).is_file(), f'{name} missing from wheel'
+          "
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
