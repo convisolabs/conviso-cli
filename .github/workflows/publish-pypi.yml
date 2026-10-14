@@ -1,0 +1,102 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-pypi
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure tag pusher and run initiator have admin or maintain role
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTOR: ${{ github.actor }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+        run: |
+          # actor is who pushed the tag; triggering_actor is who started this run (differs on re-runs).
+          for USER in "$ACTOR" "$TRIGGERING_ACTOR"; do
+            ROLE="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${USER}/permission" --jq '.role_name' || echo none)"
+            case "$ROLE" in
+              admin|maintain)
+                echo "$USER is allowed to release (role: $ROLE)."
+                ;;
+              *)
+                echo "$USER is not allowed to release (role: $ROLE)."
+                exit 1
+                ;;
+            esac
+          done
+
+  tests:
+    needs: authorize
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install package and test dependencies
+        run: pip install . pytest
+      - name: Run tests
+        run: pytest -q
+
+  version-check:
+    needs: authorize
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure tag matches VERSION file
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          FILE_VERSION="$(tr -d '[:space:]' < src/conviso/VERSION)"
+          if [ "$TAG" != "$FILE_VERSION" ]; then
+            echo "Tag ($GITHUB_REF_NAME) does not match src/conviso/VERSION ($FILE_VERSION)."
+            exit 1
+          fi
+          echo "Tag matches VERSION ($FILE_VERSION)."
+
+  build-and-publish-pypi:
+    needs:
+      - tests
+      - version-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install build tools
+        run: pip install build twine
+      - name: Build package
+        run: python -m build
+      - name: Check distribution
+        run: twine check dist/*
+      - name: Smoke test built wheel
+        run: |
+          python -m venv /tmp/wheel-venv
+          /tmp/wheel-venv/bin/pip install dist/*.whl
+          cd /tmp
+          /tmp/wheel-venv/bin/conviso --version
+          /tmp/wheel-venv/bin/python -c "
+          from pathlib import Path
+          import conviso
+          pkg = Path(next(iter(conviso.__path__)))
+          for name in ('VERSION', 'security_gate_rules_schema.json'):
+              assert (pkg / name).is_file(), f'{name} missing from wheel'
+          "
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.SRE_PYPI_TOKEN }}
+        run: twine upload dist/*
