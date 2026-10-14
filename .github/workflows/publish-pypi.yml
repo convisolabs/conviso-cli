@@ -13,7 +13,27 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  authorize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure actor has admin or maintain role on the repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTOR: ${{ github.triggering_actor }}
+        run: |
+          ROLE="$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${ACTOR}/permission" --jq '.role_name' || echo none)"
+          case "$ROLE" in
+            admin|maintain)
+              echo "$ACTOR is allowed to release (role: $ROLE)."
+              ;;
+            *)
+              echo "$ACTOR is not allowed to release (role: $ROLE)."
+              exit 1
+              ;;
+          esac
+
   tests:
+    needs: authorize
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +47,7 @@ jobs:
         run: pytest -q
 
   version-check:
+    needs: authorize
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,9 +66,6 @@ jobs:
       - tests
       - version-check
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/project/conviso-cli/
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
