@@ -5,6 +5,13 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-pypi
+  cancel-in-progress: false
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -38,6 +45,9 @@ jobs:
       - tests
       - version-check
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/conviso-cli/
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
