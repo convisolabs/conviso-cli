@@ -39,5 +39,15 @@ Thanks for your interest in contributing! Below is a quick guide to help you get
 - If adding commands or bulk flows, update README and samples if needed.
 - If touching bulk, ensure `--show-template` output stays consistent.
 
+## Releases
+- Versions follow [SemVer](https://semver.org) (`MAJOR.MINOR.PATCH`) and live in `src/conviso/VERSION`.
+- Release tags use the `vX.Y.Z` format (e.g., `v0.5.1`) and must match `VERSION` without the `v`.
+- Pushing a release tag runs the tests and publishes the package to PyPI:
+  ```
+  git tag v0.5.1
+  git push origin v0.5.1
+  ```
+- Tags in any other format do not trigger a release.
+
 ## Reporting issues
 - Provide command run, options used, expected vs. actual behavior, and any GraphQL errors returned.

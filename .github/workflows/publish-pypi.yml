@@ -1,0 +1,57 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install package and test dependencies
+        run: pip install . pytest
+      - name: Run tests
+        run: pytest -q
+
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure tag matches VERSION file
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          FILE_VERSION="$(tr -d '[:space:]' < src/conviso/VERSION)"
+          if [ "$TAG" != "$FILE_VERSION" ]; then
+            echo "Tag ($GITHUB_REF_NAME) does not match src/conviso/VERSION ($FILE_VERSION)."
+            exit 1
+          fi
+          echo "Tag matches VERSION ($FILE_VERSION)."
+
+  build-and-publish-pypi:
+    needs:
+      - tests
+      - version-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install build tools
+        run: pip install build twine
+      - name: Build package
+        run: python -m build
+      - name: Check distribution
+        run: twine check dist/*
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.SRE_PYPI_TOKEN }}
+        run: twine upload dist/*

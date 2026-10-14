@@ -44,5 +44,8 @@ cvs = "conviso.app:app"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+conviso = ["VERSION", "*.json"]
+
 [tool.setuptools.dynamic]
 version = { file = "src/conviso/VERSION" }
